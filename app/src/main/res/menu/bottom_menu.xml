@@ -8,19 +8,19 @@
             android:title="@string/translator"
 
             android:icon="@drawable/ic_settings_black_24dp"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="collapseActionView" />
 
         <item
             android:id="@+id/item_action_history"
             android:enabled="true"
             android:title="@string/history"
             android:icon="@drawable/ic_settings_black_24dp"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="collapseActionView" />
 
         <item
             android:title="@string/about"
             android:id="@+id/item_action_about"
             android:enabled="true"
             android:icon="@drawable/ic_settings_black_24dp"
-            app:showAsAction="ifRoom" />
+            app:showAsAction="withText" />
 </menu>
