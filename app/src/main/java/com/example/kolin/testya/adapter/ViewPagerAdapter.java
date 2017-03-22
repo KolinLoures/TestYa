@@ -1,17 +1,11 @@
 package com.example.kolin.testya.adapter;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
 
-import com.example.kolin.testya.HistoryFragment;
-import com.example.kolin.testya.InfoFragment;
-import com.example.kolin.testya.R;
-import com.example.kolin.testya.TranslatorFragment;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kolin on 21.03.2017.
@@ -19,38 +13,42 @@ import com.example.kolin.testya.TranslatorFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private static final int PAGE_COUNT = 3;
-    private Context context;
+    private List<Fragment> list;
+    private List<String> titlesList;
+    private boolean isAddTitle;
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm, boolean isAddTitle) {
         super(fm);
-        this.context = context;
+        list = new ArrayList<>();
+        this.isAddTitle = isAddTitle;
+        if (isAddTitle)
+            titlesList = new ArrayList<>();
     }
 
 
+    public void addFragment(Fragment fragment, String title) {
+        if (!list.contains(fragment)) {
+            list.add(fragment);
+            notifyDataSetChanged();
 
-    @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return TranslatorFragment.newInstance("","");
-            case 1:
-                return HistoryFragment.newInstance("","");
-            case 2:
-                return InfoFragment.newInstance("","");
-            default:
-                return null;
+            if (isAddTitle && title != null) {
+                titlesList.add(title);
+            }
         }
     }
 
     @Override
+    public Fragment getItem(int position) {
+        return list != null && !list.isEmpty() ? list.get(position) : null;
+    }
+
+    @Override
     public int getCount() {
-        return PAGE_COUNT;
+        return list.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-
-        return super.getPageTitle(position);
+        return isAddTitle ? titlesList.get(position) : super.getPageTitle(position);
     }
 }

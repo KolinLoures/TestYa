@@ -7,16 +7,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
     </style>
 
     <!--Custom settings to Bottom Tab Layout-->
-
     <style name="CustomBottomTabLayout" parent="Base.Widget.Design.TabLayout">
         <item name="tabBackground">?attr/selectableItemBackground</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabIndicatorHeight">4dp</item>
+        <item name="tabSelectedTextColor">@color/colorBlack</item>
     </style>
 
 </resources>

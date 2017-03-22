@@ -1,13 +1,40 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.kolin.testya.HistoryFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.example.kolin.testya.HistoryFavoriteFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        
+        <include layout="@layout/main_toolbar"/>
+        
+        <android.support.design.widget.TabLayout
+            android:id="@+id/history_favorite_tab"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent"
+            app:tabMode="fixed"
+            app:tabIndicatorHeight="4dp"
+            app:tabTextAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            app:tabIndicatorColor="@color/colorBlack"
+            app:tabSelectedTextColor="@color/colorBlack"
+            android:textAllCaps = "false">
+
+
+        </android.support.design.widget.TabLayout>
+
+
+    </FrameLayout>
+    
+    <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/history_favorite_view_pager"
+        />
 
-</FrameLayout>
+</LinearLayout>
