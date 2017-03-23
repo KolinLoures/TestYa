@@ -5,7 +5,22 @@
     android:orientation="vertical"
     tools:fragment="com.example.kolin.testya.InfoFragment">
 
-    <include layout="@layout/main_toolbar"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/main_toolbar" />
+
+        <TextView
+            android:text="@string/about"
+            android:layout_margin="16dp"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/colorBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
 
 
 </LinearLayout>

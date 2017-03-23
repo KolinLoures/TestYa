@@ -1,13 +1,13 @@
 package com.example.kolin.testya;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.SearchView;
 
 
 public class CommonFragment extends Fragment {
@@ -18,6 +18,9 @@ public class CommonFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    //Views
+    private SearchView searchView;
+    private View dividerView;
 
     public CommonFragment() {
         // Required empty public constructor
@@ -47,11 +50,19 @@ public class CommonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_common, container, false);
-        TextView  textView = (TextView) view.findViewById(R.id.common_text_view);
-        textView.setText(mParam1);
+        dividerView = view.findViewById(R.id.fragment_common_divider);
+        searchView = (SearchView) view.findViewById(R.id.fragment_common_search);
+        setSearchView();
+
         return view;
     }
 
+    private void setSearchView() {
+        if (mParam1.equals("История"))
+            searchView.setQueryHint("Найти в истории");
+        else
+            searchView.setQueryHint("Найти в избранном");
+    }
 
 
     @Override

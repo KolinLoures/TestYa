@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
         
         <include layout="@layout/main_toolbar"/>
-        
+
         <android.support.design.widget.TabLayout
             android:id="@+id/history_favorite_tab"
             android:layout_width="wrap_content"
@@ -23,11 +23,16 @@
             app:tabTextAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             app:tabIndicatorColor="@color/colorBlack"
             app:tabSelectedTextColor="@color/colorBlack"
-            android:textAllCaps = "false">
+            android:textAllCaps="false" />
 
-
-        </android.support.design.widget.TabLayout>
-
+        <ImageButton
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_delete_black_24dp"
+            android:layout_gravity="end"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_height="match_parent" />
 
     </FrameLayout>
     

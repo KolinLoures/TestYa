@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.example.kolin.testya.adapter.ViewPagerAdapter;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnable(false);
 
-
         tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -36,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    //TODO: substitute first tab icon
     @SuppressWarnings("all")
     private void setupTabIcons() {
-            tabLayout.getTabAt(0).setIcon(R.drawable.ic_settings_black_24dp);
-            tabLayout.getTabAt(1).setIcon(R.drawable.ic_favorite_border_black_24dp);
-            tabLayout.getTabAt(2).setIcon(R.drawable.ic_check_circle_black_24dp);
+            tabLayout.getTabAt(0).setIcon(R.drawable.ic_translate_black_24dp);
+            tabLayout.getTabAt(1).setIcon(R.drawable.ic_bookmark_black_24dp);
+            tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
 
             tabLayout.getTabAt(1).getIcon().setAlpha(128);
             tabLayout.getTabAt(2).getIcon().setAlpha(128);
