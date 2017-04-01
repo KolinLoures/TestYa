@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:textStyle="italic"
+    tools:text="Существиетльное"
+    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+    android:id="@+id/dictionary_section_text"
+    android:layout_height="match_parent" />

@@ -5,7 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.kolin.testya.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.InfoFragment;
+import com.example.kolin.testya.veiw.NonSwipeViewPager;
+import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.veiw.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (NonSwipeViewPager) findViewById(R.id.main_view_pager);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), false);
-        adapter.addFragment(TranslatorFragment.newInstance("", ""), null);
+        adapter.addFragment(TranslatorFragment.newInstance(), null);
         adapter.addFragment(HistoryFavoriteFragment.newInstance("", ""), null);
         adapter.addFragment(InfoFragment.newInstance("", ""), null);
 

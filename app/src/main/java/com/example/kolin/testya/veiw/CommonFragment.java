@@ -1,13 +1,14 @@
-package com.example.kolin.testya;
+package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+
+import com.example.kolin.testya.R;
 
 
 public class CommonFragment extends Fragment {
@@ -68,7 +69,6 @@ public class CommonFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.kolin.testya;
+package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.kolin.testya.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.R;
+import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
 
 
 public class HistoryFavoriteFragment extends Fragment {
@@ -31,7 +32,7 @@ public class HistoryFavoriteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), true);

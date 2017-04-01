@@ -1,7 +1,4 @@
-package com.example.kolin.testya.models;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+package com.example.kolin.testya.data.models;
 
 import java.util.List;
 

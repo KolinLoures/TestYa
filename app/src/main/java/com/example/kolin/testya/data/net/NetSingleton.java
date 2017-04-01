@@ -1,4 +1,4 @@
-package com.example.kolin.testya.net;
+package com.example.kolin.testya.data.net;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetSingleton {
 
-    private NetSingleton netSingleton = null;
+    private static NetSingleton netSingleton = null;
 
     private NetSingleton(){
     }
@@ -28,16 +28,17 @@ public class NetSingleton {
     private Retrofit provideRetrofit(){
         return new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .baseUrl(NetTranslator.BASE_URL_TRNSL)
                 .client(provideOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
     }
 
-    private ITranslator provideTranslator(){
-        return provideRetrofit().create(ITranslator.class);
+    public NetTranslator provideTranslator(){
+        return provideRetrofit().create(NetTranslator.class);
     }
 
-    public NetSingleton providenetSingleton(){
+    public static NetSingleton providenetSingleton(){
         if (netSingleton == null){
             netSingleton = new NetSingleton();
         }

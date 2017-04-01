@@ -1,4 +1,4 @@
-package com.example.kolin.testya.adapter;
+package com.example.kolin.testya.veiw.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

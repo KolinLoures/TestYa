@@ -1,9 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.kolin.testya.TranslatorFragment">
+    tools:context="com.example.kolin.testya.veiw.TranslatorFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -53,53 +54,40 @@
 
     </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="175dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/selector" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:padding="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_clear_black_24dp"/>
-
-    </FrameLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:addStatesFromChildren="true"
+        android:background="@drawable/selector"
+        android:minHeight="150dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:weightSum="1">
 
-        <TextView
+        <EditText
+            android:id="@+id/translator_edit_text"
             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="start"
+            android:hint="Введите слово или фразу"
+            android:scrollbars="vertical" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/colorBlack"
-            android:textStyle="bold"
-            tools:text="Hi" />
-
-        <ScrollView
-            android:layout_marginTop="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_clear_black_24dp" />
 
     </LinearLayout>
+
+
+    <include layout="@layout/translation_card" />
+
+    <include layout="@layout/dictionary_card" />
 
 
 </LinearLayout>
