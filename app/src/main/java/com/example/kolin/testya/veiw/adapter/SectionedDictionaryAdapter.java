@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.example.kolin.testya.R;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
@@ -115,10 +117,9 @@ public class SectionedDictionaryAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
 
-    public void setSections(Section[] sections) {
+    public void setSections(List<Section> sections) {
         this.sections.clear();
-
-        Arrays.sort(sections, new Comparator<Section>() {
+        Collections.sort(sections, new Comparator<Section>() {
             @Override
             public int compare(Section o, Section o1) {
                 return (o.firstPosition == o1.firstPosition)

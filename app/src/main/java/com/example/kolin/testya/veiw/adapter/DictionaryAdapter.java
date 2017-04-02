@@ -7,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.data.models.dictionary.Def;
-import com.example.kolin.testya.data.models.dictionary.Dictionary;
 import com.example.kolin.testya.data.models.dictionary.Mean;
 import com.example.kolin.testya.data.models.dictionary.Tr;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +19,10 @@ import java.util.List;
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.DictionaryViewHolder> {
 
-    private List<Def> list;
+    private List<Tr> list;
 
     public DictionaryAdapter() {
-        this.list = new LinkedList<>();
+        this.list = new ArrayList<>();
     }
 
     @Override
@@ -36,37 +34,54 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
 
     /**
      * TODO Think about several values and process to build string text (add StringBuilder)
-     *
+     * <p>
      * currentItem.getTr().get(0)!
-     * */
+     */
     @Override
     public void onBindViewHolder(DictionaryViewHolder holder, int position) {
-        Def currentItem = list.get(position);
-        Tr tr = currentItem.getTr().get(0);
-        holder.primaryText.setText(tr.getText());
+        Tr currentItem = list.get(position);
+        holder.primaryText.setText(currentItem.getText());
 
-        String supportText = null;
+        String supportText = "";
 
-        for (Mean m: tr.getMean()){
-            supportText += m.getText();
-        }
+        List<Mean> mean = currentItem.getMean();
+        if (mean != null)
+            for (Mean m : mean)
+                supportText += m.getText();
 
-        holder.supportText.setText(supportText);
+        if (!supportText.equals(""))
+            holder.supportText.setText(supportText);
+        else
+            holder.supportText.setVisibility(View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
-    static class DictionaryViewHolder extends RecyclerView.ViewHolder{
+    static class DictionaryViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView  primaryText;
-        private TextView  supportText;
+        private TextView primaryText;
+        private TextView supportText;
 
         public DictionaryViewHolder(View itemView) {
             super(itemView);
+
+            primaryText = (TextView) itemView.findViewById(R.id.sub_item_dic_primary_text);
+            supportText = (TextView) itemView.findViewById(R.id.sub_item_dic_sub_text);
+
         }
+    }
+
+    public void clearAdapter() {
+        list.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addDataList(List<Tr> trList) {
+        this.list.addAll(trList);
+        notifyDataSetChanged();
     }
 
 }

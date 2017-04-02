@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.kolin.testya.veiw.TranslatorFragment">
+    tools:context="com.example.kolin.testya.veiw.fragment.TranslatorFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -84,10 +84,24 @@
 
     </LinearLayout>
 
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <include layout="@layout/translation_card" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <include layout="@layout/dictionary_card" />
+            <include
+                layout="@layout/translation_card" />
+
+            <include
+                layout="@layout/dictionary_card" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 </LinearLayout>

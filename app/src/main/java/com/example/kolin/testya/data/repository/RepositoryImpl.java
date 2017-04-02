@@ -1,5 +1,6 @@
 package com.example.kolin.testya.data.repository;
 
+import com.example.kolin.testya.data.db.DataBaseHelper;
 import com.example.kolin.testya.data.models.Translation;
 import com.example.kolin.testya.data.models.dictionary.Def;
 import com.example.kolin.testya.data.models.dictionary.Dictionary;
@@ -20,10 +21,12 @@ import io.reactivex.functions.Function;
 public class RepositoryImpl implements Repository {
 
     private NetTranslator netTranslator;
+    private DataBaseHelper dataBaseHelper;
 
 
     public RepositoryImpl() {
         netTranslator = NetSingleton.providenetSingleton().provideTranslator();
+        dataBaseHelper = DataBaseHelper.getDataBaseHelper();
     }
 
     @Override
@@ -39,7 +42,8 @@ public class RepositoryImpl implements Repository {
         return netTranslator.getTranslationOptions(
                 NetTranslator.API_KEY_DICT,
                 text,
-                lang)
+                lang,
+                "ru")
                 .flatMap(new Function<Dictionary, ObservableSource<List<Def>>>() {
                     @Override
                     public ObservableSource<List<Def>> apply(@NonNull Dictionary dictionary) throws Exception {

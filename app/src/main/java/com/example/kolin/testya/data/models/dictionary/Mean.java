@@ -5,6 +5,7 @@ package com.example.kolin.testya.data.models.dictionary;
  */
 
 public class Mean {
+
     private String text;
 
     public String getText() {

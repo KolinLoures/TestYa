@@ -3,11 +3,11 @@ package com.example.kolin.testya.domain;
 import android.support.annotation.NonNull;
 
 import com.example.kolin.testya.data.models.dictionary.Def;
-import com.example.kolin.testya.data.models.dictionary.Dictionary;
 import com.example.kolin.testya.data.repository.Repository;
 import com.example.kolin.testya.data.repository.RepositoryImpl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
@@ -17,6 +17,9 @@ import io.reactivex.Observable;
 
 public class GetTranslationOptions extends BaseUseCase<List<Def>, GetTranslationOptions.DictionaryParams> {
 
+    //Delay for start dictionary search
+    private static final int DELAY_MILLISECONDS = 1500;
+
     private Repository repository;
 
     public GetTranslationOptions() {
@@ -25,7 +28,9 @@ public class GetTranslationOptions extends BaseUseCase<List<Def>, GetTranslation
 
     @Override
     public Observable<List<Def>> createObservable(@NonNull DictionaryParams dictionaryParams) {
-        return repository.getTranslationOptions(dictionaryParams.text, dictionaryParams.lang);
+        return repository
+                .getTranslationOptions(dictionaryParams.text, dictionaryParams.lang)
+                .delay(DELAY_MILLISECONDS, TimeUnit.MILLISECONDS);
     }
 
     public static final class DictionaryParams{
@@ -39,7 +44,7 @@ public class GetTranslationOptions extends BaseUseCase<List<Def>, GetTranslation
             this.lang = lang;
         }
 
-        public DictionaryParams getEntity(String text, String lang) {
+        public static DictionaryParams getEntity(String text, String lang) {
             return new DictionaryParams(text, lang);
         }
     }

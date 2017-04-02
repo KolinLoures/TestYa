@@ -9,7 +9,7 @@ import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.InfoFragment;
 import com.example.kolin.testya.veiw.NonSwipeViewPager;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
-import com.example.kolin.testya.veiw.TranslatorFragment;
+import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity {

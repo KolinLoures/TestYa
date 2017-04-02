@@ -1,16 +1,27 @@
 package com.example.kolin.testya.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by kolin on 28.03.2017.
  */
 
-public class Translation {
+public class Translation{
 
     private int code;
     private String lang;
     private List<String> text = null;
+
+    protected Translation(Parcel in) {
+        code = in.readInt();
+        lang = in.readString();
+        text = in.createStringArrayList();
+    }
+
+
 
     public int getCode() {
         return code;
@@ -35,4 +46,5 @@ public class Translation {
     public void setText(List<String> text) {
         this.text = text;
     }
+
 }
