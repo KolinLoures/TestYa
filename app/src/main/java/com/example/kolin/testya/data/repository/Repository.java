@@ -1,8 +1,7 @@
 package com.example.kolin.testya.data.repository;
 
-import com.example.kolin.testya.data.models.Translation;
-import com.example.kolin.testya.data.models.dictionary.Def;
-import com.example.kolin.testya.data.models.dictionary.Dictionary;
+import com.example.kolin.testya.data.entity.Translation;
+import com.example.kolin.testya.data.entity.dictionary.Def;
 
 import java.util.List;
 

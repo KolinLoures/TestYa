@@ -1,9 +1,10 @@
 package com.example.kolin.testya.data.repository;
 
-import com.example.kolin.testya.data.db.DataBaseHelper;
-import com.example.kolin.testya.data.models.Translation;
-import com.example.kolin.testya.data.models.dictionary.Def;
-import com.example.kolin.testya.data.models.dictionary.Dictionary;
+import com.example.kolin.testya.data.TypeSaveTranslation;
+import com.example.kolin.testya.data.db.Queries;
+import com.example.kolin.testya.data.entity.Translation;
+import com.example.kolin.testya.data.entity.dictionary.Def;
+import com.example.kolin.testya.data.entity.dictionary.Dictionary;
 import com.example.kolin.testya.data.net.NetSingleton;
 import com.example.kolin.testya.data.net.NetTranslator;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 /**
@@ -21,12 +23,12 @@ import io.reactivex.functions.Function;
 public class RepositoryImpl implements Repository {
 
     private NetTranslator netTranslator;
-    private DataBaseHelper dataBaseHelper;
+    private Queries queries;
 
 
     public RepositoryImpl() {
         netTranslator = NetSingleton.providenetSingleton().provideTranslator();
-        dataBaseHelper = DataBaseHelper.getDataBaseHelper();
+        queries = new Queries();
     }
 
     @Override
@@ -34,7 +36,12 @@ public class RepositoryImpl implements Repository {
         return netTranslator.getTranslation(
                 NetTranslator.API_KEY_TRNSL,
                 text,
-                lang);
+                lang).doOnNext(new Consumer<Translation>() {
+            @Override
+            public void accept(@NonNull Translation translation) throws Exception {
+                queries.addTranslation(translation, TypeSaveTranslation.HISTORY);
+            }
+        });
     }
 
     @Override

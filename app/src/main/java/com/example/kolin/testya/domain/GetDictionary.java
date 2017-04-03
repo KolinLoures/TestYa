@@ -2,7 +2,7 @@ package com.example.kolin.testya.domain;
 
 import android.support.annotation.NonNull;
 
-import com.example.kolin.testya.data.models.dictionary.Def;
+import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.data.repository.Repository;
 import com.example.kolin.testya.data.repository.RepositoryImpl;
 
@@ -15,14 +15,14 @@ import io.reactivex.Observable;
  * Created by kolin on 01.04.2017.
  */
 
-public class GetTranslationOptions extends BaseUseCase<List<Def>, GetTranslationOptions.DictionaryParams> {
+public class GetDictionary extends BaseUseCase<List<Def>, GetDictionary.DictionaryParams> {
 
     //Delay for start dictionary search
     private static final int DELAY_MILLISECONDS = 1500;
 
     private Repository repository;
 
-    public GetTranslationOptions() {
+    public GetDictionary() {
         this.repository = new RepositoryImpl();
     }
 

@@ -3,10 +3,10 @@ package com.example.kolin.testya.veiw.presenters;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.kolin.testya.data.models.dictionary.Def;
+import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.domain.GetTranslation;
-import com.example.kolin.testya.data.models.Translation;
-import com.example.kolin.testya.domain.GetTranslationOptions;
+import com.example.kolin.testya.data.entity.Translation;
+import com.example.kolin.testya.domain.GetDictionary;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class TranslatorPresenter extends AbstractPresenter<TranslatorFragment> {
     private static final String TAG = TranslatorPresenter.class.getSimpleName();
 
     private GetTranslation getTranslation;
-    private GetTranslationOptions getTranslationOptions;
+    private GetDictionary getDictionary;
 
 
     private String currentText;
@@ -32,7 +32,7 @@ public class TranslatorPresenter extends AbstractPresenter<TranslatorFragment> {
         super.attacheView(view);
 
         getTranslation = new GetTranslation();
-        getTranslationOptions = new GetTranslationOptions();
+        getDictionary = new GetDictionary();
     }
 
     public void loadTranslation(String text, String lang) {
@@ -48,10 +48,10 @@ public class TranslatorPresenter extends AbstractPresenter<TranslatorFragment> {
     }
 
     public void loadTranslationOptions(String text, String lang) {
-        getTranslationOptions.clearDisposableObservers();
+        getDictionary.clearDisposableObservers();
 
-        getTranslationOptions.execute(new DictionaryObserver(),
-                GetTranslationOptions.DictionaryParams.getEntity(text, lang));
+        getDictionary.execute(new DictionaryObserver(),
+                GetDictionary.DictionaryParams.getEntity(text, lang));
     }
 
     private void showTranslationResult(String translation) {

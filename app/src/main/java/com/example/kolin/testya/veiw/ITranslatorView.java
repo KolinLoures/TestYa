@@ -1,6 +1,6 @@
 package com.example.kolin.testya.veiw;
 
-import com.example.kolin.testya.data.models.dictionary.Def;
+import com.example.kolin.testya.data.entity.dictionary.Def;
 
 import java.util.List;
 

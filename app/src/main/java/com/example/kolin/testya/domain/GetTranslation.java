@@ -2,7 +2,7 @@ package com.example.kolin.testya.domain;
 
 import android.support.annotation.NonNull;
 
-import com.example.kolin.testya.data.models.Translation;
+import com.example.kolin.testya.data.entity.Translation;
 import com.example.kolin.testya.data.repository.Repository;
 import com.example.kolin.testya.data.repository.RepositoryImpl;
 

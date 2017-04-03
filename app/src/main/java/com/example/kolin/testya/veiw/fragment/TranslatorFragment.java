@@ -16,7 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.data.models.dictionary.Def;
+import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.veiw.ITranslatorView;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
 import com.example.kolin.testya.veiw.adapter.SectionedDictionaryAdapter;

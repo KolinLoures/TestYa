@@ -1,4 +1,4 @@
-package com.example.kolin.testya.data.models.dictionary;
+package com.example.kolin.testya.data.entity.dictionary;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.example.kolin.testya.data.net;
 
-import com.example.kolin.testya.data.models.Translation;
-import com.example.kolin.testya.data.models.dictionary.Dictionary;
+import com.example.kolin.testya.data.entity.Translation;
+import com.example.kolin.testya.data.entity.dictionary.Dictionary;
 
 import io.reactivex.Observable;
 import retrofit2.http.Headers;

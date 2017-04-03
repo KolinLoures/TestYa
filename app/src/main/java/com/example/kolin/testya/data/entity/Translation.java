@@ -1,7 +1,6 @@
-package com.example.kolin.testya.data.models;
+package com.example.kolin.testya.data.entity;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.util.List;
 

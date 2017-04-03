@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.data.models.dictionary.Mean;
-import com.example.kolin.testya.data.models.dictionary.Tr;
+import com.example.kolin.testya.data.entity.dictionary.Mean;
+import com.example.kolin.testya.data.entity.dictionary.Tr;
 
 import java.util.ArrayList;
 import java.util.List;

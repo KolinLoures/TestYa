@@ -14,14 +14,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //DB info
     private static final String DB_NAME = "db_history_favorite";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     //Table
     public static final String TABLE = "history_favorite";
 
     //Table columns
-    public static final String COUNT = "count";
-    public static final String TEXT = "text";
+    public static final String TEXT_FROM = "text_from";
+    public static final String TEXT_TO = "text_to";
     public static final String LANG = "lang";
     public static final String TYPE = "type";
 
@@ -34,8 +34,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE +
                 "(" +
-                        COUNT + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        TEXT + " TEXT," +
+                        TEXT_FROM + " TEXT," +
+                        TEXT_TO + " TEXT," +
                         LANG + " LANG," +
                         TYPE + " TYPE" +
                 ")");
