@@ -1,6 +1,7 @@
 package com.example.kolin.testya.veiw;
 
 import com.example.kolin.testya.data.entity.dictionary.Def;
+import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface ITranslatorView {
 
-    void showTranslationResult(String translation);
+    void showTranslationResult(InternalTranslation translation);
 
     void showTranslationOptions(List<Def> defList);
 }

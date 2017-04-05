@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("all")
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_translate_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_bookmark_black_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_bookmark_gray_24dp);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
 
         tabLayout.getTabAt(1).getIcon().setAlpha(128);

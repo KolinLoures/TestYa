@@ -8,15 +8,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.entity.dictionary.Def;
+import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.ITranslatorView;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
 import com.example.kolin.testya.veiw.adapter.SectionedDictionaryAdapter;
@@ -28,14 +32,14 @@ import java.util.List;
 
 public class TranslatorFragment extends Fragment implements ITranslatorView {
 
+    private static final String TAG = TranslatorFragment.class.getSimpleName();
+
 
     private TextView textTransResult;
     private TextView dictionaryTextHeader;
     private EditText editTextTranslate;
     private RecyclerView recyclerViewDictionary;
-    private ImageButton btnAddFavorite;
-
-    private View translationCard;
+    private CheckBox btnAddFavorite;
 
     private int animationDuration;
 
@@ -69,9 +73,8 @@ public class TranslatorFragment extends Fragment implements ITranslatorView {
         textTransResult = (TextView) view.findViewById(R.id.translation_card_text_result);
         recyclerViewDictionary = (RecyclerView) view.findViewById(R.id.dictionary_card_recycler_view);
         dictionaryTextHeader = (TextView) view.findViewById(R.id.dictionary_card_text_header);
-        btnAddFavorite = (ImageButton) view.findViewById(R.id.translation_card_btn_favorite);
+        btnAddFavorite = (CheckBox) view.findViewById(R.id.translation_card_btn_favorite);
 
-        translationCard = view.findViewById(R.id.translation_card);
         animationDuration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
         return view;
@@ -86,6 +89,25 @@ public class TranslatorFragment extends Fragment implements ITranslatorView {
 
         setupEditTextChangeListener();
         setupRecyclerViewAdapter();
+        setupOnClickFavoriteBtn();
+
+    }
+
+    private void setupOnClickFavoriteBtn() {
+        btnAddFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CheckBox checkBox = (CheckBox) v;
+                if (checkBox.isChecked()) {
+                    Log.i(TAG, "presenter.addFavorite()");
+                    presenter.addRemoveTranslationDb(false);
+                }
+                else {
+                    Log.i(TAG, "presenter.removeFromFavorite()");
+                    presenter.addRemoveTranslationDb(true);
+                }
+            }
+        });
     }
 
     private void setupRecyclerViewAdapter() {
@@ -109,8 +131,7 @@ public class TranslatorFragment extends Fragment implements ITranslatorView {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = s.toString().trim();
-                presenter.loadTranslation(text, "en-ru");
+                presenter.loadTranslation(s.toString().trim(), "en-ru");
             }
         });
     }
@@ -125,18 +146,27 @@ public class TranslatorFragment extends Fragment implements ITranslatorView {
         super.onDetach();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.detachView();
+        sectionedDictionaryAdapter = null;
+        dictionaryAdapter = null;
+    }
 
     @Override
-    public void showTranslationResult(String translation) {
+    public void showTranslationResult(InternalTranslation translation) {
 //        crossFade();
-        textTransResult.setText(translation);
+        textTransResult.setText(translation.getTextTo());
+        btnAddFavorite.setChecked(translation.isFavorite());
     }
 
 
-    //TODO refactor this moment
+    //TODO refactor this moment and add transcription
     @Override
     public void showTranslationOptions(List<Def> defList) {
         dictionaryAdapter.clearAdapter();
+        dictionaryTextHeader.setText(defList.get(0).getText());
         List<SectionedDictionaryAdapter.Section> sections = new ArrayList<>();
         int position = 0;
         for (Def def : defList) {

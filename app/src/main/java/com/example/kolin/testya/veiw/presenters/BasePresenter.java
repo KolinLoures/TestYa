@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
  * Created by kolin on 31.03.2017.
  */
 
-public class AbstractPresenter<V> {
+public class BasePresenter<V> {
 
     private WeakReference<V> viewWeakReference = null;
 

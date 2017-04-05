@@ -1,7 +1,6 @@
 package com.example.kolin.testya.data.repository;
 
-import com.example.kolin.testya.data.TypeSaveTranslation;
-import com.example.kolin.testya.data.db.Queries;
+import com.example.kolin.testya.data.db.QueriesImpl;
 import com.example.kolin.testya.data.entity.Translation;
 import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.data.entity.dictionary.Dictionary;
@@ -23,12 +22,12 @@ import io.reactivex.functions.Function;
 public class RepositoryImpl implements Repository {
 
     private NetTranslator netTranslator;
-    private Queries queries;
+    private QueriesImpl queries;
 
 
     public RepositoryImpl() {
         netTranslator = NetSingleton.providenetSingleton().provideTranslator();
-        queries = new Queries();
+        queries = new QueriesImpl();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class RepositoryImpl implements Repository {
                 lang).doOnNext(new Consumer<Translation>() {
             @Override
             public void accept(@NonNull Translation translation) throws Exception {
-                queries.addTranslation(translation, TypeSaveTranslation.HISTORY);
+//                queries.addTranslation(translation, TypeSaveTranslation.HISTORY);
             }
         });
     }

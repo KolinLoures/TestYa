@@ -14,16 +14,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //DB info
     private static final String DB_NAME = "db_history_favorite";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 1;
 
     //Table
-    public static final String TABLE = "history_favorite";
+    static final String TABLE = "history_favorite";
 
     //Table columns
-    public static final String TEXT_FROM = "text_from";
-    public static final String TEXT_TO = "text_to";
-    public static final String LANG = "lang";
-    public static final String TYPE = "type";
+    static final String TEXT_FROM = "text_from";
+    static final String TEXT_TO = "text_to";
+    static final String LANG = "lang";
+    static final String TYPE = "type";
 
 
     private DataBaseHelper(Context context) {
