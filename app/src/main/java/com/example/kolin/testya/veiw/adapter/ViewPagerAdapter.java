@@ -2,9 +2,9 @@ package com.example.kolin.testya.veiw.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.example.kolin.testya.veiw.fragment.DataUpdatable;
 import com.example.kolin.testya.veiw.fragment.Updatable;
 
 import java.util.ArrayList;
@@ -52,6 +52,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             ((Updatable) fragment).update();
         return super.getItemPosition(object);
     }
+
+
 
     @Override
     public int getCount() {

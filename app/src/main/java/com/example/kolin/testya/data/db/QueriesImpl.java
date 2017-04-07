@@ -27,22 +27,20 @@ public class QueriesImpl implements IQueries {
 
     @Override
     public boolean addOrRemoveTranslation(InternalTranslation translation,
-                                          @TypeSaveTranslation.TypeName String type,
                                           boolean remove) {
         return remove ?
-                removeTranslation(translation, type) :
-                addOrUpdateTranslation(translation, type);
+                removeTranslation(translation) :
+                addOrUpdateTranslation(translation);
     }
 
     @Override
-    public boolean addOrUpdateTranslation(InternalTranslation translation,
-                                          @TypeSaveTranslation.TypeName String type) {
+    public boolean addOrUpdateTranslation(InternalTranslation translation) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
 
         try {
-            ContentValues values = getAllContentValues(translation, type);
+            ContentValues values = getAllContentValues(translation);
             String whereClause = String.format(
                     "%s = ? AND %s = ? AND %s = ? AND %s = ?",
                     DataBaseHelper.TEXT_FROM,
@@ -59,7 +57,7 @@ public class QueriesImpl implements IQueries {
                             translation.getTextFrom(),
                             translation.getTextTo(),
                             translation.getLang(),
-                            type
+                            translation.getType()
                     });
 
             if (rows != 1) {
@@ -77,17 +75,14 @@ public class QueriesImpl implements IQueries {
     }
 
     @Override
-    public List<InternalTranslation> getTranslation(@TypeSaveTranslation.TypeName
-                                                            String type) {
+    public List<InternalTranslation> getTranslations() {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         List<InternalTranslation> temp = new ArrayList<>();
 
         String query = String.format(
-                "SELECT * FROM %s WHERE %s = '%s'",
-                DataBaseHelper.TABLE,
-                DataBaseHelper.TYPE,
-                type);
+                "SELECT * FROM %s",
+                DataBaseHelper.TABLE);
 
         Cursor cursor = db.rawQuery(query, null);
         try {
@@ -97,7 +92,8 @@ public class QueriesImpl implements IQueries {
                     translation.setLang(cursor.getString(cursor.getColumnIndex(DataBaseHelper.LANG)));
                     translation.setTextFrom(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TEXT_FROM)));
                     translation.setTextTo(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TEXT_TO)));
-                    if (type.equals(TypeSaveTranslation.FAVORITE))
+                    translation.setType(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TYPE)));
+                    if (translation.getType().equals(TypeSaveTranslation.FAVORITE))
                         translation.setFavorite(true);
 
                     temp.add(translation);
@@ -117,9 +113,7 @@ public class QueriesImpl implements IQueries {
 
 
     @Override
-    public boolean removeTranslation(InternalTranslation translation,
-                                  @TypeSaveTranslation.TypeName
-                                          String type) {
+    public boolean removeTranslation(InternalTranslation translation) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -137,7 +131,7 @@ public class QueriesImpl implements IQueries {
                     new String[]{
                             translation.getTextFrom(),
                             translation.getTextTo(),
-                            type
+                            translation.getType()
                     });
 
             db.setTransactionSuccessful();
@@ -167,11 +161,8 @@ public class QueriesImpl implements IQueries {
     }
 
     @Override
-    public boolean isAddedToTable(InternalTranslation translation,
-                                  @TypeSaveTranslation.TypeName String type) {
+    public boolean isFavorite(InternalTranslation translation) {
         SQLiteDatabase db = helper.getReadableDatabase();
-
-        List<InternalTranslation> temp = new ArrayList<>();
 
         String query = String.format(
                 "SELECT * FROM %s WHERE %s = '%s' AND %s = '%s' AND %s = '%s' AND %s = '%s'",
@@ -183,7 +174,7 @@ public class QueriesImpl implements IQueries {
                 DataBaseHelper.LANG,
                 translation.getLang(),
                 DataBaseHelper.TYPE,
-                type);
+                TypeSaveTranslation.FAVORITE);
 
         Cursor cursor = db.rawQuery(query, null);
         try {
@@ -198,13 +189,12 @@ public class QueriesImpl implements IQueries {
         return false;
     }
 
-    private ContentValues getAllContentValues(InternalTranslation translation,
-                                              String type) {
+    private ContentValues getAllContentValues(InternalTranslation translation) {
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.TEXT_FROM, translation.getTextFrom());
         values.put(DataBaseHelper.TEXT_TO, translation.getTextTo());
         values.put(DataBaseHelper.LANG, translation.getLang());
-        values.put(DataBaseHelper.TYPE, type);
+        values.put(DataBaseHelper.TYPE, translation.getType());
         return values;
     }
 }

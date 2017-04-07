@@ -1,5 +1,7 @@
 package com.example.kolin.testya.domain.model;
 
+import com.example.kolin.testya.data.TypeSaveTranslation;
+
 /**
  * Created by kolin on 03.04.2017.
  */
@@ -11,8 +13,9 @@ public class InternalTranslation {
     private String textTo;
     private String textFrom;
 
-    private boolean isFavorite = false;
-
+    private boolean isFavorite;
+    @TypeSaveTranslation.TypeName
+    private String type;
 
     public InternalTranslation() {
     }
@@ -55,5 +58,13 @@ public class InternalTranslation {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

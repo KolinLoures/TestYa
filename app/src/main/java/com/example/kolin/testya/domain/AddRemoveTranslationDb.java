@@ -31,7 +31,6 @@ public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTransl
             public Boolean call() throws Exception {
                 return queries.addOrRemoveTranslation(
                         addTranslationParams.obj,
-                        TypeSaveTranslation.FAVORITE,
                         addTranslationParams.remove
                 );
             }

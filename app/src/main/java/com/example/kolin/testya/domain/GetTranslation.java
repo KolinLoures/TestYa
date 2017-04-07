@@ -47,6 +47,7 @@ public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslat
                         temp.setLang(translation.getLang());
                         temp.setTextTo(TextUtils.join(" ", translation.getText()));
                         temp.setTextFrom(translationParams.text);
+                        temp.setType(TypeSaveTranslation.HISTORY);
                         return temp;
                     }
                 })
@@ -55,15 +56,13 @@ public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslat
                     public void accept(@io.reactivex.annotations.NonNull
                                                InternalTranslation internalTranslation) throws Exception {
                         internalTranslation.setFavorite(
-                                queries.isAddedToTable(
-                                        internalTranslation,
-                                        TypeSaveTranslation.FAVORITE
+                                queries.isFavorite(
+                                        internalTranslation
                                 )
                         );
 
                         queries.addOrUpdateTranslation(
-                                internalTranslation,
-                                TypeSaveTranslation.HISTORY
+                                internalTranslation
                         );
                     }
                 });

@@ -12,24 +12,17 @@ import java.util.List;
 public interface IQueries {
 
     boolean addOrRemoveTranslation(InternalTranslation translation,
-                                   @TypeSaveTranslation.TypeName String type,
                                    boolean remove);
 
 
-    boolean addOrUpdateTranslation(InternalTranslation translation,
-                                   @TypeSaveTranslation.TypeName String type);
+    boolean addOrUpdateTranslation(InternalTranslation translation);
 
-    List<InternalTranslation> getTranslation(@TypeSaveTranslation.TypeName
-                                                     String type);
+    List<InternalTranslation> getTranslations();
 
-    boolean removeTranslation(InternalTranslation translation,
-                           @TypeSaveTranslation.TypeName
-                                   String type);
+    boolean removeTranslation(InternalTranslation translation);
 
     void deleteAllType(@TypeSaveTranslation.TypeName
                                String type);
 
-    boolean isAddedToTable(InternalTranslation translation,
-            @TypeSaveTranslation.TypeName
-                    String type);
+    boolean isFavorite(InternalTranslation translation);
 }

@@ -2,27 +2,32 @@ package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.TypeSaveTranslation;
+import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.veiw.fragment.DataUpdatable;
+import com.example.kolin.testya.veiw.fragment.OnClickCommonFragment;
 import com.example.kolin.testya.veiw.fragment.Updatable;
+import com.example.kolin.testya.veiw.presenters.CommonPresenter;
 
 
-public class HistoryFavoriteFragment extends Fragment {
+public class HistoryFavoriteFragment extends Fragment
+        implements ICommonView, Updatable {
 
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
 
-
+    private CommonPresenter presenter;
 
     public HistoryFavoriteFragment() {
     }
@@ -34,6 +39,8 @@ public class HistoryFavoriteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        presenter = new CommonPresenter();
     }
 
     @Override
@@ -44,13 +51,9 @@ public class HistoryFavoriteFragment extends Fragment {
         viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
         adapter = new ViewPagerAdapter(getFragmentManager(), true);
 
-        adapter.addFragment(
-                CommonFragment.newInstance(TypeSaveTranslation.HISTORY),
-                getString(R.string.history));
+        adapter.addFragment(CommonFragment.newInstance(), getString(R.string.history));
 
-        adapter.addFragment(
-                CommonFragment.newInstance(TypeSaveTranslation.FAVORITE),
-                getString(R.string.favorite));
+        adapter.addFragment(CommonFragment.newInstance(), getString(R.string.favorite));
 
         viewPager.setAdapter(adapter);
 
@@ -61,7 +64,12 @@ public class HistoryFavoriteFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        presenter.attacheView(this);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -74,4 +82,28 @@ public class HistoryFavoriteFragment extends Fragment {
     }
 
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void showLoadedData(InternalTranslation translation) {
+        if (translation.getType().equals(TypeSaveTranslation.HISTORY))
+            ((DataUpdatable) adapter.getItem(0)).update(translation);
+        else
+            ((DataUpdatable) adapter.getItem(1)).update(translation);
+    }
+
+    @Override
+    public void clearAdapter() {
+        ((DataUpdatable) adapter.getItem(0)).remove();
+        ((DataUpdatable) adapter.getItem(1)).remove();
+    }
+
+    @Override
+    public void update() {
+        presenter.loadTranslationDb();
+    }
+
+    @Override
+    public void remove(InternalTranslation translation, boolean check) {
+        presenter.addRemoveFavoriteTranslationDb(translation, check);
+    }
 }

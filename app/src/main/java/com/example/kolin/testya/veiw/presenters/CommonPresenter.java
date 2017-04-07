@@ -4,10 +4,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
-import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.GetTranslationsDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.CommonFragment;
+import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.adapter.HistoryFavoriteFilter;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -15,17 +16,14 @@ import io.reactivex.observers.DisposableObserver;
  * Created by kolin on 06.04.2017.
  */
 
-public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
+public class CommonPresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
 
     private static final String TAG = CommonPresenter.class.getSimpleName();
 
     private GetTranslationsDb getTranslationsDb;
 
-    @TypeSaveTranslation.TypeName
-    private String currentType;
-
     @Override
-    public void attacheView(@NonNull CommonFragment view) {
+    public void attacheView(@NonNull HistoryFavoriteFragment view) {
         super.attacheView(view);
 
         getTranslationsDb = new GetTranslationsDb();
@@ -37,13 +35,14 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
     @Override
     public void onCompleteAddingToDb() {
+        loadTranslationDb();
     }
 
     public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove){
         super.addRemoveFavoriteTranslation(translation, remove);
     }
 
-    public void loadTranslationDb(String type){
+    public void loadTranslationDb(){
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
             return;
@@ -51,10 +50,9 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
         getAttachView().clearAdapter();
 
-        currentType = type;
 
         getTranslationsDb.execute(new TranslationDbObserver(),
-                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(type));
+                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(null));
     }
 
     public void showLoadedDbData(InternalTranslation translation){
