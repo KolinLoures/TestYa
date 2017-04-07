@@ -19,10 +19,10 @@ import java.util.List;
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.DictionaryViewHolder> {
 
-    private List<Tr> list;
+    private List<Tr> data;
 
     public DictionaryAdapter() {
-        this.list = new ArrayList<>();
+        this.data = new ArrayList<>();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
      */
     @Override
     public void onBindViewHolder(DictionaryViewHolder holder, int position) {
-        Tr currentItem = list.get(position);
+        Tr currentItem = data.get(position);
         holder.primaryText.setText(currentItem.getText());
 
         String supportText = "";
@@ -57,7 +57,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return data.size();
     }
 
     static class DictionaryViewHolder extends RecyclerView.ViewHolder {
@@ -75,12 +75,12 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
     }
 
     public void clearAdapter() {
-        list.clear();
+        data.clear();
         notifyDataSetChanged();
     }
 
     public void addDataList(List<Tr> trList) {
-        this.list.addAll(trList);
+        this.data.addAll(trList);
         notifyDataSetChanged();
     }
 

@@ -2,48 +2,53 @@ package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.data.TypeSaveTranslation;
+import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
+import com.example.kolin.testya.veiw.fragment.Updatable;
+import com.example.kolin.testya.veiw.presenters.CommonPresenter;
 
 
-public class CommonFragment extends Fragment {
+public class CommonFragment extends Fragment implements ICommonView, Updatable {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = CommonFragment.class.getSimpleName();
+    private static final String KEY_TYPE = "history_favorite";
 
-    private String mParam1;
-    private String mParam2;
 
-    //Views
     private SearchView searchView;
-    private View dividerView;
+    private RecyclerView recyclerView;
+
+    private CommonPresenter presenter;
+
+    private HistoryFavoriteAdapter adapter;
 
     public CommonFragment() {
-        // Required empty public constructor
     }
 
 
-    public static CommonFragment newInstance(String param1, String param2) {
+    public static CommonFragment newInstance(@TypeSaveTranslation.TypeName String type) {
         CommonFragment fragment = new CommonFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_TYPE, type);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
+        presenter = new CommonPresenter();
     }
 
     @Override
@@ -51,18 +56,51 @@ public class CommonFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_common, container, false);
-        dividerView = view.findViewById(R.id.fragment_common_divider);
         searchView = (SearchView) view.findViewById(R.id.fragment_common_search);
-        setSearchView();
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_common_rv);
 
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setSearchView();
+        setupRecyclerViewAdapter();
+
+        presenter.attacheView(this);
+        presenter.loadTranslationDb(getArguments().getString(KEY_TYPE));
+    }
+
+    private void setupRecyclerViewAdapter() {
+        adapter = new HistoryFavoriteAdapter();
+
+        adapter.setListener(new HistoryFavoriteAdapter.OnClickHistoryFavoriteListener() {
+            @Override
+            public void checkFavorite(InternalTranslation translation, boolean check) {
+                presenter.addRemoveFavoriteTranslationDb(translation, check);
+            }
+        });
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
     private void setSearchView() {
-        if (mParam1.equals("История"))
-            searchView.setQueryHint("Найти в истории");
-        else
-            searchView.setQueryHint("Найти в избранном");
+        searchView.setQueryHint(getString(R.string.search_in_history));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
 
@@ -77,4 +115,18 @@ public class CommonFragment extends Fragment {
     }
 
 
+    @Override
+    public void showLoadedData(InternalTranslation translation) {
+        adapter.add(translation);
+    }
+
+    @Override
+    public void clearAdapter() {
+        adapter.clear();
+    }
+
+    @Override
+    public void update() {
+        presenter.loadTranslationDb(getArguments().getString(KEY_TYPE));
+    }
 }

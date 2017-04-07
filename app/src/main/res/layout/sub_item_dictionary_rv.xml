@@ -6,10 +6,11 @@
     android:layout_weight="1"
     android:orientation="vertical"
     android:paddingBottom="8dp"
+    android:clickable="true"
     android:paddingEnd="32dp"
     android:paddingStart="32dp"
     android:paddingTop="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:layout_width="wrap_content"

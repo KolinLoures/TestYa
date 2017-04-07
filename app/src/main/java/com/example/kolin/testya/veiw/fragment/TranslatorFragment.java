@@ -114,7 +114,7 @@ public class TranslatorFragment extends Fragment implements ITranslatorView {
         dictionaryAdapter = new DictionaryAdapter();
         sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
 
-        recyclerViewDictionary.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        recyclerViewDictionary.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewDictionary.setAdapter(sectionedDictionaryAdapter);
     }
 

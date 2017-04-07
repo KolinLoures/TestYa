@@ -59,7 +59,8 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         addRemoveTranslationDb.clearDisposableObservers();
         addRemoveTranslationDb.execute(
                 new AddFavoriteDbObserver(),
-                AddRemoveTranslationDb.AddTranslationParams.getParamsObj(translation, remove));
+                AddRemoveTranslationDb.AddTranslationParams.getParamsObj(translation, remove)
+        );
     }
 
     @Override

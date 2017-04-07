@@ -8,19 +8,26 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.veiw.fragment.Updatable;
 
 
 public class HistoryFavoriteFragment extends Fragment {
+
+    private ViewPager viewPager;
+    private ViewPagerAdapter adapter;
+    private TabLayout tabLayout;
 
 
 
     public HistoryFavoriteFragment() {
     }
 
-    public static HistoryFavoriteFragment newInstance(String param1, String param2) {
+    public static HistoryFavoriteFragment newInstance() {
         return new HistoryFavoriteFragment();
     }
 
@@ -32,19 +39,29 @@ public class HistoryFavoriteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
+        final View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), true);
-        viewPagerAdapter.addFragment(CommonFragment.newInstance("История", ""), " История ");
-        viewPagerAdapter.addFragment(CommonFragment.newInstance("Избранное", ""), "Избранное");
-        viewPager.setAdapter(viewPagerAdapter);
+        viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
+        adapter = new ViewPagerAdapter(getFragmentManager(), true);
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.history_favorite_tab);
+        adapter.addFragment(
+                CommonFragment.newInstance(TypeSaveTranslation.HISTORY),
+                getString(R.string.history));
+
+        adapter.addFragment(
+                CommonFragment.newInstance(TypeSaveTranslation.FAVORITE),
+                getString(R.string.favorite));
+
+        viewPager.setAdapter(adapter);
+
+        tabLayout = (TabLayout) view.findViewById(R.id.history_favorite_tab);
         tabLayout.setupWithViewPager(viewPager);
+
 
         return view;
     }
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -55,5 +72,6 @@ public class HistoryFavoriteFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
 
 }

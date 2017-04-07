@@ -35,9 +35,7 @@ public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTransl
                         addTranslationParams.remove
                 );
             }
-        })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
+        });
     }
 
 
