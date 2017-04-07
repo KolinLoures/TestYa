@@ -39,6 +39,23 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1)
+                    adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -56,27 +73,27 @@ public class MainActivity extends AppCompatActivity {
     //TODO: substitute first tab icon or selector
     @SuppressWarnings("all")
     private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_translate_black_24dp);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_bookmark_gray_24dp);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
-
-        tabLayout.getTabAt(1).getIcon().setAlpha(128);
-        tabLayout.getTabAt(2).getIcon().setAlpha(128);
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                tab.getIcon().setAlpha(255);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                tab.getIcon().setAlpha(128);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_translate_black_24dp);
+//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_bookmark_gray_24dp);
+//        tabLayout.getTabAt(2).setIcon(R.drawable.ic_settings_black_24dp);
+//
+//        tabLayout.getTabAt(1).getIcon().setAlpha(128);
+//        tabLayout.getTabAt(2).getIcon().setAlpha(128);
+//
+//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                tab.getIcon().setAlpha(255);
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//                tab.getIcon().setAlpha(128);
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//            }
+//        });
     }
 }

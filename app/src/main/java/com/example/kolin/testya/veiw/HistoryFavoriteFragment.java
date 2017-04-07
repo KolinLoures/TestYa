@@ -16,7 +16,7 @@ import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
 import com.example.kolin.testya.veiw.fragment.Updatable;
 
 
-public class HistoryFavoriteFragment extends Fragment {
+public class HistoryFavoriteFragment extends Fragment implements Updatable {
 
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
@@ -57,6 +57,23 @@ public class HistoryFavoriteFragment extends Fragment {
         tabLayout = (TabLayout) view.findViewById(R.id.history_favorite_tab);
         tabLayout.setupWithViewPager(viewPager);
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1)
+                    adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         return view;
     }
@@ -74,4 +91,8 @@ public class HistoryFavoriteFragment extends Fragment {
     }
 
 
+    @Override
+    public void update() {
+        adapter.notifyDataSetChanged();
+    }
 }

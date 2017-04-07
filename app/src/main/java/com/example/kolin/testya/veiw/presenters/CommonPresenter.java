@@ -37,6 +37,7 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
     @Override
     public void onCompleteAddingToDb() {
+
     }
 
     public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove){
