@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +27,13 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
     private RecyclerView recyclerView;
 
     private HistoryFavoriteAdapter adapter;
+
+
+    public interface OnIteractionComminFragment{
+        void onClickAddFavorite(InternalTranslation internalTranslation);
+
+        void onClickAdapterItem(InternalTranslation internalTranslation);
+    }
 
     public CommonFragment() {
     }
@@ -66,12 +74,28 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
             @Override
             public void checkFavorite(InternalTranslation translation, boolean check) {
                 Fragment parentFragment = getParentFragment();
+
                 if (parentFragment != null && parentFragment instanceof ICommonView)
                     ((ICommonView) parentFragment).check(translation, check);
+
+                if (getActivity() instanceof OnIteractionComminFragment) {
+                    translation.setFavorite(!check);
+                    ((OnIteractionComminFragment) getActivity()).onClickAddFavorite(translation);
+                }
+            }
+
+            @Override
+            public void itemClick(InternalTranslation internalTranslation) {
+                if (getActivity() instanceof OnIteractionComminFragment) {
+                    ((OnIteractionComminFragment) getActivity()).onClickAdapterItem(internalTranslation);
+                }
             }
         });
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager rvLayout = new LinearLayoutManager(recyclerView.getContext());
+
+
+        recyclerView.setLayoutManager(rvLayout);
         recyclerView.setAdapter(adapter);
     }
 

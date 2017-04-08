@@ -67,4 +67,17 @@ public class InternalTranslation {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        InternalTranslation that = (InternalTranslation) o;
+
+        if (!lang.equals(that.lang)) return false;
+        if (!textTo.equals(that.textTo)) return false;
+        return textFrom.equals(that.textFrom);
+
+    }
 }

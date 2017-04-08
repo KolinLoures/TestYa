@@ -23,7 +23,7 @@ public interface IQueries {
 
     boolean removeTranslation(InternalTranslation translation, @TypeSaveTranslation.TypeName String type);
 
-    void deleteAllType(@TypeSaveTranslation.TypeName
+    boolean deleteAllType(@TypeSaveTranslation.TypeName
                                String type);
 
     boolean isFavorite(InternalTranslation translation);

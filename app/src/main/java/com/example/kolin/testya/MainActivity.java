@@ -7,18 +7,20 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.example.kolin.testya.veiw.CommonFragment;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.InfoFragment;
 import com.example.kolin.testya.veiw.NonSwipeViewPager;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
-import com.example.kolin.testya.veiw.fragment.OnClickCommonFragment;
+import com.example.kolin.testya.veiw.fragment.DataUpdatable;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CommonFragment.OnIteractionComminFragment {
 
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
+    private ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (NonSwipeViewPager) findViewById(R.id.main_view_pager);
 
-        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), false);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), false);
         adapter.addFragment(TranslatorFragment.newInstance(), null);
         adapter.addFragment(HistoryFavoriteFragment.newInstance(), null);
         adapter.addFragment(InfoFragment.newInstance("", ""), null);
@@ -98,4 +100,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onClickAddFavorite(InternalTranslation internalTranslation) {
+        ((DataUpdatable) adapter.getItem(0)).update(internalTranslation);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onClickAdapterItem(InternalTranslation internalTranslation) {
+        viewPager.setCurrentItem(0);
+        ((DataUpdatable) adapter.getItem(0)).update(internalTranslation);
+    }
 }

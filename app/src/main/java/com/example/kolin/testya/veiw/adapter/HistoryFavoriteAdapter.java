@@ -36,6 +36,8 @@ public class HistoryFavoriteAdapter
 
     public interface OnClickHistoryFavoriteListener {
         void checkFavorite(InternalTranslation translation, boolean check);
+
+        void itemClick(InternalTranslation internalTranslation);
     }
 
     private OnClickHistoryFavoriteListener listener;
@@ -108,6 +110,14 @@ public class HistoryFavoriteAdapter
                     if (listener != null) {
                         listener.checkFavorite(data.get(getAdapterPosition()), !checkBox.isChecked());
                     }
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.itemClick(data.get(getAdapterPosition()));
                 }
             });
         }

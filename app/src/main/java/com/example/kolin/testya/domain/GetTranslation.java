@@ -26,7 +26,7 @@ import io.reactivex.functions.Function;
 
 public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslation.TranslationParams> {
 
-    private static final int DELAY = 1000;
+    private static final int DELAY = 750;
 
     private NetTranslator netTranslator;
     private IQueries queries;

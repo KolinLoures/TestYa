@@ -152,18 +152,20 @@ public class QueriesImpl implements IQueries {
     }
 
     @Override
-    public void deleteAllType(@TypeSaveTranslation.TypeName
+    public boolean deleteAllType(@TypeSaveTranslation.TypeName
                                       String type) {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
         try {
             db.delete(DataBaseHelper.TABLE, DataBaseHelper.TYPE + "= ? ", new String[]{type});
             db.setTransactionSuccessful();
+            return true;
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to delete all from data base");
         } finally {
             db.endTransaction();
         }
+        return false;
     }
 
     @Override

@@ -13,5 +13,9 @@ public interface ITranslatorView {
 
     void showTranslationResult(InternalTranslation translation);
 
-    void showTranslationOptions(List<Def> defList);
+    void showDictionary(List<Def> defList);
+
+    void showTranslationCard(boolean show);
+
+    void showDictionaryCard(boolean show);
 }

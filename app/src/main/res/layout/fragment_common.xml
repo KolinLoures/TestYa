@@ -2,10 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:divider="@drawable/vertical_divider_gray"
+    android:showDividers="middle"
     android:orientation="vertical"
-    android:divider="@color/colorBlack"
     tools:context="com.example.kolin.testya.veiw.CommonFragment">
 
-    <include layout="@layout/history_favorite_view"/>
+        <SearchView
+            android:id="@+id/fragment_common_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryBackground="@android:color/transparent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_common_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

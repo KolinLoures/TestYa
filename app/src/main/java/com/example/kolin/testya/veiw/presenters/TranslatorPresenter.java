@@ -44,26 +44,37 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
     }
 
-    public void addRemoveTranslationDb(boolean remove){
+    public void addRemoveTranslationDb(boolean remove) {
         super.addRemoveFavoriteTranslation(currentTranslation, remove);
     }
 
     public void loadTranslation(String text, String lang) {
 
+        if (!isViewAttach()) {
+            Log.e(TAG, "View is detached");
+            return;
+        }
+
+        getAttachView().showTranslationCard(false);
+        getAttachView().showDictionaryCard(false);
+
         getTranslation.clearDisposableObservers();
 
-        getTranslation.execute(new TranslatorObserver(),
-                GetTranslation.TranslationParams.getEntity(text, lang));
-
+        if (!text.isEmpty() && !text.equals("")) {
+            getTranslation.execute(new TranslatorObserver(),
+                    GetTranslation.TranslationParams.getEntity(text, lang));
+        }
     }
 
     public void loadDictionaryResult() {
+
         getDictionary.clearDisposableObservers();
 
         getDictionary.execute(new DictionaryObserver(),
                 GetDictionary.DictionaryParams.getEntity(
                         currentTranslation.getTextFrom(),
                         currentTranslation.getLang()));
+
     }
 
     private void showTranslationResult(InternalTranslation translation) {
@@ -75,6 +86,8 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             return;
         }
 
+        getAttachView().showTranslationCard(true);
+
         getAttachView().showTranslationResult(translation);
     }
 
@@ -84,8 +97,9 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             Log.e(TAG, "View is detached");
             return;
         }
+        getAttachView().showDictionaryCard(true);
 
-        getAttachView().showTranslationOptions(defList);
+        getAttachView().showDictionary(defList);
     }
 
     @Override
@@ -93,6 +107,11 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         super.detachView();
 
         getTranslation.dispose();
+    }
+
+    public void clearDisposables() {
+        getTranslation.clearDisposableObservers();
+        getDictionary.clearDisposableObservers();
     }
 
     private final class TranslatorObserver extends DisposableObserver<InternalTranslation> {
@@ -116,7 +135,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         @Override
         public void onNext(List<Def> defList) {
-            if (defList != null)
+            if (defList != null && defList.size() != 0)
                 showDictionaryResult(defList);
         }
 
@@ -126,6 +145,11 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         }
 
         @Override
-        public void onComplete() {}
+        public void onComplete() {
+        }
+    }
+
+    public boolean equalsTranslationToCurrent(InternalTranslation internalTranslation) {
+        return currentTranslation != null && currentTranslation.equals(internalTranslation);
     }
 }
