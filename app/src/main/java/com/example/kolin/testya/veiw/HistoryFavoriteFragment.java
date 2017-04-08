@@ -15,9 +15,8 @@ import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
 import com.example.kolin.testya.veiw.fragment.DataUpdatable;
-import com.example.kolin.testya.veiw.fragment.OnClickCommonFragment;
 import com.example.kolin.testya.veiw.fragment.Updatable;
-import com.example.kolin.testya.veiw.presenters.CommonPresenter;
+import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
 
 
 public class HistoryFavoriteFragment extends Fragment
@@ -27,7 +26,7 @@ public class HistoryFavoriteFragment extends Fragment
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
 
-    private CommonPresenter presenter;
+    private HistoryFavoritePresenter presenter;
 
     public HistoryFavoriteFragment() {
     }
@@ -40,7 +39,7 @@ public class HistoryFavoriteFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new CommonPresenter();
+        presenter = new HistoryFavoritePresenter();
     }
 
     @Override
@@ -49,7 +48,7 @@ public class HistoryFavoriteFragment extends Fragment
         final View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
         viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
-        adapter = new ViewPagerAdapter(getFragmentManager(), true);
+        adapter = new ViewPagerAdapter(getChildFragmentManager(), true);
 
         adapter.addFragment(CommonFragment.newInstance(), getString(R.string.history));
 
@@ -59,7 +58,6 @@ public class HistoryFavoriteFragment extends Fragment
 
         tabLayout = (TabLayout) view.findViewById(R.id.history_favorite_tab);
         tabLayout.setupWithViewPager(viewPager);
-
 
         return view;
     }
@@ -92,18 +90,25 @@ public class HistoryFavoriteFragment extends Fragment
     }
 
     @Override
-    public void clearAdapter() {
-        ((DataUpdatable) adapter.getItem(0)).remove();
-        ((DataUpdatable) adapter.getItem(1)).remove();
+    public void clearViewPagerFragment(@TypeSaveTranslation.TypeName
+                                                   String type) {
+        if (type == null) {
+            ((DataUpdatable) adapter.getItem(0)).clear();
+            ((DataUpdatable) adapter.getItem(1)).clear();
+        } else if (type.equals(TypeSaveTranslation.HISTORY))
+            ((DataUpdatable) adapter.getItem(0)).clear();
+        else
+            ((DataUpdatable) adapter.getItem(1)).clear();
+    }
+
+    @Override
+    public void check(InternalTranslation translation, boolean check) {
+        presenter.addRemoveFavoriteTranslationDb(translation, check);
     }
 
     @Override
     public void update() {
-        presenter.loadTranslationDb();
+        presenter.loadTranslationDb(null);
     }
 
-    @Override
-    public void remove(InternalTranslation translation, boolean check) {
-        presenter.addRemoveFavoriteTranslationDb(translation, check);
-    }
 }

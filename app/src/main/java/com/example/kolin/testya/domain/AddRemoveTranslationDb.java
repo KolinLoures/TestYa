@@ -31,6 +31,7 @@ public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTransl
             public Boolean call() throws Exception {
                 return queries.addOrRemoveTranslation(
                         addTranslationParams.obj,
+                        addTranslationParams.type,
                         addTranslationParams.remove
                 );
             }
@@ -40,15 +41,22 @@ public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTransl
 
     public final static class AddTranslationParams {
         private final InternalTranslation obj;
+        private final @TypeSaveTranslation.TypeName String type;
         private final boolean remove;
 
-        private AddTranslationParams(InternalTranslation obj, boolean remove) {
+        private AddTranslationParams(InternalTranslation obj,
+                                     @TypeSaveTranslation.TypeName String type,
+                                     boolean remove) {
             this.obj = obj;
             this.remove = remove;
+            this.type = type;
         }
 
-        public static AddTranslationParams getParamsObj(InternalTranslation obj, boolean remove){
-            return new AddTranslationParams(obj, remove);
+        public static AddTranslationParams getParamsObj(InternalTranslation obj,
+                                                        @TypeSaveTranslation.TypeName String type,
+                                                        boolean remove
+        ){
+            return new AddTranslationParams(obj, type, remove);
         }
     }
 }

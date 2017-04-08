@@ -11,7 +11,12 @@ import com.example.kolin.testya.data.net.NetSingleton;
 import com.example.kolin.testya.data.net.NetTranslator;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.BooleanSupplier;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -20,6 +25,7 @@ import io.reactivex.functions.Function;
  */
 
 public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslation.TranslationParams> {
+
 
     private NetTranslator netTranslator;
     private IQueries queries;
@@ -51,6 +57,7 @@ public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslat
                         return temp;
                     }
                 })
+                .delay(1000, TimeUnit.MILLISECONDS)
                 .doOnNext(new Consumer<InternalTranslation>() {
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull
@@ -61,9 +68,7 @@ public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslat
                                 )
                         );
 
-                        queries.addOrUpdateTranslation(
-                                internalTranslation
-                        );
+                        queries.addOrUpdateTranslation(internalTranslation, TypeSaveTranslation.HISTORY);
                     }
                 });
     }

@@ -6,9 +6,7 @@ import android.util.Log;
 import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.GetTranslationsDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.CommonFragment;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.adapter.HistoryFavoriteFilter;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -16,9 +14,9 @@ import io.reactivex.observers.DisposableObserver;
  * Created by kolin on 06.04.2017.
  */
 
-public class CommonPresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
+public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
 
-    private static final String TAG = CommonPresenter.class.getSimpleName();
+    private static final String TAG = HistoryFavoritePresenter.class.getSimpleName();
 
     private GetTranslationsDb getTranslationsDb;
 
@@ -31,31 +29,32 @@ public class CommonPresenter extends BaseFavoritePresenter<HistoryFavoriteFragme
 
     @Override
     public void onNextAddingToDb() {
+        //stub
     }
 
     @Override
     public void onCompleteAddingToDb() {
-        loadTranslationDb();
+        loadTranslationDb(TypeSaveTranslation.FAVORITE);
     }
 
-    public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove){
+    public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove) {
         super.addRemoveFavoriteTranslation(translation, remove);
     }
 
-    public void loadTranslationDb(){
+    public void loadTranslationDb(@TypeSaveTranslation.TypeName String type) {
+
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
             return;
         }
 
-        getAttachView().clearAdapter();
-
+        getAttachView().clearViewPagerFragment(type);
 
         getTranslationsDb.execute(new TranslationDbObserver(),
-                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(null));
+                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(type));
     }
 
-    public void showLoadedDbData(InternalTranslation translation){
+    public void showLoadedDbData(InternalTranslation translation) {
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
@@ -73,7 +72,7 @@ public class CommonPresenter extends BaseFavoritePresenter<HistoryFavoriteFragme
         getTranslationsDb.dispose();
     }
 
-    public final class TranslationDbObserver extends DisposableObserver<InternalTranslation>{
+    public final class TranslationDbObserver extends DisposableObserver<InternalTranslation> {
 
         @Override
         public void onNext(InternalTranslation translation) {
@@ -82,12 +81,10 @@ public class CommonPresenter extends BaseFavoritePresenter<HistoryFavoriteFragme
 
         @Override
         public void onError(Throwable e) {
-
         }
 
         @Override
         public void onComplete() {
-
         }
     }
 }

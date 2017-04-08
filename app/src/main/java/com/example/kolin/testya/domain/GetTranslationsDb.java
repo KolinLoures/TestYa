@@ -35,7 +35,7 @@ public class GetTranslationsDb extends BaseUseCase<InternalTranslation,
                 .fromCallable(new Callable<List<InternalTranslation>>() {
                     @Override
                     public List<InternalTranslation> call() throws Exception {
-                        return iQueries.getTranslations();
+                        return iQueries.getTranslations(params.type);
                     }
                 })
                 .flatMap(new Function<List<InternalTranslation>, ObservableSource<InternalTranslation>>() {

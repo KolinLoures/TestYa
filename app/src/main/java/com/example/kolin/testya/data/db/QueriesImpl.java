@@ -27,20 +27,22 @@ public class QueriesImpl implements IQueries {
 
     @Override
     public boolean addOrRemoveTranslation(InternalTranslation translation,
+                                          @TypeSaveTranslation.TypeName String type,
                                           boolean remove) {
         return remove ?
-                removeTranslation(translation) :
-                addOrUpdateTranslation(translation);
+                removeTranslation(translation, type) :
+                addOrUpdateTranslation(translation, type);
     }
 
     @Override
-    public boolean addOrUpdateTranslation(InternalTranslation translation) {
+    public boolean addOrUpdateTranslation(InternalTranslation translation,
+                                          @TypeSaveTranslation.TypeName String type) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
 
         try {
-            ContentValues values = getAllContentValues(translation);
+            ContentValues values = getAllContentValues(translation, type);
             String whereClause = String.format(
                     "%s = ? AND %s = ? AND %s = ? AND %s = ?",
                     DataBaseHelper.TEXT_FROM,
@@ -57,7 +59,7 @@ public class QueriesImpl implements IQueries {
                             translation.getTextFrom(),
                             translation.getTextTo(),
                             translation.getLang(),
-                            translation.getType()
+                            type
                     });
 
             if (rows != 1) {
@@ -75,14 +77,18 @@ public class QueriesImpl implements IQueries {
     }
 
     @Override
-    public List<InternalTranslation> getTranslations() {
+    public List<InternalTranslation> getTranslations(@TypeSaveTranslation.TypeName String type) {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         List<InternalTranslation> temp = new ArrayList<>();
+        String query;
 
-        String query = String.format(
-                "SELECT * FROM %s",
-                DataBaseHelper.TABLE);
+        if (type == null)
+            query = String.format("SELECT * FROM %s", DataBaseHelper.TABLE);
+        else
+            query = String.format(
+                    "SELECT * FROM %s WHERE %s = '%s'",
+                    DataBaseHelper.TABLE, DataBaseHelper.TYPE, type);
 
         Cursor cursor = db.rawQuery(query, null);
         try {
@@ -111,9 +117,9 @@ public class QueriesImpl implements IQueries {
     }
 
 
-
     @Override
-    public boolean removeTranslation(InternalTranslation translation) {
+    public boolean removeTranslation(InternalTranslation translation,
+                                     @TypeSaveTranslation.TypeName String type) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -131,7 +137,7 @@ public class QueriesImpl implements IQueries {
                     new String[]{
                             translation.getTextFrom(),
                             translation.getTextTo(),
-                            translation.getType()
+                            TypeSaveTranslation.FAVORITE
                     });
 
             db.setTransactionSuccessful();
@@ -179,7 +185,7 @@ public class QueriesImpl implements IQueries {
         Cursor cursor = db.rawQuery(query, null);
         try {
             return cursor.moveToFirst();
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Error while trying check from database");
         } finally {
             if (cursor != null && !cursor.isClosed()) {
@@ -189,12 +195,13 @@ public class QueriesImpl implements IQueries {
         return false;
     }
 
-    private ContentValues getAllContentValues(InternalTranslation translation) {
+    private ContentValues getAllContentValues(InternalTranslation translation,
+                                              @TypeSaveTranslation.TypeName String type) {
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.TEXT_FROM, translation.getTextFrom());
         values.put(DataBaseHelper.TEXT_TO, translation.getTextTo());
         values.put(DataBaseHelper.LANG, translation.getLang());
-        values.put(DataBaseHelper.TYPE, translation.getType());
+        values.put(DataBaseHelper.TYPE, type);
         return values;
     }
 }

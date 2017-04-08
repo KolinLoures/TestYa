@@ -7,5 +7,5 @@ package com.example.kolin.testya.veiw.fragment;
 public interface DataUpdatable<T> {
     void update(T newData);
 
-    void remove();
+    void clear();
 }

@@ -15,7 +15,7 @@ import com.example.kolin.testya.veiw.fragment.OnClickCommonFragment;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
-public class MainActivity extends AppCompatActivity implements OnClickCommonFragment {
+public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
@@ -97,8 +97,5 @@ public class MainActivity extends AppCompatActivity implements OnClickCommonFrag
 //        });
     }
 
-    @Override
-    public void checkFavorite(InternalTranslation translation, boolean check) {
 
-    }
 }

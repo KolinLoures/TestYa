@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,8 +15,6 @@ import com.example.kolin.testya.R;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.fragment.DataUpdatable;
-import com.example.kolin.testya.veiw.fragment.OnClickCommonFragment;
-import com.example.kolin.testya.veiw.presenters.CommonPresenter;
 
 
 public class CommonFragment extends Fragment implements DataUpdatable<InternalTranslation> {
@@ -32,7 +29,6 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
 
     public CommonFragment() {
     }
-
 
     public static CommonFragment newInstance() {
         return new CommonFragment();
@@ -69,9 +65,9 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
         adapter.setListener(new HistoryFavoriteAdapter.OnClickHistoryFavoriteListener() {
             @Override
             public void checkFavorite(InternalTranslation translation, boolean check) {
-                FragmentActivity activity = getActivity();
-                if (activity != null && activity instanceof OnClickCommonFragment)
-                    ((OnClickCommonFragment) activity).checkFavorite(translation, check);
+                Fragment parentFragment = getParentFragment();
+                if (parentFragment != null && parentFragment instanceof ICommonView)
+                    ((ICommonView) parentFragment).check(translation, check);
             }
         });
 
@@ -113,7 +109,7 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
     }
 
     @Override
-    public void remove() {
+    public void clear() {
         adapter.clear();
     }
 }
