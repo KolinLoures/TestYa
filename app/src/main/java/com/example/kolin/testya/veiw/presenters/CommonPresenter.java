@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
-import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.GetTranslationsDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.CommonFragment;
@@ -19,10 +18,16 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
     private static final String TAG = CommonPresenter.class.getSimpleName();
 
+    private static CommonPresenter commonPresenter = null;
+
     private GetTranslationsDb getTranslationsDb;
 
     @TypeSaveTranslation.TypeName
     private String currentType;
+    private boolean stateChanged = false;
+
+    private CommonPresenter() {
+    }
 
     @Override
     public void attacheView(@NonNull CommonFragment view) {
@@ -37,14 +42,15 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
     @Override
     public void onCompleteAddingToDb() {
-
+//        if (currentType.equals(TypeSaveTranslation.FAVORITE))
+//            loadTranslationDb(currentType);
     }
 
     public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove){
         super.addRemoveFavoriteTranslation(translation, remove);
     }
 
-    public void loadTranslationDb(String type){
+    public void  loadTranslationDb(String type){
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
             return;
@@ -92,5 +98,11 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
         public void onComplete() {
 
         }
+    }
+
+    public static CommonPresenter getSingletonCommonPresenter(){
+        if (commonPresenter == null)
+            commonPresenter = new CommonPresenter();
+        return commonPresenter;
     }
 }

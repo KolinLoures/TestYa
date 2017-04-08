@@ -48,7 +48,7 @@ public class CommonFragment extends Fragment implements ICommonView, Updatable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new CommonPresenter();
+        presenter = CommonPresenter.getSingletonCommonPresenter();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CommonFragment extends Fragment implements ICommonView, Updatable {
         setupRecyclerViewAdapter();
 
         presenter.attacheView(this);
-        presenter.loadTranslationDb(getArguments().getString(KEY_TYPE));
+//        presenter.loadTranslationDb(getArguments().getString(KEY_TYPE));
     }
 
     private void setupRecyclerViewAdapter() {
