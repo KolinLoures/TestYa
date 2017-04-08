@@ -165,17 +165,17 @@ public class TranslatorFragment extends Fragment implements ITranslatorView {
     //TODO refactor this moment and add transcription
     @Override
     public void showTranslationOptions(List<Def> defList) {
-        dictionaryAdapter.clearAdapter();
-        dictionaryTextHeader.setText(defList.get(0).getText());
-        List<SectionedDictionaryAdapter.Section> sections = new ArrayList<>();
-        int position = 0;
-        for (Def def : defList) {
-            sections.add(new SectionedDictionaryAdapter.Section(position, def.getPos()));
-            position += def.getTr().size();
-        }
-        for (Def def : defList)
-            dictionaryAdapter.addDataList(def.getTr());
-        sectionedDictionaryAdapter.setSections(sections);
+//        dictionaryAdapter.clearAdapter();
+//        dictionaryTextHeader.setText(defList.get(0).getText());
+//        List<SectionedDictionaryAdapter.Section> sections = new ArrayList<>();
+//        int position = 0;
+//        for (Def def : defList) {
+//            sections.add(new SectionedDictionaryAdapter.Section(position, def.getPos()));
+//            position += def.getTr().size();
+//        }
+//        for (Def def : defList)
+//            dictionaryAdapter.addDataList(def.getTr());
+//        sectionedDictionaryAdapter.setSections(sections);
     }
 
     //use to animate view

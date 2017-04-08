@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.TypeSaveTranslation;
@@ -25,6 +26,7 @@ public class HistoryFavoriteFragment extends Fragment
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
+    private ImageButton deleteBtn;
 
     private HistoryFavoritePresenter presenter;
 
@@ -49,6 +51,7 @@ public class HistoryFavoriteFragment extends Fragment
 
         viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
         adapter = new ViewPagerAdapter(getChildFragmentManager(), true);
+        deleteBtn = (ImageButton) view.findViewById(R.id.fragment_history_favorite_delete);
 
         adapter.addFragment(CommonFragment.newInstance(), getString(R.string.history));
 
@@ -67,6 +70,17 @@ public class HistoryFavoriteFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         presenter.attacheView(this);
+
+        setupClickDeleteBtn();
+    }
+
+    private void setupClickDeleteBtn() {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -82,7 +96,7 @@ public class HistoryFavoriteFragment extends Fragment
 
     @SuppressWarnings("unchecked")
     @Override
-    public void showLoadedData(InternalTranslation translation) {
+    public void updateLoadedData(InternalTranslation translation) {
         if (translation.getType().equals(TypeSaveTranslation.HISTORY))
             ((DataUpdatable) adapter.getItem(0)).update(translation);
         else

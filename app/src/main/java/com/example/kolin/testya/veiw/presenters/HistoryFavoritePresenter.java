@@ -20,6 +20,8 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
 
     private GetTranslationsDb getTranslationsDb;
 
+    private boolean updateHistoryFragment = false;
+
     @Override
     public void attacheView(@NonNull HistoryFavoriteFragment view) {
         super.attacheView(view);
@@ -34,14 +36,20 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
 
     @Override
     public void onCompleteAddingToDb() {
-        loadTranslationDb(TypeSaveTranslation.FAVORITE);
+        if (updateHistoryFragment)
+            loadTranslationDb(null);
+        else
+            loadTranslationDb(TypeSaveTranslation.FAVORITE);
     }
 
     public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove) {
+        updateHistoryFragment = translation.getType().equals(TypeSaveTranslation.FAVORITE);
+
         super.addRemoveFavoriteTranslation(translation, remove);
     }
 
-    public void loadTranslationDb(@TypeSaveTranslation.TypeName String type) {
+    public void loadTranslationDb(@TypeSaveTranslation.TypeName
+                                          String type) {
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
@@ -62,7 +70,7 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
         }
 
 
-        getAttachView().showLoadedData(translation);
+        getAttachView().updateLoadedData(translation);
     }
 
     @Override

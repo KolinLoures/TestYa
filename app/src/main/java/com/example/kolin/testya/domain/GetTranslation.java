@@ -26,6 +26,7 @@ import io.reactivex.functions.Function;
 
 public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslation.TranslationParams> {
 
+    private static final int DELAY = 1000;
 
     private NetTranslator netTranslator;
     private IQueries queries;
@@ -57,7 +58,7 @@ public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslat
                         return temp;
                     }
                 })
-                .delay(1000, TimeUnit.MILLISECONDS)
+                .delay(DELAY, TimeUnit.MILLISECONDS)
                 .doOnNext(new Consumer<InternalTranslation>() {
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull

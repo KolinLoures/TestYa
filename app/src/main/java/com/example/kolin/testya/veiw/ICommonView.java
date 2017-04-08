@@ -9,7 +9,7 @@ import com.example.kolin.testya.domain.model.InternalTranslation;
 
 public interface ICommonView {
 
-    void showLoadedData(InternalTranslation translation);
+    void updateLoadedData(InternalTranslation translation);
 
     void clearViewPagerFragment(@TypeSaveTranslation.TypeName String type);
 
