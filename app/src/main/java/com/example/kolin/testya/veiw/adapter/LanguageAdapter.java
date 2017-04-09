@@ -20,6 +20,7 @@ import java.util.List;
 
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder> {
 
+    private RadioButton lastSelectedRadio;
     private List<String> data;
 
     public LanguageAdapter() {
@@ -35,7 +36,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
     @Override
     public void onBindViewHolder(LanguageViewHolder holder, int position) {
         String name = data.get(position);
-        holder.textNameLanguage.setText(name);
+        holder.rdLanguage.setText(name);
     }
 
     @Override
@@ -44,22 +45,37 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
     }
 
 
-    final static class LanguageViewHolder extends RecyclerView.ViewHolder{
+    final class LanguageViewHolder extends RecyclerView.ViewHolder {
 
         private RadioButton rdLanguage;
-        private TextView textNameLanguage;
 
         public LanguageViewHolder(View itemView) {
             super(itemView);
 
             rdLanguage = (RadioButton) itemView.findViewById(R.id.item_chose_language_rdBtn);
-            textNameLanguage = (TextView) itemView.findViewById(R.id.item_chose_language_text);
+
+            rdLanguage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (lastSelectedRadio != null)
+                        lastSelectedRadio.setChecked(false);
+
+                    if (lastSelectedRadio != v) {
+                        lastSelectedRadio = (RadioButton) v;
+                    } else
+                        lastSelectedRadio = null;
+                }
+            });
         }
     }
 
-    public void addAll(List<String> data){
+    public void addAll(List<String> data) {
         this.data.clear();
         this.data.addAll(data);
         notifyDataSetChanged();
+    }
+
+    public String getChose(){
+        return lastSelectedRadio != null ? lastSelectedRadio.getText().toString() : null;
     }
 }

@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.ArrayMap;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
-import java.util.Set;
-import java.util.zip.InflaterInputStream;
 
 /**
  * Created by kolin on 09.04.2017.
@@ -34,8 +34,8 @@ public class LanguageProperties {
 
         AssetManager assetManager = context.getAssets();
 
-        InputStream stream = assetManager.open("language_ru.properties", Context.MODE_PRIVATE);
-        InputStreamReader isr = new InputStreamReader(stream, "UTF-8");
+        InputStream stream = assetManager.open("languages_ru.txt", Context.MODE_PRIVATE);
+        InputStreamReader isr = new InputStreamReader(stream);
 
         properties.load(isr);
 
@@ -46,7 +46,8 @@ public class LanguageProperties {
     }
 
     private ArrayMap<String, String> propertiesToMap(Properties properties){
-        Set<String> names = properties.stringPropertyNames();
+        List<String> names = new ArrayList<>(properties.stringPropertyNames());
+
         ArrayMap<String, String> temp = new ArrayMap<>();
 
         for (String n: names)

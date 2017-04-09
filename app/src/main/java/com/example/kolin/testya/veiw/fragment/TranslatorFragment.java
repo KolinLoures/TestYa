@@ -36,8 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class TranslatorFragment extends Fragment
-        implements ITranslatorView, DataUpdatable<Pair<Boolean, InternalTranslation>> {
+public class TranslatorFragment extends Fragment implements
+        ITranslatorView,
+        DataUpdatable<Pair<Boolean, InternalTranslation>>,
+        LanguageDialogFragment.OnIteractionLanguageDialog {
 
     private static final String TAG = TranslatorFragment.class.getSimpleName();
 
@@ -57,6 +59,8 @@ public class TranslatorFragment extends Fragment
 
     private Animation animationFadeIn;
     private Animation animationFadeOut;
+
+    private LanguageDialogFragment dialog;
 
     private View.OnClickListener onClickListener;
 
@@ -153,8 +157,12 @@ public class TranslatorFragment extends Fragment
                 translationCard.startAnimation(animationFadeOut);
                 break;
             case R.id.translator_btn_from:
-                LanguageDialogFragment languageDialogFragment = LanguageDialogFragment.newInstance();
-                languageDialogFragment.show(getChildFragmentManager(), "language_dialog_fragment");
+                dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), true);
+                dialog.show(getChildFragmentManager(), "language_dialog_fragment");
+                break;
+            case R.id.translator_btn_to:
+                dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), false);
+                dialog.show(getChildFragmentManager(), "language_dialog_fragment");
                 break;
         }
     }
@@ -182,7 +190,7 @@ public class TranslatorFragment extends Fragment
             public void afterTextChanged(Editable s) {
                 String text = s.toString().trim();
                 setVisibleToBtnClear(!text.isEmpty());
-                presenter.loadTranslation(text, "en-ru");
+                presenter.loadTranslation(text, btnFrom.getText().toString(), btnTo.getText().toString());
             }
         });
 
@@ -294,7 +302,21 @@ public class TranslatorFragment extends Fragment
     }
 
     @Override
-    public void clear() {
+    public void clear() {}
 
+    @Override
+    public void onChooseLanguageDialog(String lang, boolean isTextFrom) {
+        dialog = null;
+        if (isTextFrom)
+            btnFrom.setText(lang);
+        else
+            btnTo.setText(lang);
+
+
+        presenter.loadTranslation(
+                editTextTranslate.getText().toString(),
+                btnFrom.getText().toString(),
+                btnTo.getText().toString()
+        );
     }
 }

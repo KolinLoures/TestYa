@@ -16,8 +16,7 @@
         android:text="@string/cancel"
         android:textAllCaps="false"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorBlack"
-        android:textStyle="bold" />
+        android:textColor="@color/colorBlack" />
 
     <Button
         android:id="@+id/dialog_btn_yes"
@@ -27,7 +26,6 @@
         android:background="?attr/selectableItemBackground"
         android:text="@string/yes"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorBlack"
-        android:textStyle="bold" />
+        android:textColor="@color/colorBlack" />
 
 </LinearLayout>
