@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -17,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -35,7 +37,7 @@ import java.util.List;
 
 
 public class TranslatorFragment extends Fragment
-        implements ITranslatorView, DataUpdatable<InternalTranslation> {
+        implements ITranslatorView, DataUpdatable<Pair<Boolean, InternalTranslation>> {
 
     private static final String TAG = TranslatorFragment.class.getSimpleName();
 
@@ -48,6 +50,10 @@ public class TranslatorFragment extends Fragment
     private ImageButton btnClear;
     private View translationCard;
     private View dictionaryCard;
+    private Button btnFrom;
+    private Button btnTo;
+    private ImageButton imBtmReverse;
+
 
     private Animation animationFadeIn;
     private Animation animationFadeOut;
@@ -81,6 +87,7 @@ public class TranslatorFragment extends Fragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_translator, container, false);
 
+
         editTextTranslate = (EditText) view.findViewById(R.id.translator_edit_text);
         textTransResult = (TextView) view.findViewById(R.id.translation_card_text_result);
         recyclerViewDictionary = (RecyclerView) view.findViewById(R.id.dictionary_card_recycler_view);
@@ -89,6 +96,9 @@ public class TranslatorFragment extends Fragment
         btnClear = (ImageButton) view.findViewById(R.id.translation_clear_edit_btn);
         translationCard = view.findViewById(R.id.translation_card);
         dictionaryCard = view.findViewById(R.id.dictionary_card);
+        btnFrom = (Button) view.findViewById(R.id.translator_btn_from);
+        btnTo = (Button) view.findViewById(R.id.translator_btn_to);
+        imBtmReverse = (ImageButton) view.findViewById(R.id.translator_img_btn_reverse);
 
         animationFadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
         animationFadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
@@ -105,6 +115,7 @@ public class TranslatorFragment extends Fragment
 
         translationCard.setVisibility(View.INVISIBLE);
         dictionaryCard.setVisibility(View.INVISIBLE);
+        btnClear.setVisibility(View.GONE);
 
         setupEditTextChangeListener();
         setupRecyclerViewAdapter();
@@ -113,7 +124,9 @@ public class TranslatorFragment extends Fragment
 
         btnClear.setOnClickListener(onClickListener);
         btnAddFavorite.setOnClickListener(onClickListener);
-
+        btnTo.setOnClickListener(onClickListener);
+        btnFrom.setOnClickListener(onClickListener);
+        imBtmReverse.setOnClickListener(onClickListener);
     }
 
     private void setupAnimListener() {
@@ -139,6 +152,10 @@ public class TranslatorFragment extends Fragment
                 editTextTranslate.getText().clear();
                 translationCard.startAnimation(animationFadeOut);
                 break;
+            case R.id.translator_btn_from:
+                LanguageDialogFragment languageDialogFragment = LanguageDialogFragment.newInstance();
+                languageDialogFragment.show(getChildFragmentManager(), "language_dialog_fragment");
+                break;
         }
     }
 
@@ -163,7 +180,9 @@ public class TranslatorFragment extends Fragment
 
             @Override
             public void afterTextChanged(Editable s) {
-                presenter.loadTranslation(s.toString().trim(), "en-ru");
+                String text = s.toString().trim();
+                setVisibleToBtnClear(!text.isEmpty());
+                presenter.loadTranslation(text, "en-ru");
             }
         });
 
@@ -232,11 +251,10 @@ public class TranslatorFragment extends Fragment
 
     @Override
     public void showDictionaryCard(boolean show) {
-//        dictionaryCard.clearAnimation();
-//        showCard(dictionaryCard, show);
+        showCard(dictionaryCard, show);
     }
 
-    private void showCard(View card, boolean show){
+    private void showCard(View card, boolean show) {
         if (card == null)
             return;
 
@@ -254,15 +272,25 @@ public class TranslatorFragment extends Fragment
 
     }
 
+    private void setVisibleToBtnClear(boolean show) {
+        if (show)
+            btnClear.setVisibility(View.VISIBLE);
+        else
+            btnClear.setVisibility(View.GONE);
+    }
 
 
     @Override
-    public void update(InternalTranslation newData) {
-        if (presenter.equalsTranslationToCurrent(newData)) {
-            btnAddFavorite.setChecked(newData.isFavorite());
-        } else {
-            editTextTranslate.setText(newData.getTextFrom());
+    public void update(Pair<Boolean, InternalTranslation> pair) {
+        if (!pair.first && !presenter.equalsTranslationToCurrent(pair.second))
+            return;
+
+        if (!pair.first && presenter.equalsTranslationToCurrent(pair.second)) {
+            btnAddFavorite.setChecked(pair.second.isFavorite());
+            return;
         }
+
+        editTextTranslate.setText(pair.second.getTextFrom());
     }
 
     @Override

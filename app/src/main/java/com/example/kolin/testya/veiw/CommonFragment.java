@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,10 +28,8 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
     private HistoryFavoriteAdapter adapter;
 
 
-    public interface OnIteractionComminFragment{
-        void onClickAddFavorite(InternalTranslation internalTranslation);
-
-        void onClickAdapterItem(InternalTranslation internalTranslation);
+    public interface OnInteractionCommonFragment {
+        void onClickItemInCommonFragment(InternalTranslation internalTranslation, boolean clicked);
     }
 
     public CommonFragment() {
@@ -78,16 +75,18 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
                 if (parentFragment != null && parentFragment instanceof ICommonView)
                     ((ICommonView) parentFragment).check(translation, check);
 
-                if (getActivity() instanceof OnIteractionComminFragment) {
+                if (getActivity() instanceof OnInteractionCommonFragment) {
                     translation.setFavorite(!check);
-                    ((OnIteractionComminFragment) getActivity()).onClickAddFavorite(translation);
+                    ((OnInteractionCommonFragment) getActivity())
+                            .onClickItemInCommonFragment(translation, false);
                 }
             }
 
             @Override
             public void itemClick(InternalTranslation internalTranslation) {
-                if (getActivity() instanceof OnIteractionComminFragment) {
-                    ((OnIteractionComminFragment) getActivity()).onClickAdapterItem(internalTranslation);
+                if (getActivity() instanceof OnInteractionCommonFragment) {
+                    ((OnInteractionCommonFragment) getActivity())
+                            .onClickItemInCommonFragment(internalTranslation, true);
                 }
             }
         });

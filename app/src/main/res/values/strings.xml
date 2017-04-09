@@ -15,4 +15,5 @@
     <string name="yes">Да</string>
     <string name="dialog_question">Вы уверены, что хотите \nочистить </string>
     <string name="write_text">Введите текст</string>
+    <string name="translation_language">Язык перевода</string>
 </resources>

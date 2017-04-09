@@ -36,12 +36,10 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
     @Override
     public void onNextAddingToDb() {
-
     }
 
     @Override
     public void onCompleteAddingToDb() {
-
     }
 
     public void addRemoveTranslationDb(boolean remove) {
