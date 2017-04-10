@@ -18,7 +18,7 @@ import io.reactivex.Observable;
 public class GetDictionary extends BaseUseCase<List<Def>, GetDictionary.DictionaryParams> {
 
     //Delay for start dictionary search
-    private static final int DELAY_MILLISECONDS = 1500;
+    private static final int DELAY_MILLISECONDS = 750;
 
     private Repository repository;
 

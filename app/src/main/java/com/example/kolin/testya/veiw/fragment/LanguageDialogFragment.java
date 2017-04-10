@@ -10,13 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.veiw.adapter.LanguageAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class LanguageDialogFragment extends DialogFragment {
@@ -29,6 +32,7 @@ public class LanguageDialogFragment extends DialogFragment {
     private RecyclerView recyclerView;
     private Button btnCancel;
     private Button btnYes;
+    private SearchView searchView;
 
     private View.OnClickListener onClickListener;
 
@@ -65,12 +69,19 @@ public class LanguageDialogFragment extends DialogFragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.dialog_language_rv);
         btnCancel = (Button) view.findViewById(R.id.dialog_btn_cancel);
         btnYes = (Button) view.findViewById(R.id.dialog_btn_yes);
+        searchView = (SearchView) view.findViewById(R.id.dialog_language_search);
 
         return view;
     }
 
     @Override
     public void onResume() {
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        // Assign window properties to fill the parent
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+
         super.onResume();
     }
 
@@ -80,11 +91,27 @@ public class LanguageDialogFragment extends DialogFragment {
 
         setupRecyclerViewAdapter();
         initializeListener();
+        setupSearchViewListener();
 
         setAdapterData();
 
         btnCancel.setOnClickListener(onClickListener);
         btnYes.setOnClickListener(onClickListener);
+    }
+
+    private void setupSearchViewListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
 
 
@@ -97,8 +124,11 @@ public class LanguageDialogFragment extends DialogFragment {
     private void setAdapterData() {
         ArrayList<String> list = getArguments().getStringArrayList(KEY_LANG);
         if (list != null && adapter != null) {
-            if (!getArguments().getBoolean(KEY_SHOW))
-                list.remove(0);
+            Collections.sort(list);
+
+            if (getArguments().getBoolean(KEY_SHOW))
+                list.add(0, getString(R.string.determine_language));
+
             adapter.addAll(list);
         }
     }

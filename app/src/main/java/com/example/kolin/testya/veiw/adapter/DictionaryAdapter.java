@@ -26,24 +26,24 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         this.data = new ArrayList<>();
     }
 
+    private OnClickDictionaryAdapter listener;
+
+    public interface OnClickDictionaryAdapter{
+        void onClickItem(int position);
+    }
+
     @Override
     public DictionaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sub_item_dictionary_rv, parent, false);
         return new DictionaryViewHolder(view);
     }
 
-
-    /**
-     * TODO Think about several values and process to build string text (add StringBuilder)
-     * <p>
-     * currentItem.getTr().get(0)!
-     */
     @Override
     public void onBindViewHolder(DictionaryViewHolder holder, int position) {
 
         Tr currentItem = data.get(position);
-        String supportText = null;
-
+        String supportText= null;
+        holder.supportText.setVisibility(View.VISIBLE);
         holder.primaryText.setText(currentItem.getText());
 
         List<Mean> mean = currentItem.getMean();
@@ -62,7 +62,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         return data.size();
     }
 
-    static class DictionaryViewHolder extends RecyclerView.ViewHolder {
+    class DictionaryViewHolder extends RecyclerView.ViewHolder {
 
         private TextView primaryText;
         private TextView supportText;
@@ -72,7 +72,19 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
 
             primaryText = (TextView) itemView.findViewById(R.id.sub_item_dic_primary_text);
             supportText = (TextView) itemView.findViewById(R.id.sub_item_dic_sub_text);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.onClickItem((getAdapterPosition()));
+                }
+            });
         }
+    }
+
+    public Tr getDataAtPosition(int position){
+        return data.get(position);
     }
 
     public void clearAdapter() {
@@ -85,6 +97,10 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         notifyDataSetChanged();
     }
 
+
+    public void setOnClickListener(OnClickDictionaryAdapter listener){
+        this.listener = listener;
+    }
 
 
 }

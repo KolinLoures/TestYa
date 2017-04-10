@@ -5,15 +5,13 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.example.kolin.testya.data.entity.dictionary.Def;
+import com.example.kolin.testya.domain.GetDictionary;
 import com.example.kolin.testya.domain.GetLanguages;
 import com.example.kolin.testya.domain.GetTranslation;
-import com.example.kolin.testya.domain.GetDictionary;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.observers.DisposableObserver;
@@ -30,6 +28,8 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     private GetLanguages getLanguages;
 
 
+    private String currentLangFrom;
+    private String currentLangTo;
     private InternalTranslation currentTranslation;
     private ArrayMap<String, String> languages;
 
@@ -67,10 +67,14 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         getAttachView().showTranslationCard(false);
         getAttachView().showDictionaryCard(false);
+        getAttachView().showDetermineLang(false);
 
-        getTranslation.clearDisposableObservers();
 
         if (!text.isEmpty() && !text.equals("")) {
+            getTranslation.clearDisposableObservers();
+
+            getAttachView().showLoadingProgress(true);
+
             getTranslation.execute(new TranslatorObserver(),
                     GetTranslation.TranslationParams.getEntity(text, buildLangString(langFrom, langTo)));
         }
@@ -96,7 +100,19 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             return;
         }
 
+
+        if (currentLangFrom == null){
+
+            getAttachView().showDetermineLang(true);
+
+            String value = translation.getLang().split("-")[0].toLowerCase();
+            currentLangFrom = getNameLang(value);
+            getAttachView().setDetermineLanguage(currentLangFrom);
+        }
+
+
         getAttachView().showTranslationCard(true);
+        getAttachView().showError(false);
 
         getAttachView().showTranslationResult(translation);
     }
@@ -116,6 +132,8 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     public void detachView() {
         super.detachView();
 
+        languages.clear();
+        languages = null;
         getTranslation.dispose();
         getLanguages.dispose();
         getDictionary.dispose();
@@ -131,26 +149,29 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         return currentTranslation != null && currentTranslation.equals(internalTranslation);
     }
 
-    public List<String> getListLanguages(){
+    public List<String> getListLanguages() {
 
-        List<String> values = new ArrayList<>(languages.values());
+        List<String> values = new ArrayList<>(languages.keySet());
 
         return languages != null && !languages.isEmpty() ? values : null;
     }
 
-    public String buildLangString(String langFrom, String langTo){
-        List<String> values = new ArrayList<>(languages.values());
-        String keyFrom = languages.keyAt(values.indexOf(langFrom));
-        String keyTo = languages.keyAt(values.indexOf(langTo));
-        if (keyFrom.trim().isEmpty()) {
-            return keyTo;
-        }
-        else {
-            return String.format("%s%s%s",
-                    keyFrom,
-                    "-",
-                    keyTo);
-        }
+    private String buildLangString(String langFrom, String langTo) {
+        currentLangFrom = getCodeLang(langFrom);
+        currentLangTo = getCodeLang(langTo);
+        if (currentLangFrom == null)
+            return currentLangTo;
+        else
+            return String.format("%s%s%s", currentLangFrom, "-", currentLangTo);
+
+    }
+
+    public String getCodeLang(String langName){
+        return languages.get(langName.toLowerCase());
+    }
+
+    public String getNameLang (String langCode){
+        return languages.keyAt(new ArrayList<>(languages.values()).indexOf(langCode));
     }
 
     private final class TranslatorObserver extends DisposableObserver<InternalTranslation> {
@@ -161,11 +182,15 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         @Override
         public void onError(Throwable e) {
+            getAttachView().showLoadingProgress(false);
+            getAttachView().showError(true);
+
             Log.e(TAG, "TranslatorObservable: ", e);
         }
 
         @Override
         public void onComplete() {
+            getAttachView().showLoadingProgress(false);
             loadDictionaryResult();
         }
     }
@@ -183,7 +208,8 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             Log.e(TAG, e.toString());
         }
 
-        public void onComplete() {      }
+        public void onComplete() {
+        }
     }
 
     private final class LanguageObserver extends DisposableObserver<ArrayMap<String, String>> {
@@ -194,9 +220,11 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         }
 
         @Override
-        public void onError(Throwable e) {}
+        public void onError(Throwable e) {
+        }
 
         @Override
-        public void onComplete() {}
+        public void onComplete() {
+        }
     }
 }

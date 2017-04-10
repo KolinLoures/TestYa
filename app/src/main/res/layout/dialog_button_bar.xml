@@ -9,7 +9,7 @@
 
     <Button
         android:id="@+id/dialog_btn_cancel"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:background="?attr/selectableItemBackground"
@@ -20,7 +20,7 @@
 
     <Button
         android:id="@+id/dialog_btn_yes"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:background="?attr/selectableItemBackground"

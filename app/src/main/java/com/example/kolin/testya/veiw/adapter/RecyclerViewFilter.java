@@ -2,43 +2,35 @@ package com.example.kolin.testya.veiw.adapter;
 
 import android.widget.Filter;
 
-import com.example.kolin.testya.domain.model.InternalTranslation;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by kolin on 07.04.2017.
+ * Created by kolin on 10.04.2017.
  */
 
-public class HistoryFavoriteFilter extends Filter {
+public abstract class RecyclerViewFilter<T> extends Filter {
 
-    private final HistoryFavoriteAdapter adapter;
 
-    private final List<InternalTranslation> data;
-    private final List<InternalTranslation> filterData;
+    private final List<T> data;
+    private final List<T> filterData;
 
-    public HistoryFavoriteFilter(HistoryFavoriteAdapter adapter,
-                                 List<InternalTranslation> data) {
-        this.adapter = adapter;
+    public RecyclerViewFilter(List<T> data) {
         this.data = new ArrayList<>(data);
-        this.filterData = new ArrayList<>();
+        this.filterData = new ArrayList<>(data);
     }
-
-
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         filterData.clear();
         final FilterResults filterResults = new FilterResults();
-
-        if (constraint.length() == 0){
+        if (constraint.length() == 0)
             filterData.addAll(data);
-        } else {
+        else {
             final String search = constraint.toString().trim();
 
-            for (InternalTranslation t: data){
-                if (t.getTextFrom().contains(search))
+            for (T t: data){
+                if (inWhatObjValueSearch(t).contains(search))
                     filterData.add(t);
             }
         }
@@ -49,9 +41,13 @@ public class HistoryFavoriteFilter extends Filter {
         return filterResults;
     }
 
+    public abstract String inWhatObjValueSearch(T obj);
+
+    public abstract void publishFilterResult(List<T> filterData);
+
     @SuppressWarnings("unchecked")
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        adapter.addAll((List<InternalTranslation>) results.values);
+        publishFilterResult((List<T>) results.values);
     }
 }

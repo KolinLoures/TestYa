@@ -6,7 +6,6 @@
     <string name="history">История</string>
     <string name="favorite">Избранное</string>
     <string name="about">О приложении</string>
-    <string name="translate_language">Язык перевода</string>
     <string name="search_in_history">Найти в истории</string>
     <string name="search_in_favorite">Найти в избранном</string>
 
@@ -17,4 +16,9 @@
     <string name="write_text">Введите текст</string>
     <string name="translation_language">Язык перевода</string>
     <string name="chose_language">Выберите язык</string>
+    <string name="determine_language">определить</string>
+    <string name="determine">определено</string>
+    <string name="chose_language_from">Выбирите язык с которого переводить</string>
+    <string name="error_message">Упс… что-то пошло не так. \nПроверьте ваше интернет соединение или \n повторите перевод позже.</string>
+
 </resources>

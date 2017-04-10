@@ -1,4 +1,4 @@
-package com.example.kolin.testya.data.properties;
+package com.example.kolin.testya.data.languages;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -34,7 +34,7 @@ public class LanguageProperties {
 
         AssetManager assetManager = context.getAssets();
 
-        InputStream stream = assetManager.open("languages_ru.txt", Context.MODE_PRIVATE);
+        InputStream stream = assetManager.open("languages-ru.txt", Context.MODE_PRIVATE);
         InputStreamReader isr = new InputStreamReader(stream);
 
         properties.load(isr);
@@ -46,7 +46,9 @@ public class LanguageProperties {
     }
 
     private ArrayMap<String, String> propertiesToMap(Properties properties){
+
         List<String> names = new ArrayList<>(properties.stringPropertyNames());
+        Collections.sort(names);
 
         ArrayMap<String, String> temp = new ArrayMap<>();
 

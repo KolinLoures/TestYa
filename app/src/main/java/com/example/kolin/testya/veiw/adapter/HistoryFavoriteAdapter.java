@@ -29,7 +29,7 @@ public class HistoryFavoriteAdapter
     @Override
     public Filter getFilter() {
         if (filter == null)
-            filter = new HistoryFavoriteFilter(this, data);
+            filter = new HistoryFavoriteFilter(data);
         return filter;
     }
 
@@ -123,5 +123,22 @@ public class HistoryFavoriteAdapter
         }
 
 
+    }
+
+    private class HistoryFavoriteFilter extends RecyclerViewFilter<InternalTranslation> {
+
+        HistoryFavoriteFilter(List<InternalTranslation> data) {
+            super(data);
+        }
+
+        @Override
+        public String inWhatObjValueSearch(InternalTranslation obj) {
+            return obj.getTextFrom();
+        }
+
+        @Override
+        public void publishFilterResult(List<InternalTranslation> filterData) {
+            addAll(filterData);
+        }
     }
 }

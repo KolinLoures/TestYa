@@ -1,13 +1,12 @@
 package com.example.kolin.testya.veiw.adapter;
 
-import android.graphics.RadialGradient;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 
@@ -18,10 +17,13 @@ import java.util.List;
  * Created by kolin on 09.04.2017.
  */
 
-public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder> {
+public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>
+implements Filterable{
 
     private RadioButton lastSelectedRadio;
     private List<String> data;
+    private LanguageFilter filter;
+
 
     public LanguageAdapter() {
         this.data = new ArrayList<>();
@@ -42,6 +44,23 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    public void addAll(List<String> data) {
+        this.data.clear();
+        this.data.addAll(data);
+        notifyDataSetChanged();
+    }
+
+    public String getChose(){
+        return lastSelectedRadio != null ? lastSelectedRadio.getText().toString() : null;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (filter == null)
+            filter = new LanguageFilter(data);
+        return filter;
     }
 
 
@@ -69,13 +88,21 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
         }
     }
 
-    public void addAll(List<String> data) {
-        this.data.clear();
-        this.data.addAll(data);
-        notifyDataSetChanged();
+    private final class LanguageFilter extends RecyclerViewFilter<String>{
+
+        public LanguageFilter(List<String> data) {
+            super(data);
+        }
+
+        @Override
+        public String inWhatObjValueSearch(String obj) {
+            return obj;
+        }
+
+        @Override
+        public void publishFilterResult(List<String> filterData) {
+            addAll(filterData);
+        }
     }
 
-    public String getChose(){
-        return lastSelectedRadio != null ? lastSelectedRadio.getText().toString() : null;
-    }
 }

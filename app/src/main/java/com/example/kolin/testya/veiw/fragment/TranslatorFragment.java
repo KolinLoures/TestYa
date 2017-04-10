@@ -1,5 +1,6 @@
 package com.example.kolin.testya.veiw.fragment;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,20 +10,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.entity.dictionary.Def;
@@ -50,15 +50,14 @@ public class TranslatorFragment extends Fragment implements
     private RecyclerView recyclerViewDictionary;
     private CheckBox btnAddFavorite;
     private ImageButton btnClear;
-    private View translationCard;
-    private View dictionaryCard;
     private Button btnFrom;
     private Button btnTo;
     private ImageButton imBtmReverse;
-
-
-    private Animation animationFadeIn;
-    private Animation animationFadeOut;
+    private TextView textDeterminedLanguage;
+    private ProgressBar loadingProgress;
+    private View translationCard;
+    private View dictionaryCard;
+    private TextView textViewError;
 
     private LanguageDialogFragment dialog;
 
@@ -100,12 +99,13 @@ public class TranslatorFragment extends Fragment implements
         btnClear = (ImageButton) view.findViewById(R.id.translation_clear_edit_btn);
         translationCard = view.findViewById(R.id.translation_card);
         dictionaryCard = view.findViewById(R.id.dictionary_card);
-        btnFrom = (Button) view.findViewById(R.id.translator_btn_from);
-        btnTo = (Button) view.findViewById(R.id.translator_btn_to);
-        imBtmReverse = (ImageButton) view.findViewById(R.id.translator_img_btn_reverse);
+        btnFrom = (Button) view.findViewById(R.id.translation_btn_from);
+        btnTo = (Button) view.findViewById(R.id.translation_btn_to);
+        imBtmReverse = (ImageButton) view.findViewById(R.id.translation_img_btn_reverse);
+        textDeterminedLanguage = (TextView) view.findViewById(R.id.translation_text_determined_lang);
+        loadingProgress = (ProgressBar) view.findViewById(R.id.translation_progress_downloading);
+        textViewError = (TextView) view.findViewById(R.id.translation_error_text);
 
-        animationFadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-        animationFadeOut = AnimationUtils.loadAnimation(getContext(), R.anim.fade_out);
 
         return view;
     }
@@ -117,23 +117,15 @@ public class TranslatorFragment extends Fragment implements
 
         presenter.attacheView(this);
 
-        translationCard.setVisibility(View.INVISIBLE);
-        dictionaryCard.setVisibility(View.INVISIBLE);
-        btnClear.setVisibility(View.GONE);
-
         setupEditTextChangeListener();
         setupRecyclerViewAdapter();
         initializeOnClickListener();
-        setupAnimListener();
 
         btnClear.setOnClickListener(onClickListener);
         btnAddFavorite.setOnClickListener(onClickListener);
         btnTo.setOnClickListener(onClickListener);
         btnFrom.setOnClickListener(onClickListener);
         imBtmReverse.setOnClickListener(onClickListener);
-    }
-
-    private void setupAnimListener() {
     }
 
     private void initializeOnClickListener() {
@@ -154,25 +146,54 @@ public class TranslatorFragment extends Fragment implements
             case R.id.translation_clear_edit_btn:
                 presenter.clearDisposables();
                 editTextTranslate.getText().clear();
-                translationCard.startAnimation(animationFadeOut);
+                showDetermineLang(false);
                 break;
-            case R.id.translator_btn_from:
+            case R.id.translation_btn_from:
                 dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), true);
                 dialog.show(getChildFragmentManager(), "language_dialog_fragment");
                 break;
-            case R.id.translator_btn_to:
+            case R.id.translation_btn_to:
                 dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), false);
                 dialog.show(getChildFragmentManager(), "language_dialog_fragment");
                 break;
+            case R.id.translation_img_btn_reverse:
+                if (reverseLanguages())
+                    editTextTranslate.setText(textTransResult.getText());
+                break;
         }
+    }
+
+    private boolean reverseLanguages() {
+        String valuerByKey = presenter.getCodeLang(btnFrom.getText().toString());
+        if (valuerByKey != null) {
+            String temp = btnTo.getText().toString();
+            btnTo.setText(btnFrom.getText());
+            btnFrom.setText(temp);
+            return true;
+        } else
+            notifyUser(getString(R.string.chose_language_from));
+        return false;
     }
 
     private void setupRecyclerViewAdapter() {
         dictionaryAdapter = new DictionaryAdapter();
         sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
 
+        dictionaryAdapter.setOnClickListener(new DictionaryAdapter.OnClickDictionaryAdapter() {
+            @Override
+            public void onClickItem(int position) {
+                editTextTranslate
+                        .setText(
+                                dictionaryAdapter.getDataAtPosition(
+                                        sectionedDictionaryAdapter.sectionedPositionToPosition(position)
+                                ).getText());
+            }
+        });
+
         recyclerViewDictionary.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewDictionary.setAdapter(sectionedDictionaryAdapter);
+
+
     }
 
     private void setupEditTextChangeListener() {
@@ -189,7 +210,7 @@ public class TranslatorFragment extends Fragment implements
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString().trim();
-                setVisibleToBtnClear(!text.isEmpty());
+                setVisibleClearBtn(!text.isEmpty());
                 presenter.loadTranslation(text, btnFrom.getText().toString(), btnTo.getText().toString());
             }
         });
@@ -253,38 +274,73 @@ public class TranslatorFragment extends Fragment implements
     }
 
     @Override
+    public void setDetermineLanguage(String langFrom) {
+        textDeterminedLanguage.setText(String.format("%s (%s)",
+                langFrom, getString(R.string.determine)));
+    }
+
+    @Override
+    public void notifyUser(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void showTranslationCard(boolean show) {
-        showCard(translationCard, show);
+        showAnimCard(translationCard, show);
     }
 
     @Override
     public void showDictionaryCard(boolean show) {
-        showCard(dictionaryCard, show);
+        showAnimCard(dictionaryCard, show);
     }
 
-    private void showCard(View card, boolean show) {
+    @Override
+    public void showLoadingProgress(boolean show) {
+        showComponent(loadingProgress, show);
+    }
+
+    @Override
+    public void showError(boolean show) {
+        showComponent(textViewError, show);
+    }
+
+    @Override
+    public void showDetermineLang(boolean show) {
+        showComponent(textDeterminedLanguage, show);
+    }
+
+    private void showAnimCard(View card, boolean show) {
         if (card == null)
             return;
 
-        if (show) {
-            if (card.getVisibility() == View.INVISIBLE) {
-                card.startAnimation(animationFadeIn);
-            }
+        if (show && card.getVisibility() == View.INVISIBLE) {
+            ObjectAnimator animator = ObjectAnimator.ofFloat(card, View.ALPHA, 0.0f, 1.0f);
+            animator.setDuration(500);
+            animator.start();
+
             card.setVisibility(View.VISIBLE);
-        } else {
-            if (card.getVisibility() == View.VISIBLE) {
-                card.startAnimation(animationFadeOut);
-            }
-            card.setVisibility(View.INVISIBLE);
         }
+
+        if (!show && card.getVisibility() == View.VISIBLE)
+            card.setVisibility(View.INVISIBLE);
+
 
     }
 
-    private void setVisibleToBtnClear(boolean show) {
-        if (show)
+    private void showComponent(View component, boolean show) {
+        if (show && component.getVisibility() == View.INVISIBLE)
+            component.setVisibility(View.VISIBLE);
+
+        if (!show && component.getVisibility() == View.VISIBLE)
+            component.setVisibility(View.INVISIBLE);
+    }
+
+    private void setVisibleClearBtn(boolean show) {
+        if (show) {
             btnClear.setVisibility(View.VISIBLE);
-        else
-            btnClear.setVisibility(View.GONE);
+        } else {
+            btnClear.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -298,19 +354,37 @@ public class TranslatorFragment extends Fragment implements
             return;
         }
 
+        String[] pairLang = pair.second.getLang().split("-");
+        String langFrom = pairLang[0];
+        String langTo = pairLang[1];
+
+        if (langFrom.equals(langTo))
+            btnFrom.setText(getString(R.string.determine));
+        else
+            btnFrom.setText(presenter.getNameLang(langFrom));
+
+        btnTo.setText(presenter.getNameLang(langTo));
         editTextTranslate.setText(pair.second.getTextFrom());
     }
 
     @Override
-    public void clear() {}
+    public void clear() {
+    }
 
     @Override
     public void onChooseLanguageDialog(String lang, boolean isTextFrom) {
         dialog = null;
-        if (isTextFrom)
+        if (isTextFrom) {
+            if (lang.equals(btnTo.getText()))
+                btnTo.setText(btnFrom.getText());
+
             btnFrom.setText(lang);
-        else
+        } else {
+            if (lang.equals(btnFrom.getText()))
+                btnFrom.setText(btnTo.getText());
+
             btnTo.setText(lang);
+        }
 
 
         presenter.loadTranslation(

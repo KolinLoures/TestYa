@@ -3,7 +3,7 @@ package com.example.kolin.testya.domain;
 import android.content.Context;
 import android.util.ArrayMap;
 
-import com.example.kolin.testya.data.properties.LanguageProperties;
+import com.example.kolin.testya.data.languages.LanguageProperties;
 
 import java.util.concurrent.Callable;
 

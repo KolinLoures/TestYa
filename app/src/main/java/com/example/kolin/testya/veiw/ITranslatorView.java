@@ -15,7 +15,19 @@ public interface ITranslatorView {
 
     void showDictionary(List<Def> defList);
 
+    void setDetermineLanguage(String langFrom);
+
+    void notifyUser(String message);
+
     void showTranslationCard(boolean show);
 
     void showDictionaryCard(boolean show);
+
+    void showLoadingProgress(boolean show);
+
+    void showError(boolean show);
+
+    void showDetermineLang(boolean show);
+
+
 }
