@@ -20,5 +20,6 @@
     <string name="determine">определено</string>
     <string name="chose_language_from">Выбирите язык с которого переводить</string>
     <string name="error_message">Упс… что-то пошло не так. \nПроверьте ваше интернет соединение или \n повторите перевод позже.</string>
+    <string name="no_translations">Нет переводов</string>
 
 </resources>

@@ -56,9 +56,13 @@ public class HistoryFavoriteFragment extends Fragment
         adapter = new ViewPagerAdapter(getChildFragmentManager(), true);
         deleteBtn = (ImageButton) view.findViewById(R.id.fragment_history_favorite_delete);
 
-        adapter.addFragment(CommonFragment.newInstance(), getString(R.string.history));
+        adapter.addFragment(
+                CommonFragment.newInstance(getString(R.string.search_in_history)),
+                getString(R.string.history));
 
-        adapter.addFragment(CommonFragment.newInstance(), getString(R.string.favorite));
+        adapter.addFragment(
+                CommonFragment.newInstance(getString(R.string.search_in_favorite)),
+                getString(R.string.favorite));
 
         viewPager.setAdapter(adapter);
 

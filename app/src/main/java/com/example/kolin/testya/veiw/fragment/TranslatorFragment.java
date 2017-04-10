@@ -149,7 +149,10 @@ public class TranslatorFragment extends Fragment implements
                 showDetermineLang(false);
                 break;
             case R.id.translation_btn_from:
-                dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), true);
+                List<String> listLanguages = presenter.getListLanguages();
+                if (btnFrom.getText().toString().equals(getString(R.string.determine_language)))
+                    listLanguages.remove(btnTo.getText().toString());
+                dialog = LanguageDialogFragment.newInstance(listLanguages, true);
                 dialog.show(getChildFragmentManager(), "language_dialog_fragment");
                 break;
             case R.id.translation_btn_to:
@@ -313,7 +316,7 @@ public class TranslatorFragment extends Fragment implements
         if (card == null)
             return;
 
-        if (show && card.getVisibility() == View.INVISIBLE) {
+        if (show && card.getVisibility() == View.GONE) {
             ObjectAnimator animator = ObjectAnimator.ofFloat(card, View.ALPHA, 0.0f, 1.0f);
             animator.setDuration(500);
             animator.start();
@@ -322,25 +325,21 @@ public class TranslatorFragment extends Fragment implements
         }
 
         if (!show && card.getVisibility() == View.VISIBLE)
-            card.setVisibility(View.INVISIBLE);
+            card.setVisibility(View.GONE);
 
 
     }
 
     private void showComponent(View component, boolean show) {
-        if (show && component.getVisibility() == View.INVISIBLE)
+        if (show && component.getVisibility() == View.GONE)
             component.setVisibility(View.VISIBLE);
 
         if (!show && component.getVisibility() == View.VISIBLE)
-            component.setVisibility(View.INVISIBLE);
+            component.setVisibility(View.GONE);
     }
 
     private void setVisibleClearBtn(boolean show) {
-        if (show) {
-            btnClear.setVisibility(View.VISIBLE);
-        } else {
-            btnClear.setVisibility(View.INVISIBLE);
-        }
+       showComponent(btnClear, show);
     }
 
 
