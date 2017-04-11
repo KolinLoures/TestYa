@@ -18,10 +18,14 @@ public class NetSingleton {
     }
 
     private OkHttpClient provideOkHttpClient(){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        HttpLoggingInterceptor loggingInterceptor =
+                new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+
         return new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+                .addNetworkInterceptor(loggingInterceptor)
+                .addInterceptor(loggingInterceptor)
                 .build();
     }
 

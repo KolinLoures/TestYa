@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.TypeSaveTranslation;
@@ -105,6 +106,10 @@ public class HistoryFavoriteFragment extends Fragment
         super.onDetach();
     }
 
+    @Override
+    public void notifyUser(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
     @SuppressWarnings("unchecked")
     @Override

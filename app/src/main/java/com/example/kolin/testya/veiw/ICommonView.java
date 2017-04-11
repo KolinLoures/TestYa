@@ -13,5 +13,7 @@ public interface ICommonView {
 
     void clearViewPagerFragment(@TypeSaveTranslation.TypeName String type);
 
+    void notifyUser(String message);
+
     void check(InternalTranslation translation, boolean check);
 }

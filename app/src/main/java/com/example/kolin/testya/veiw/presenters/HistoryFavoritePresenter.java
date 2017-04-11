@@ -110,11 +110,12 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
         }
     }
 
-    public final class DeleteDbObserver extends DisposableObserver<Void> {
+    public final class DeleteDbObserver extends DisposableObserver<Boolean> {
 
         @Override
-        public void onNext(Void aVoid) {
-            //stub
+        public void onNext(Boolean bool) {
+            if (bool)
+                getAttachView().notifyUser("Переводов больше нет!");
         }
 
         @Override

@@ -7,14 +7,12 @@ import com.example.kolin.testya.data.db.QueriesImpl;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by kolin on 08.04.2017.
  */
 
-public class DeleteTypeDb extends BaseUseCase<Void, DeleteTypeDb.DeleteRequestParams> {
+public class DeleteTypeDb extends BaseUseCase<Boolean, DeleteTypeDb.DeleteRequestParams> {
 
     private IQueries queries;
 
@@ -23,17 +21,16 @@ public class DeleteTypeDb extends BaseUseCase<Void, DeleteTypeDb.DeleteRequestPa
     }
 
     @Override
-    public Observable<Void> createObservable(final DeleteRequestParams deleteRequestParams) {
-        return Observable.create(new ObservableOnSubscribe<Void>() {
+    public Observable<Boolean> createObservable(final DeleteRequestParams deleteRequestParams) {
+        return Observable.fromCallable(new Callable<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<Void> e) throws Exception {
-                queries.deleteAllType(deleteRequestParams.type);
-                e.onComplete();
+            public Boolean call() throws Exception {
+                return queries.deleteAllType(deleteRequestParams.type);
             }
         });
     }
 
-    public static class DeleteRequestParams{
+    public static class DeleteRequestParams {
         private final String type;
 
         private DeleteRequestParams(String type) {
@@ -41,7 +38,7 @@ public class DeleteTypeDb extends BaseUseCase<Void, DeleteTypeDb.DeleteRequestPa
         }
 
         public static DeleteRequestParams getParamsObj(@TypeSaveTranslation.TypeName
-                                                       String type){
+                                                               String type) {
             return new DeleteRequestParams(type);
         }
     }
