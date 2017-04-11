@@ -70,7 +70,7 @@ public class TranslatorFragment extends Fragment implements
     private TranslatorPresenter presenter;
 
     public TranslatorFragment() {
-        // Required empty public constructor
+        setRetainInstance(true);
     }
 
 
@@ -114,6 +114,10 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        String ssss;
+        if (savedInstanceState != null)
+            ssss = savedInstanceState.getString("la");
 
         presenter.attacheView(this);
 
@@ -170,8 +174,8 @@ public class TranslatorFragment extends Fragment implements
         String valuerByKey = presenter.getCodeLang(btnFrom.getText().toString());
         if (valuerByKey != null) {
             String temp = btnTo.getText().toString();
-            btnTo.setText(btnFrom.getText());
-            btnFrom.setText(temp);
+            setLanguagesToButtons(temp, btnFrom.getText().toString());
+
             return true;
         } else
             notifyUser(getString(R.string.chose_language_from));
@@ -312,6 +316,12 @@ public class TranslatorFragment extends Fragment implements
         showComponent(textDeterminedLanguage, show);
     }
 
+    @Override
+    public void setLanguagesToButtons(String langFrom, String langTo) {
+        btnFrom.setText(langFrom);
+        btnTo.setText(langTo);
+    }
+
     private void showAnimCard(View card, boolean show) {
         if (card == null)
             return;
@@ -368,6 +378,7 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void clear() {
+        //stub
     }
 
     @Override
@@ -391,5 +402,12 @@ public class TranslatorFragment extends Fragment implements
                 btnFrom.getText().toString(),
                 btnTo.getText().toString()
         );
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("la", "проверка");
     }
 }

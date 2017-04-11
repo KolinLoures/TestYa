@@ -13,14 +13,51 @@
         <include layout="@layout/main_toolbar" />
 
         <TextView
-            android:text="@string/about"
-            android:layout_margin="16dp"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:textColor="@color/colorBlack"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/about"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@color/colorBlack" />
 
     </FrameLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/yandex_translate" />
+
+    <TextView
+        android:id="@+id/fragment_info_translator_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:autoLink="web"
+        android:textColorLink="@color/colorRed"
+        android:text="@string/translate_with_yandex"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/colorBlack" />
+
+    <TextView
+        android:id="@+id/fragment_info_dictionary_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:autoLink="web"
+        android:textColorLink="@color/colorRed"
+        android:text="@string/dictionary_with_yandex"
+
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+        android:textColor="@color/colorBlack" />
+
+    <Button
+        android:id="@+id/fragment_info_update_btn"
+        android:layout_width="match_parent"
+        android:textColor="@color/colorRed"
+        android:text="@string/update_language_properties"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" />
 
 
 </LinearLayout>

@@ -167,11 +167,15 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     }
 
     public String getCodeLang(String langName){
-        return languages.get(langName.toLowerCase());
+        return !languages.isEmpty()
+                ? languages.get(langName.toLowerCase())
+                : null;
     }
 
     public String getNameLang (String langCode){
-        return languages.keyAt(new ArrayList<>(languages.values()).indexOf(langCode));
+        return !languages.isEmpty()
+                ? languages.keyAt(new ArrayList<>(languages.values()).indexOf(langCode))
+                : null;
     }
 
     private final class TranslatorObserver extends DisposableObserver<InternalTranslation> {
@@ -184,6 +188,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         public void onError(Throwable e) {
             getAttachView().showLoadingProgress(false);
             getAttachView().showError(true);
+
 
             Log.e(TAG, "TranslatorObservable: ", e);
         }
@@ -205,26 +210,30 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         @Override
         public void onError(Throwable e) {
-            Log.e(TAG, e.toString());
+            Log.e(TAG, "DictionaryObservable: ", e);
         }
 
-        public void onComplete() {
-        }
+        public void onComplete() {}
     }
 
+
+    /**
+    * TODO: refactor LanguageObserver. Must set languages from SharedPreferences as last picked langs
+    */
     private final class LanguageObserver extends DisposableObserver<ArrayMap<String, String>> {
 
         @Override
         public void onNext(ArrayMap<String, String> stringStringArrayMap) {
             languages.putAll(stringStringArrayMap);
+            getAttachView().setLanguagesToButtons(getNameLang("ru"), getNameLang("en"));
         }
 
         @Override
         public void onError(Throwable e) {
+            Log.e(TAG, "LanguageObserver: ", e);
         }
 
         @Override
-        public void onComplete() {
-        }
+        public void onComplete() {}
     }
 }

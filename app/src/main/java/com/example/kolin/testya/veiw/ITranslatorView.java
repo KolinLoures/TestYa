@@ -29,5 +29,6 @@ public interface ITranslatorView {
 
     void showDetermineLang(boolean show);
 
+    void setLanguagesToButtons(String langFrom, String langTo);
 
 }

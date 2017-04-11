@@ -21,7 +21,6 @@ public class LanguageProperties {
     private Properties properties;
     private Context context;
 
-    private LanguageProperties languageProperties = null;
 
     public LanguageProperties(Context context) {
         this.context = context;
@@ -34,7 +33,7 @@ public class LanguageProperties {
 
         AssetManager assetManager = context.getAssets();
 
-        InputStream stream = assetManager.open("languages-ru.txt", Context.MODE_PRIVATE);
+        InputStream stream = assetManager.open("languages-ru.properties", Context.MODE_PRIVATE);
         InputStreamReader isr = new InputStreamReader(stream);
 
         properties.load(isr);

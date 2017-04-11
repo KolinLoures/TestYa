@@ -21,5 +21,8 @@
     <string name="chose_language_from">Выбирите язык с которого переводить</string>
     <string name="error_message">Упс… что-то пошло не так. \nПроверьте ваше интернет соединение или \n повторите перевод позже.</string>
     <string name="no_translations">Нет переводов</string>
+    <string name="translate_with_yandex">Переведено сервисом \"Яндекс-Переводчик\".\nПодробнее о сервисе:\nhttp://translate.yandex.ru/</string>
+    <string name="dictionary_with_yandex">Подробная информация о переводе\nпредоставлена сервисом \"Яндекс-Словарь\".\nПодробнее о сервисе:\nhttps://tech.yandex.ru/dictionary/</string>
+    <string name="update_language_properties">Обновить базу языков перевода</string>
 
 </resources>

@@ -16,32 +16,35 @@
         <include layout="@layout/main_toolbar" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:weightSum="1">
 
             <Button
                 android:id="@+id/translation_btn_from"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:layout_weight="0.4"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:text="Английский"
                 android:textAllCaps="false"
+                tools:text="Английский"
+                android:textAlignment="viewEnd"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:textColor="@color/colorBlack" />
 
             <ImageButton
                 android:id="@+id/translation_img_btn_reverse"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:layout_weight="0.2"
+                android:layout_gravity="center_vertical"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:src="@drawable/ic_swap_horiz_black_24px"
-                android:text="Английский" />
+                android:src="@drawable/ic_swap_horiz_black_24px" />
 
             <Button
                 android:id="@+id/translation_btn_to"
@@ -49,7 +52,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:background="?attr/selectableItemBackground"
-                android:text="Английский"
+                tools:text="Английский"
+                android:lines="1"
+                android:textAlignment="viewStart"
+                android:ellipsize="end"
                 android:textAllCaps="false"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:textColor="@color/colorBlack" />
