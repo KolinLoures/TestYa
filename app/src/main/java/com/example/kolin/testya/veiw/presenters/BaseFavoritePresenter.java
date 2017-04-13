@@ -8,9 +8,6 @@ import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.observers.DisposableObserver;
 
 /**

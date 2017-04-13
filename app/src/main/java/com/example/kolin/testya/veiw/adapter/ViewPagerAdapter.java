@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.kolin.testya.veiw.fragment.DataUpdatable;
 import com.example.kolin.testya.veiw.fragment.Updatable;
 
 import java.util.ArrayList;

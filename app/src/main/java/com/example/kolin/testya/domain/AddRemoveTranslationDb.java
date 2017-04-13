@@ -8,8 +8,6 @@ import com.example.kolin.testya.domain.model.InternalTranslation;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kolin on 03.04.2017.
