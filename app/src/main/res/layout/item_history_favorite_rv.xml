@@ -6,7 +6,6 @@
     android:weightSum="1"
     android:clickable="true"
     android:background="?android:attr/selectableItemBackground"
-    android:minHeight="72dp"
     android:padding="16dp">
 
     <CheckBox
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content"
             tools:text = "Primary text"
             android:textColor="@color/colorBlack"
-            android:textSize="13sp"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
         <TextView
             android:id="@+id/item_secondary_text"
@@ -39,7 +38,7 @@
             android:layout_height="wrap_content"
             tools:text = "Secondary text"
             android:textColor="@color/colorGray"
-            android:textSize="13sp"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
 
     </LinearLayout>
 

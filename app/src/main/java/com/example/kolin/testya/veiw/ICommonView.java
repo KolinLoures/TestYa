@@ -1,5 +1,6 @@
 package com.example.kolin.testya.veiw;
 
+import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
 /**
@@ -8,7 +9,11 @@ import com.example.kolin.testya.domain.model.InternalTranslation;
 
 public interface ICommonView {
 
-    void showLoadedData(InternalTranslation translation);
+    void updateLoadedData(InternalTranslation translation);
 
-    void clearAdapter();
+    void clearViewPagerFragment(@TypeSaveTranslation.TypeName String type);
+
+    void notifyUser(String message);
+
+    void check(InternalTranslation translation, boolean check);
 }

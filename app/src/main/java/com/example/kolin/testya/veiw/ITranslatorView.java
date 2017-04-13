@@ -13,5 +13,22 @@ public interface ITranslatorView {
 
     void showTranslationResult(InternalTranslation translation);
 
-    void showTranslationOptions(List<Def> defList);
+    void showDictionary(List<Def> defList);
+
+    void setDetermineLanguage(String langFrom);
+
+    void notifyUser(String message);
+
+    void showTranslationCard(boolean show);
+
+    void showDictionaryCard(boolean show);
+
+    void showLoadingProgress(boolean show);
+
+    void showError(boolean show);
+
+    void showDetermineLang(boolean show);
+
+    void setLanguagesToButtons(String langFrom, String langTo);
+
 }

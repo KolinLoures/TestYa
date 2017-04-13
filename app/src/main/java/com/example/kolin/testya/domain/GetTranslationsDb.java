@@ -5,7 +5,6 @@ import com.example.kolin.testya.data.db.IQueries;
 import com.example.kolin.testya.data.db.QueriesImpl;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -36,7 +35,7 @@ public class GetTranslationsDb extends BaseUseCase<InternalTranslation,
                 .fromCallable(new Callable<List<InternalTranslation>>() {
                     @Override
                     public List<InternalTranslation> call() throws Exception {
-                        return iQueries.getTranslation(params.type);
+                        return iQueries.getTranslations(params.type);
                     }
                 })
                 .flatMap(new Function<List<InternalTranslation>, ObservableSource<InternalTranslation>>() {
@@ -49,9 +48,9 @@ public class GetTranslationsDb extends BaseUseCase<InternalTranslation,
                 .doOnNext(new Consumer<InternalTranslation>() {
                     @Override
                     public void accept(@NonNull InternalTranslation translation) throws Exception {
-                        translation
-                                .setFavorite(
-                                        iQueries.isAddedToTable(translation, TypeSaveTranslation.FAVORITE));
+
+                        if (translation.getType().equals(TypeSaveTranslation.HISTORY))
+                            translation.setFavorite(iQueries.isFavorite(translation));
                     }
                 });
     }

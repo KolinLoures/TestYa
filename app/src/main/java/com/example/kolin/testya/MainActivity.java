@@ -1,22 +1,27 @@
 package com.example.kolin.testya;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 
+import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.example.kolin.testya.veiw.CommonFragment;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.InfoFragment;
 import com.example.kolin.testya.veiw.NonSwipeViewPager;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.veiw.fragment.DataUpdatable;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        CommonFragment.OnInteractionCommonFragment {
 
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
+    private ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = (NonSwipeViewPager) findViewById(R.id.main_view_pager);
 
-        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(), false);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), false);
         adapter.addFragment(TranslatorFragment.newInstance(), null);
         adapter.addFragment(HistoryFavoriteFragment.newInstance(), null);
         adapter.addFragment(InfoFragment.newInstance("", ""), null);
@@ -56,18 +61,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getSupportFragmentManager().popBackStack();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     //TODO: substitute first tab icon or selector
     @SuppressWarnings("all")
     private void setupTabIcons() {
@@ -95,4 +88,14 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onClickItemInCommonFragment(InternalTranslation internalTranslation, boolean clicked) {
+        Pair<Boolean, InternalTranslation> pair = new Pair<>(clicked, internalTranslation);
+        if (clicked)
+            viewPager.setCurrentItem(0);
+
+        ((DataUpdatable) adapter.getItem(0)).update(pair);
+    }
 }

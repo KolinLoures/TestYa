@@ -35,4 +35,7 @@ public class TypeSaveTranslation {
         return list.get(id);
     }
 
+    public static int getTypeId(String type){
+        return list.indexOf(type);
+    }
 }

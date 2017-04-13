@@ -77,17 +77,18 @@ public class QueriesImpl implements IQueries {
     }
 
     @Override
-    public List<InternalTranslation> getTranslation(@TypeSaveTranslation.TypeName
-                                                            String type) {
+    public List<InternalTranslation> getTranslations(@TypeSaveTranslation.TypeName String type) {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         List<InternalTranslation> temp = new ArrayList<>();
+        String query;
 
-        String query = String.format(
-                "SELECT * FROM %s WHERE %s = '%s'",
-                DataBaseHelper.TABLE,
-                DataBaseHelper.TYPE,
-                type);
+        if (type == null)
+            query = String.format("SELECT * FROM %s", DataBaseHelper.TABLE);
+        else
+            query = String.format(
+                    "SELECT * FROM %s WHERE %s = '%s'",
+                    DataBaseHelper.TABLE, DataBaseHelper.TYPE, type);
 
         Cursor cursor = db.rawQuery(query, null);
         try {
@@ -97,7 +98,8 @@ public class QueriesImpl implements IQueries {
                     translation.setLang(cursor.getString(cursor.getColumnIndex(DataBaseHelper.LANG)));
                     translation.setTextFrom(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TEXT_FROM)));
                     translation.setTextTo(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TEXT_TO)));
-                    if (type.equals(TypeSaveTranslation.FAVORITE))
+                    translation.setType(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TYPE)));
+                    if (translation.getType().equals(TypeSaveTranslation.FAVORITE))
                         translation.setFavorite(true);
 
                     temp.add(translation);
@@ -115,11 +117,9 @@ public class QueriesImpl implements IQueries {
     }
 
 
-
     @Override
     public boolean removeTranslation(InternalTranslation translation,
-                                  @TypeSaveTranslation.TypeName
-                                          String type) {
+                                     @TypeSaveTranslation.TypeName String type) {
 
         SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -137,7 +137,7 @@ public class QueriesImpl implements IQueries {
                     new String[]{
                             translation.getTextFrom(),
                             translation.getTextTo(),
-                            type
+                            TypeSaveTranslation.FAVORITE
                     });
 
             db.setTransactionSuccessful();
@@ -152,26 +152,25 @@ public class QueriesImpl implements IQueries {
     }
 
     @Override
-    public void deleteAllType(@TypeSaveTranslation.TypeName
+    public boolean deleteAllType(@TypeSaveTranslation.TypeName
                                       String type) {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
         try {
             db.delete(DataBaseHelper.TABLE, DataBaseHelper.TYPE + "= ? ", new String[]{type});
             db.setTransactionSuccessful();
+            return true;
         } catch (Exception e) {
             Log.d(TAG, "Error while trying to delete all from data base");
         } finally {
             db.endTransaction();
         }
+        return false;
     }
 
     @Override
-    public boolean isAddedToTable(InternalTranslation translation,
-                                  @TypeSaveTranslation.TypeName String type) {
+    public boolean isFavorite(InternalTranslation translation) {
         SQLiteDatabase db = helper.getReadableDatabase();
-
-        List<InternalTranslation> temp = new ArrayList<>();
 
         String query = String.format(
                 "SELECT * FROM %s WHERE %s = '%s' AND %s = '%s' AND %s = '%s' AND %s = '%s'",
@@ -183,12 +182,12 @@ public class QueriesImpl implements IQueries {
                 DataBaseHelper.LANG,
                 translation.getLang(),
                 DataBaseHelper.TYPE,
-                type);
+                TypeSaveTranslation.FAVORITE);
 
         Cursor cursor = db.rawQuery(query, null);
         try {
             return cursor.moveToFirst();
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.d(TAG, "Error while trying check from database");
         } finally {
             if (cursor != null && !cursor.isClosed()) {
@@ -199,7 +198,7 @@ public class QueriesImpl implements IQueries {
     }
 
     private ContentValues getAllContentValues(InternalTranslation translation,
-                                              String type) {
+                                              @TypeSaveTranslation.TypeName String type) {
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.TEXT_FROM, translation.getTextFrom());
         values.put(DataBaseHelper.TEXT_TO, translation.getTextTo());

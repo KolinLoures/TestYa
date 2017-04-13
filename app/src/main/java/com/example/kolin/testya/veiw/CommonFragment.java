@@ -2,6 +2,7 @@ package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,37 +11,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
-import com.example.kolin.testya.veiw.fragment.Updatable;
-import com.example.kolin.testya.veiw.presenters.CommonPresenter;
+import com.example.kolin.testya.veiw.fragment.DataUpdatable;
+
+import java.util.ArrayList;
 
 
-public class CommonFragment extends Fragment implements ICommonView, Updatable {
+public class CommonFragment extends Fragment implements DataUpdatable<InternalTranslation> {
 
     private static final String TAG = CommonFragment.class.getSimpleName();
-    private static final String KEY_TYPE = "history_favorite";
 
+    private static final String KEY_TEXT = "what_fragment";
+    private static final String KEY_DATA = "adapter_data";
 
     private SearchView searchView;
     private RecyclerView recyclerView;
-
-    private CommonPresenter presenter;
+    private TextView textEmpty;
+    private View mainContent;
 
     private HistoryFavoriteAdapter adapter;
 
-    public CommonFragment() {
+
+    public interface OnInteractionCommonFragment {
+        void onClickItemInCommonFragment(InternalTranslation internalTranslation, boolean clicked);
     }
 
+    public CommonFragment() {}
 
-    public static CommonFragment newInstance(@TypeSaveTranslation.TypeName String type) {
+    public static CommonFragment newInstance(String textToSearchView) {
+
         CommonFragment fragment = new CommonFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_TYPE, type);
-        fragment.setArguments(bundle);
+        Bundle args = new Bundle();
+        args.putString(KEY_TEXT, textToSearchView);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -48,7 +55,7 @@ public class CommonFragment extends Fragment implements ICommonView, Updatable {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = CommonPresenter.getSingletonCommonPresenter();
+        adapter = new HistoryFavoriteAdapter();
     }
 
     @Override
@@ -58,6 +65,8 @@ public class CommonFragment extends Fragment implements ICommonView, Updatable {
         View view = inflater.inflate(R.layout.fragment_common, container, false);
         searchView = (SearchView) view.findViewById(R.id.fragment_common_search);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_common_rv);
+        textEmpty = (TextView) view.findViewById(R.id.fragment_common_text_empty);
+        mainContent = view.findViewById(R.id.fragment_common_main_content);
 
         return view;
     }
@@ -66,29 +75,50 @@ public class CommonFragment extends Fragment implements ICommonView, Updatable {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (savedInstanceState != null){
+            ArrayList<InternalTranslation> data = savedInstanceState.getParcelableArrayList(KEY_DATA);
+            adapter.addAll(data);
+        }
+
         setSearchView();
         setupRecyclerViewAdapter();
-
-        presenter.attacheView(this);
-//        presenter.loadTranslationDb(getArguments().getString(KEY_TYPE));
     }
 
     private void setupRecyclerViewAdapter() {
-        adapter = new HistoryFavoriteAdapter();
-
         adapter.setListener(new HistoryFavoriteAdapter.OnClickHistoryFavoriteListener() {
             @Override
             public void checkFavorite(InternalTranslation translation, boolean check) {
-                presenter.addRemoveFavoriteTranslationDb(translation, check);
+                Fragment parentFragment = getParentFragment();
+
+                if (parentFragment != null && parentFragment instanceof ICommonView)
+                    ((ICommonView) parentFragment).check(translation, check);
+
+                if (getActivity() instanceof OnInteractionCommonFragment) {
+                    translation.setFavorite(!check);
+                    ((OnInteractionCommonFragment) getActivity())
+                            .onClickItemInCommonFragment(translation, false);
+                }
+            }
+
+            @Override
+            public void itemClick(InternalTranslation internalTranslation) {
+                if (getActivity() instanceof OnInteractionCommonFragment) {
+                    ((OnInteractionCommonFragment) getActivity())
+                            .onClickItemInCommonFragment(internalTranslation, true);
+                }
             }
         });
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager rvLayout = new LinearLayoutManager(recyclerView.getContext());
+
+
+        recyclerView.setLayoutManager(rvLayout);
         recyclerView.setAdapter(adapter);
     }
 
     private void setSearchView() {
-        searchView.setQueryHint(getString(R.string.search_in_history));
+        String string = getArguments().getString(KEY_TEXT);
+        searchView.setQueryHint(string);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -112,21 +142,36 @@ public class CommonFragment extends Fragment implements ICommonView, Updatable {
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-
-    @Override
-    public void showLoadedData(InternalTranslation translation) {
-        adapter.add(translation);
-    }
-
-    @Override
-    public void clearAdapter() {
         adapter.clear();
+        adapter = null;
     }
 
     @Override
-    public void update() {
-        presenter.loadTranslationDb(getArguments().getString(KEY_TYPE));
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(KEY_DATA, new ArrayList<Parcelable>(adapter.getAdapterData()));
+    }
+
+    @Override
+    public void update(InternalTranslation newData) {
+        adapter.add(newData);
+        showComponent(mainContent, true);
+        showComponent(textEmpty, false);
+    }
+
+    @Override
+    public void clear() {
+        adapter.clear();
+        showComponent(mainContent, false);
+        showComponent(textEmpty, true);
+    }
+
+    private void showComponent(View component, boolean show) {
+        if (show && component.getVisibility() == View.INVISIBLE)
+            component.setVisibility(View.VISIBLE);
+
+        if (!show && component.getVisibility() == View.VISIBLE)
+            component.setVisibility(View.INVISIBLE);
     }
 }

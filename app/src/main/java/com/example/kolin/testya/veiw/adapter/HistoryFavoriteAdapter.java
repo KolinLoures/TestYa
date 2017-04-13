@@ -29,13 +29,15 @@ public class HistoryFavoriteAdapter
     @Override
     public Filter getFilter() {
         if (filter == null)
-            filter = new HistoryFavoriteFilter(this, data);
+            filter = new HistoryFavoriteFilter(data);
         return filter;
     }
 
 
     public interface OnClickHistoryFavoriteListener {
         void checkFavorite(InternalTranslation translation, boolean check);
+
+        void itemClick(InternalTranslation internalTranslation);
     }
 
     private OnClickHistoryFavoriteListener listener;
@@ -82,6 +84,10 @@ public class HistoryFavoriteAdapter
         notifyDataSetChanged();
     }
 
+    public List<InternalTranslation> getAdapterData(){
+        return data;
+    }
+
     public void setListener(OnClickHistoryFavoriteListener listener) {
         this.listener = listener;
     }
@@ -110,8 +116,33 @@ public class HistoryFavoriteAdapter
                     }
                 }
             });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.itemClick(data.get(getAdapterPosition()));
+                }
+            });
         }
 
 
+    }
+
+    private class HistoryFavoriteFilter extends RecyclerViewFilter<InternalTranslation> {
+
+        HistoryFavoriteFilter(List<InternalTranslation> data) {
+            super(data);
+        }
+
+        @Override
+        public String inWhatObjValueSearch(InternalTranslation obj) {
+            return obj.getTextFrom();
+        }
+
+        @Override
+        public void publishFilterResult(List<InternalTranslation> filterData) {
+            addAll(filterData);
+        }
     }
 }

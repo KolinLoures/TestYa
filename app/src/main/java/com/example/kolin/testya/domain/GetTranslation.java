@@ -11,6 +11,8 @@ import com.example.kolin.testya.data.net.NetSingleton;
 import com.example.kolin.testya.data.net.NetTranslator;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -20,6 +22,8 @@ import io.reactivex.functions.Function;
  */
 
 public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslation.TranslationParams> {
+
+    private static final int DELAY = 500;
 
     private NetTranslator netTranslator;
     private IQueries queries;
@@ -47,24 +51,22 @@ public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslat
                         temp.setLang(translation.getLang());
                         temp.setTextTo(TextUtils.join(" ", translation.getText()));
                         temp.setTextFrom(translationParams.text);
+                        temp.setType(TypeSaveTranslation.HISTORY);
                         return temp;
                     }
                 })
+                .delay(DELAY, TimeUnit.MILLISECONDS)
                 .doOnNext(new Consumer<InternalTranslation>() {
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull
                                                InternalTranslation internalTranslation) throws Exception {
                         internalTranslation.setFavorite(
-                                queries.isAddedToTable(
-                                        internalTranslation,
-                                        TypeSaveTranslation.FAVORITE
+                                queries.isFavorite(
+                                        internalTranslation
                                 )
                         );
 
-                        queries.addOrUpdateTranslation(
-                                internalTranslation,
-                                TypeSaveTranslation.HISTORY
-                        );
+                        queries.addOrUpdateTranslation(internalTranslation, TypeSaveTranslation.HISTORY);
                     }
                 });
     }

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
@@ -20,8 +21,6 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
 
     private static final String TAG = BaseFavoritePresenter.class.getSimpleName();
 
-    private List<InternalTranslation> favoriteList = new ArrayList<>();
-
     private AddRemoveTranslationDb addRemoveTranslationDb;
 
     @Override
@@ -35,6 +34,21 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
 
     public abstract void onCompleteAddingToDb();
 
+    protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove){
+        addRemoveTranslationDb.clearDisposableObservers();
+        addRemoveTranslationDb.execute(
+                new AddFavoriteDbObserver(),
+                AddRemoveTranslationDb.AddTranslationParams.getParamsObj(translation,
+                        TypeSaveTranslation.FAVORITE,
+                        remove)
+        );
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        addRemoveTranslationDb.dispose();
+    }
 
     public final class AddFavoriteDbObserver extends DisposableObserver<Boolean>{
 
@@ -53,20 +67,5 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         public void onComplete() {
             onCompleteAddingToDb();
         }
-    }
-
-    protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove){
-        addRemoveTranslationDb.clearDisposableObservers();
-        addRemoveTranslationDb.execute(
-                new AddFavoriteDbObserver(),
-                AddRemoveTranslationDb.AddTranslationParams.getParamsObj(translation, remove)
-        );
-    }
-
-    @Override
-    public void detachView() {
-        super.detachView();
-
-        addRemoveTranslationDb.dispose();
     }
 }

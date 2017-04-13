@@ -19,17 +19,12 @@ public interface IQueries {
     boolean addOrUpdateTranslation(InternalTranslation translation,
                                    @TypeSaveTranslation.TypeName String type);
 
-    List<InternalTranslation> getTranslation(@TypeSaveTranslation.TypeName
-                                                     String type);
+    List<InternalTranslation> getTranslations(@TypeSaveTranslation.TypeName String type);
 
-    boolean removeTranslation(InternalTranslation translation,
-                           @TypeSaveTranslation.TypeName
-                                   String type);
+    boolean removeTranslation(InternalTranslation translation, @TypeSaveTranslation.TypeName String type);
 
-    void deleteAllType(@TypeSaveTranslation.TypeName
+    boolean deleteAllType(@TypeSaveTranslation.TypeName
                                String type);
 
-    boolean isAddedToTable(InternalTranslation translation,
-            @TypeSaveTranslation.TypeName
-                    String type);
+    boolean isFavorite(InternalTranslation translation);
 }

@@ -2,30 +2,40 @@ package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.TypeSaveTranslation;
+import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
+import com.example.kolin.testya.veiw.fragment.ClearDialogFragment;
+import com.example.kolin.testya.veiw.fragment.DataUpdatable;
 import com.example.kolin.testya.veiw.fragment.Updatable;
+import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
 
 
-public class HistoryFavoriteFragment extends Fragment implements Updatable {
+public class HistoryFavoriteFragment extends Fragment
+        implements ICommonView, Updatable, ClearDialogFragment.ClearDialogListener {
 
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
+    private ImageButton deleteBtn;
 
-
+    private HistoryFavoritePresenter presenter;
 
     public HistoryFavoriteFragment() {
     }
+
 
     public static HistoryFavoriteFragment newInstance() {
         return new HistoryFavoriteFragment();
@@ -34,22 +44,25 @@ public class HistoryFavoriteFragment extends Fragment implements Updatable {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        presenter = new HistoryFavoritePresenter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
         viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
-        adapter = new ViewPagerAdapter(getFragmentManager(), true);
+        adapter = new ViewPagerAdapter(getChildFragmentManager(), true);
+        deleteBtn = (ImageButton) view.findViewById(R.id.fragment_history_favorite_delete);
 
         adapter.addFragment(
-                CommonFragment.newInstance(TypeSaveTranslation.HISTORY),
+                CommonFragment.newInstance(getString(R.string.search_in_history)),
                 getString(R.string.history));
 
         adapter.addFragment(
-                CommonFragment.newInstance(TypeSaveTranslation.FAVORITE),
+                CommonFragment.newInstance(getString(R.string.search_in_favorite)),
                 getString(R.string.favorite));
 
         viewPager.setAdapter(adapter);
@@ -57,28 +70,32 @@ public class HistoryFavoriteFragment extends Fragment implements Updatable {
         tabLayout = (TabLayout) view.findViewById(R.id.history_favorite_tab);
         tabLayout.setupWithViewPager(viewPager);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 1)
-                    adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
         return view;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        presenter.attacheView(this);
+
+
+        setupClickDeleteBtn();
+    }
+
+    private void setupClickDeleteBtn() {
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager childFragmentManager = getChildFragmentManager();
+                ClearDialogFragment clearDialogFragment =
+                        ClearDialogFragment.newInstance(
+                                (String) adapter.getPageTitle(viewPager.getCurrentItem()));
+
+                clearDialogFragment.show(childFragmentManager, "clear_dialog_fragment");
+            }
+        });
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -90,9 +107,56 @@ public class HistoryFavoriteFragment extends Fragment implements Updatable {
         super.onDetach();
     }
 
+    @Override
+    public void notifyUser(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void updateLoadedData(InternalTranslation translation) {
+//        if (translation.getType().equals(TypeSaveTranslation.HISTORY))
+//            ((DataUpdatable) adapter.getItem(0)).update(translation);
+//        else
+//            ((DataUpdatable) adapter.getItem(1)).update(translation);
+
+        ((DataUpdatable) adapter
+                .getItem(TypeSaveTranslation.getTypeId(translation.getType()))).update(translation);
+
+    }
+
+    @Override
+    public void clearViewPagerFragment(@TypeSaveTranslation.TypeName String type) {
+        if (type == null) {
+            ((DataUpdatable) adapter.getItem(0)).clear();
+            ((DataUpdatable) adapter.getItem(1)).clear();
+        } else ((DataUpdatable) adapter
+                .getItem(TypeSaveTranslation.getTypeId(type))).clear();
+
+
+//            if (type.equals(TypeSaveTranslation.HISTORY))
+//            ((DataUpdatable) adapter.getItem(0)).clear();
+//        else
+//            ((DataUpdatable) adapter.getItem(1)).clear();
+    }
+
+    @Override
+    public void check(InternalTranslation translation, boolean check) {
+        presenter.addRemoveFavoriteTranslationDb(translation, check);
+    }
 
     @Override
     public void update() {
-        adapter.notifyDataSetChanged();
+        presenter.loadTranslationDb(null);
+    }
+
+    @Override
+    public void onClickPositiveBtn() {
+        presenter.deleteTranslationsByCategory(TypeSaveTranslation.getTypeById(viewPager.getCurrentItem()));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }

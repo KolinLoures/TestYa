@@ -1,6 +1,7 @@
 package com.example.kolin.testya.veiw.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,31 +26,32 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         this.data = new ArrayList<>();
     }
 
+    private OnClickDictionaryAdapter listener;
+
+    public interface OnClickDictionaryAdapter{
+        void onClickItem(int position);
+    }
+
     @Override
     public DictionaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sub_item_dictionary_rv, parent, false);
         return new DictionaryViewHolder(view);
     }
 
-
-    /**
-     * TODO Think about several values and process to build string text (add StringBuilder)
-     * <p>
-     * currentItem.getTr().get(0)!
-     */
     @Override
     public void onBindViewHolder(DictionaryViewHolder holder, int position) {
+
         Tr currentItem = data.get(position);
+        String supportText= null;
+        holder.supportText.setVisibility(View.VISIBLE);
         holder.primaryText.setText(currentItem.getText());
 
-        String supportText = "";
-
         List<Mean> mean = currentItem.getMean();
-        if (mean != null)
-            for (Mean m : mean)
-                supportText += m.getText();
+        if (mean != null) {
+            supportText = TextUtils.join(", ", mean);
+        }
 
-        if (!supportText.equals(""))
+        if (supportText != null && !supportText.isEmpty())
             holder.supportText.setText(supportText);
         else
             holder.supportText.setVisibility(View.GONE);
@@ -60,18 +62,29 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         return data.size();
     }
 
-    static class DictionaryViewHolder extends RecyclerView.ViewHolder {
+    class DictionaryViewHolder extends RecyclerView.ViewHolder {
 
         private TextView primaryText;
         private TextView supportText;
 
-        public DictionaryViewHolder(View itemView) {
+        DictionaryViewHolder(View itemView) {
             super(itemView);
 
             primaryText = (TextView) itemView.findViewById(R.id.sub_item_dic_primary_text);
             supportText = (TextView) itemView.findViewById(R.id.sub_item_dic_sub_text);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null)
+                        listener.onClickItem((getAdapterPosition()));
+                }
+            });
         }
+    }
+
+    public Tr getDataAtPosition(int position){
+        return data.get(position);
     }
 
     public void clearAdapter() {
@@ -83,5 +96,11 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         this.data.addAll(trList);
         notifyDataSetChanged();
     }
+
+
+    public void setOnClickListener(OnClickDictionaryAdapter listener){
+        this.listener = listener;
+    }
+
 
 }
