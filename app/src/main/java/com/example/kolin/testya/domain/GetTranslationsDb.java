@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -19,7 +18,7 @@ import io.reactivex.functions.Function;
  * Created by kolin on 06.04.2017.
  */
 
-public class GetTranslationsDb extends BaseUseCase<InternalTranslation,
+public class GetTranslationsDb extends BaseUseCase<List<InternalTranslation>,
         GetTranslationsDb.GetTranslationsDbParams> {
 
     private IQueries iQueries;
@@ -29,8 +28,7 @@ public class GetTranslationsDb extends BaseUseCase<InternalTranslation,
     }
 
     @Override
-    public Observable<InternalTranslation> createObservable(
-            final GetTranslationsDbParams params) {
+    public Observable<List<InternalTranslation>> createObservable(final GetTranslationsDbParams params) {
         return Observable
                 .fromCallable(new Callable<List<InternalTranslation>>() {
                     @Override
@@ -38,22 +36,51 @@ public class GetTranslationsDb extends BaseUseCase<InternalTranslation,
                         return iQueries.getTranslations(params.type);
                     }
                 })
-                .flatMap(new Function<List<InternalTranslation>, ObservableSource<InternalTranslation>>() {
+                .map(new Function<List<InternalTranslation>, List<InternalTranslation>>() {
                     @Override
-                    public ObservableSource<InternalTranslation> apply(@NonNull List<InternalTranslation> translations) throws Exception {
+                    public List<InternalTranslation> apply(@NonNull List<InternalTranslation> translations) throws Exception {
                         Collections.reverse(translations);
-                        return Observable.fromIterable(translations);
+                        return translations;
                     }
                 })
-                .doOnNext(new Consumer<InternalTranslation>() {
+                .doOnNext(new Consumer<List<InternalTranslation>>() {
                     @Override
-                    public void accept(@NonNull InternalTranslation translation) throws Exception {
-
-                        if (translation.getType().equals(TypeSaveTranslation.HISTORY))
-                            translation.setFavorite(iQueries.isFavorite(translation));
+                    public void accept(@NonNull List<InternalTranslation> translations) throws Exception {
+                        for (InternalTranslation t: translations){
+                            if (t.getType().equals(TypeSaveTranslation.HISTORY))
+                                t.setFavorite(iQueries.isFavorite(t));
+                        }
                     }
                 });
     }
+
+
+    //    @Override
+//    public Observable<InternalTranslation> createObservable(
+//            final GetTranslationsDbParams params) {
+//        return Observable
+//                .fromCallable(new Callable<List<InternalTranslation>>() {
+//                    @Override
+//                    public List<InternalTranslation> call() throws Exception {
+//                        return iQueries.getTranslations(params.type);
+//                    }
+//                })
+//                .flatMap(new Function<List<InternalTranslation>, ObservableSource<InternalTranslation>>() {
+//                    @Override
+//                    public ObservableSource<InternalTranslation> apply(@NonNull List<InternalTranslation> translations) throws Exception {
+//                        Collections.reverse(translations);
+//                        return Observable.fromIterable(translations);
+//                    }
+//                })
+//                .doOnNext(new Consumer<InternalTranslation>() {
+//                    @Override
+//                    public void accept(@NonNull InternalTranslation translation) throws Exception {
+//
+//                        if (translation.getType().equals(TypeSaveTranslation.HISTORY))
+//                            translation.setFavorite(iQueries.isFavorite(translation));
+//                    }
+//                });
+//    }
 
     public static class GetTranslationsDbParams {
         private String type;

@@ -55,15 +55,15 @@ public class HistoryFavoriteFragment extends Fragment
 
         viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
         adapter = new ViewPagerAdapter(getChildFragmentManager(), true);
-        deleteBtn = (ImageButton) view.findViewById(R.id.fragment_history_favorite_delete);
+        deleteBtn = (ImageButton) view.findViewById(R.id.fragment_new_delete);
 
-        adapter.addFragment(
-                CommonFragment.newInstance(getString(R.string.search_in_history)),
-                getString(R.string.history));
-
-        adapter.addFragment(
-                CommonFragment.newInstance(getString(R.string.search_in_favorite)),
-                getString(R.string.favorite));
+//        adapter.addFragment(
+//                CommonFragment.newInstance(getString(R.string.search_in_history)),
+//                getString(R.string.history));
+//
+//        adapter.addFragment(
+//                CommonFragment.newInstance(getString(R.string.search_in_favorite)),
+//                getString(R.string.favorite));
 
         viewPager.setAdapter(adapter);
 
@@ -78,7 +78,6 @@ public class HistoryFavoriteFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         presenter.attacheView(this);
-
 
         setupClickDeleteBtn();
     }
@@ -105,6 +104,8 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
+
+        presenter.detachView();
     }
 
     @Override
@@ -142,21 +143,17 @@ public class HistoryFavoriteFragment extends Fragment
 
     @Override
     public void check(InternalTranslation translation, boolean check) {
-        presenter.addRemoveFavoriteTranslationDb(translation, check);
+//        presenter.addRemoveFavoriteTranslationDb(translation, check);
     }
 
     @Override
     public void update() {
         presenter.loadTranslationDb(null);
+//        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onClickPositiveBtn() {
-        presenter.deleteTranslationsByCategory(TypeSaveTranslation.getTypeById(viewPager.getCurrentItem()));
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+//        presenter.deleteTranslationsByCategory(TypeSaveTranslation.getTypeById(viewPager.getCurrentItem()));
     }
 }

@@ -1,6 +1,5 @@
 package com.example.kolin.testya.domain;
 
-import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.data.db.IQueries;
 import com.example.kolin.testya.data.db.QueriesImpl;
 
@@ -37,8 +36,7 @@ public class DeleteTypeDb extends BaseUseCase<Boolean, DeleteTypeDb.DeleteReques
             this.type = type;
         }
 
-        public static DeleteRequestParams getParamsObj(@TypeSaveTranslation.TypeName
-                                                               String type) {
+        public static DeleteRequestParams getParamsObj(String type) {
             return new DeleteRequestParams(type);
         }
     }

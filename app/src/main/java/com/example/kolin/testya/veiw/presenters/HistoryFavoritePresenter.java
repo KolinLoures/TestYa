@@ -68,8 +68,8 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
 
         getAttachView().clearViewPagerFragment(type);
 
-        getTranslationsDb.execute(new TranslationDbObserver(),
-                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(type));
+//        getTranslationsDb.execute(new TranslationDbObserver(),
+//                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(type));
     }
 
     public void deleteTranslationsByCategory(String type){

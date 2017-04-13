@@ -5,7 +5,7 @@
     tools:context="com.example.kolin.testya.veiw.CommonFragment">
 
     <TextView
-        android:id="@+id/fragment_common_text_empty"
+        android:id="@+id/fragment_new_text_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
@@ -23,14 +23,14 @@
         android:showDividers="middle">
 
         <SearchView
-            android:id="@+id/fragment_common_search"
+            android:id="@+id/fragment_new_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
             android:queryBackground="@android:color/transparent" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_common_rv"
+            android:id="@+id/fragment_new_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -1,15 +1,14 @@
 package com.example.kolin.testya;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.CommonFragment;
-import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.InfoFragment;
+import com.example.kolin.testya.veiw.NewFragment;
 import com.example.kolin.testya.veiw.NonSwipeViewPager;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
 import com.example.kolin.testya.veiw.fragment.DataUpdatable;
@@ -17,7 +16,7 @@ import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
-        CommonFragment.OnInteractionCommonFragment {
+        NewFragment.OnInteractionNewFragment {
 
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
@@ -30,10 +29,16 @@ public class MainActivity extends AppCompatActivity implements
 
         viewPager = (NonSwipeViewPager) findViewById(R.id.main_view_pager);
 
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), false);
-        adapter.addFragment(TranslatorFragment.newInstance(), null);
-        adapter.addFragment(HistoryFavoriteFragment.newInstance(), null);
-        adapter.addFragment(InfoFragment.newInstance("", ""), null);
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+
+        adapter = new ViewPagerAdapter(supportFragmentManager, false);
+
+
+//            adapter.addFragment(TranslatorFragment.newInstance(), null);
+//        adapter.addFragment(HistoryFavoriteFragment.newInstance(), null);
+//            adapter.addFragment(NewFragment.newInstance("", ""), null);
+//            adapter.addFragment(InfoFragment.newInstance("", ""), null);
+
 
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnable(false);
@@ -89,13 +94,20 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
-    public void onClickItemInCommonFragment(InternalTranslation internalTranslation, boolean clicked) {
+    public void onClickItem(InternalTranslation internalTranslation, boolean clicked) {
         Pair<Boolean, InternalTranslation> pair = new Pair<>(clicked, internalTranslation);
         if (clicked)
             viewPager.setCurrentItem(0);
 
-        ((DataUpdatable) adapter.getItem(0)).update(pair);
+        TranslatorFragment item = (TranslatorFragment) adapter.instantiateItem(viewPager, 0);
+
+        ((DataUpdatable) item).update(pair);
     }
 }

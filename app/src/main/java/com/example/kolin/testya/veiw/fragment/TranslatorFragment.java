@@ -70,6 +70,7 @@ public class TranslatorFragment extends Fragment implements
     private TranslatorPresenter presenter;
 
     public TranslatorFragment() {
+        setRetainInstance(true);
     }
 
 
@@ -80,10 +81,6 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        presenter = new TranslatorPresenter();
-        dictionaryAdapter = new DictionaryAdapter();
-        sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
     }
 
     @Override
@@ -111,10 +108,20 @@ public class TranslatorFragment extends Fragment implements
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        presenter = new TranslatorPresenter();
+
+        dictionaryAdapter = new DictionaryAdapter();
+        sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
 
         presenter.attacheView(this);
 
@@ -365,6 +372,10 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void update(Pair<Boolean, InternalTranslation> pair) {
+
+        if (presenter == null)
+            return;
+
         if (!pair.first && !presenter.equalsTranslationToCurrent(pair.second))
             return;
 

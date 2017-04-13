@@ -63,9 +63,9 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_common, container, false);
-        searchView = (SearchView) view.findViewById(R.id.fragment_common_search);
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_common_rv);
-        textEmpty = (TextView) view.findViewById(R.id.fragment_common_text_empty);
+        searchView = (SearchView) view.findViewById(R.id.fragment_new_search);
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_new_rv);
+        textEmpty = (TextView) view.findViewById(R.id.fragment_new_text_empty);
         mainContent = view.findViewById(R.id.fragment_common_main_content);
 
         return view;
