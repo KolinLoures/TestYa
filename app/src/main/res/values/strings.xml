@@ -17,7 +17,7 @@
     <string name="translation_language">Язык перевода</string>
     <string name="chose_language">Выберите язык</string>
     <string name="determine_language">определить</string>
-    <string name="determine">определено</string>
+    <string name="determined">определено</string>
     <string name="chose_language_from">Выбирите язык с которого переводить</string>
     <string name="error_message">Упс… что-то пошло не так. \nПроверьте ваше интернет соединение или \n повторите перевод позже.</string>
     <string name="no_translations">Нет переводов</string>

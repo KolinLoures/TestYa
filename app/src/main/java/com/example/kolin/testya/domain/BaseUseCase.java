@@ -18,6 +18,7 @@ public abstract class BaseUseCase<T, RequestParams> {
         this.compositeDisposable = new CompositeDisposable();
     }
 
+
     public abstract Observable<T> createObservable(RequestParams params);
 
 

@@ -1,5 +1,7 @@
 package com.example.kolin.testya.veiw.presenters;
 
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -8,6 +10,9 @@ import com.example.kolin.testya.domain.DeleteTypeDb;
 import com.example.kolin.testya.domain.GetTranslationsDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -18,11 +23,14 @@ import io.reactivex.observers.DisposableObserver;
 public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
 
     private static final String TAG = HistoryFavoritePresenter.class.getSimpleName();
+    private static final String KEY_DATA = "current_data";
 
     private GetTranslationsDb getTranslationsDb;
     private DeleteTypeDb deleteTypeDb;
 
     private boolean updateHistoryFragment = false;
+
+    private List<InternalTranslation> currentData;
 
     @Override
     public void attacheView(@NonNull HistoryFavoriteFragment view) {
@@ -30,6 +38,8 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
 
         getTranslationsDb = new GetTranslationsDb();
         deleteTypeDb = new DeleteTypeDb();
+
+        currentData = new ArrayList<>();
     }
 
     @Override
@@ -83,6 +93,7 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
             return;
         }
 
+        currentData.add(translation);
 
         getAttachView().updateLoadedData(translation);
     }
@@ -91,7 +102,24 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
     public void detachView() {
         super.detachView();
 
+        currentData.clear();
+        currentData = null;
+
         getTranslationsDb.dispose();
+    }
+
+    @Override
+    public void restoreStateData(Bundle savedInstateState) {
+        ArrayList<InternalTranslation> data = savedInstateState.getParcelableArrayList(KEY_DATA);
+        if (data != null){
+            for (InternalTranslation it: data)
+                showLoadedDbData(it);
+        }
+    }
+
+    @Override
+    public void prepareForChangeState(Bundle outSate) {
+        outSate.putParcelableArrayList(KEY_DATA, new ArrayList<Parcelable>(currentData));
     }
 
     public final class TranslationDbObserver extends DisposableObserver<InternalTranslation> {

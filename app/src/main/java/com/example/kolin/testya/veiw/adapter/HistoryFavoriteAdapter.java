@@ -84,6 +84,10 @@ public class HistoryFavoriteAdapter
         notifyDataSetChanged();
     }
 
+    public List<InternalTranslation> getAdapterData(){
+        return data;
+    }
+
     public void setListener(OnClickHistoryFavoriteListener listener) {
         this.listener = listener;
     }

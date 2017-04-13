@@ -1,18 +1,38 @@
 package com.example.kolin.testya.data.entity.dictionary;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
  */
 
-public class Tr {
+public class Tr implements Parcelable {
 
     private String text;
     private String pos;
     private List<Syn> syn = null;
     private List<Mean> mean = null;
     private List<Ex> ex = null;
+
+    protected Tr(Parcel in) {
+        text = in.readString();
+        pos = in.readString();
+    }
+
+    public static final Creator<Tr> CREATOR = new Creator<Tr>() {
+        @Override
+        public Tr createFromParcel(Parcel in) {
+            return new Tr(in);
+        }
+
+        @Override
+        public Tr[] newArray(int size) {
+            return new Tr[size];
+        }
+    };
 
     public String getText() {
         return text;
@@ -52,5 +72,16 @@ public class Tr {
 
     public void setEx(List<Ex> ex) {
         this.ex = ex;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(text);
+        dest.writeString(pos);
     }
 }

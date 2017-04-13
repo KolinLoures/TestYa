@@ -2,6 +2,7 @@ package com.example.kolin.testya.veiw;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,12 +18,15 @@ import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.fragment.DataUpdatable;
 
+import java.util.ArrayList;
+
 
 public class CommonFragment extends Fragment implements DataUpdatable<InternalTranslation> {
 
     private static final String TAG = CommonFragment.class.getSimpleName();
 
     private static final String KEY_TEXT = "what_fragment";
+    private static final String KEY_DATA = "adapter_data";
 
     private SearchView searchView;
     private RecyclerView recyclerView;
@@ -36,8 +40,7 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
         void onClickItemInCommonFragment(InternalTranslation internalTranslation, boolean clicked);
     }
 
-    public CommonFragment() {
-    }
+    public CommonFragment() {}
 
     public static CommonFragment newInstance(String textToSearchView) {
 
@@ -51,6 +54,8 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adapter = new HistoryFavoriteAdapter();
     }
 
     @Override
@@ -70,14 +75,16 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (savedInstanceState != null){
+            ArrayList<InternalTranslation> data = savedInstanceState.getParcelableArrayList(KEY_DATA);
+            adapter.addAll(data);
+        }
+
         setSearchView();
         setupRecyclerViewAdapter();
-
     }
 
     private void setupRecyclerViewAdapter() {
-        adapter = new HistoryFavoriteAdapter();
-
         adapter.setListener(new HistoryFavoriteAdapter.OnClickHistoryFavoriteListener() {
             @Override
             public void checkFavorite(InternalTranslation translation, boolean check) {
@@ -135,8 +142,16 @@ public class CommonFragment extends Fragment implements DataUpdatable<InternalTr
     @Override
     public void onDetach() {
         super.onDetach();
+        adapter.clear();
+        adapter = null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArrayList(KEY_DATA, new ArrayList<Parcelable>(adapter.getAdapterData()));
+    }
 
     @Override
     public void update(InternalTranslation newData) {

@@ -70,7 +70,6 @@ public class TranslatorFragment extends Fragment implements
     private TranslatorPresenter presenter;
 
     public TranslatorFragment() {
-        setRetainInstance(true);
     }
 
 
@@ -83,6 +82,8 @@ public class TranslatorFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 
         presenter = new TranslatorPresenter();
+        dictionaryAdapter = new DictionaryAdapter();
+        sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
     }
 
     @Override
@@ -115,11 +116,13 @@ public class TranslatorFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String ssss;
-        if (savedInstanceState != null)
-            ssss = savedInstanceState.getString("la");
-
         presenter.attacheView(this);
+
+        if (savedInstanceState != null)
+            presenter.restoreStateData(savedInstanceState);
+        else
+            presenter.loadSupportLanguages();
+
 
         setupEditTextChangeListener();
         setupRecyclerViewAdapter();
@@ -166,29 +169,32 @@ public class TranslatorFragment extends Fragment implements
             case R.id.translation_img_btn_reverse:
                 if (reverseLanguages())
                     editTextTranslate.setText(textTransResult.getText());
+                else
+                    notifyUser(getString(R.string.chose_language_from));
                 break;
         }
     }
 
     private boolean reverseLanguages() {
-        String valuerByKey = presenter.getCodeLang(btnFrom.getText().toString());
-        if (valuerByKey != null) {
+        String valueByKey = presenter.getCodeLang(btnFrom.getText().toString());
+        if (valueByKey != null) {
             String temp = btnTo.getText().toString();
             setLanguagesToButtons(temp, btnFrom.getText().toString());
-
             return true;
-        } else
-            notifyUser(getString(R.string.chose_language_from));
+        }
         return false;
     }
 
     private void setupRecyclerViewAdapter() {
-        dictionaryAdapter = new DictionaryAdapter();
-        sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
-
         dictionaryAdapter.setOnClickListener(new DictionaryAdapter.OnClickDictionaryAdapter() {
             @Override
             public void onClickItem(int position) {
+
+                if (!reverseLanguages()) {
+                    String lang = textDeterminedLanguage.getText().toString().split(" ")[0];
+                    btnTo.setText(lang);
+                }
+
                 editTextTranslate
                         .setText(
                                 dictionaryAdapter.getDataAtPosition(
@@ -283,7 +289,7 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public void setDetermineLanguage(String langFrom) {
         textDeterminedLanguage.setText(String.format("%s (%s)",
-                langFrom, getString(R.string.determine)));
+                langFrom, getString(R.string.determined)));
     }
 
     @Override
@@ -318,7 +324,11 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void setLanguagesToButtons(String langFrom, String langTo) {
-        btnFrom.setText(langFrom);
+        if (langFrom == null)
+            btnFrom.setText(getString(R.string.determine_language));
+        else
+            btnFrom.setText(langFrom);
+
         btnTo.setText(langTo);
     }
 
@@ -349,7 +359,7 @@ public class TranslatorFragment extends Fragment implements
     }
 
     private void setVisibleClearBtn(boolean show) {
-       showComponent(btnClear, show);
+        showComponent(btnClear, show);
     }
 
 
@@ -368,7 +378,7 @@ public class TranslatorFragment extends Fragment implements
         String langTo = pairLang[1];
 
         if (langFrom.equals(langTo))
-            btnFrom.setText(getString(R.string.determine));
+            btnFrom.setText(getString(R.string.determine_language));
         else
             btnFrom.setText(presenter.getNameLang(langFrom));
 
@@ -408,6 +418,6 @@ public class TranslatorFragment extends Fragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString("la", "проверка");
+        presenter.prepareForChangeState(outState);
     }
 }

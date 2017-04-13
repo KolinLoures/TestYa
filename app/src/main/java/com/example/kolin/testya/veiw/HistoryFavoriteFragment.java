@@ -51,7 +51,7 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
         viewPager = (ViewPager) view.findViewById(R.id.history_favorite_view_pager);
         adapter = new ViewPagerAdapter(getChildFragmentManager(), true);
@@ -78,6 +78,7 @@ public class HistoryFavoriteFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         presenter.attacheView(this);
+
 
         setupClickDeleteBtn();
     }
@@ -152,5 +153,10 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public void onClickPositiveBtn() {
         presenter.deleteTranslationsByCategory(TypeSaveTranslation.getTypeById(viewPager.getCurrentItem()));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 }
