@@ -7,164 +7,207 @@ import android.util.Log;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.DeleteTypeDb;
-import com.example.kolin.testya.domain.GetTranslationsDb;
+import com.example.kolin.testya.domain.GetDbTranslations;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableObserver;
 
 /**
- * Created by kolin on 06.04.2017.
+ * Created by kolin on 13.04.2017.
  */
 
 public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
 
     private static final String TAG = HistoryFavoritePresenter.class.getSimpleName();
-    private static final String KEY_DATA = "current_data";
 
-    private GetTranslationsDb getTranslationsDb;
+    private static final String KEY_HISTORY = "history_data";
+    private static final String KEY_FAVORITE = "favorite_data";
+
+    private GetDbTranslations getDbTranslations;
     private DeleteTypeDb deleteTypeDb;
 
-    private boolean updateHistoryFragment = false;
 
-    private List<InternalTranslation> currentData;
+    private List<InternalTranslation> currentHistoryData;
+    private List<InternalTranslation> currentFavoriteData;
+
+    private int currentSpinnerPos;
+    private String currentTypeLoad;
 
     @Override
     public void attacheView(@NonNull HistoryFavoriteFragment view) {
         super.attacheView(view);
 
-        getTranslationsDb = new GetTranslationsDb();
+        getDbTranslations = new GetDbTranslations();
         deleteTypeDb = new DeleteTypeDb();
 
-        currentData = new ArrayList<>();
+        currentHistoryData = new ArrayList<>();
+        currentFavoriteData = new ArrayList<>();
     }
 
-    @Override
-    public void onNextAddingToDb() {
-        //stub
+    public void loadTranslationFromDb(@TypeSaveTranslation.TypeName String type, int spinnerPos) {
+
+        currentTypeLoad = type;
+        currentSpinnerPos = spinnerPos;
+
+        if (type == null) {
+            currentFavoriteData.clear();
+            currentHistoryData.clear();
+        }
+
+
+        getDbTranslations.clearDisposableObservers();
+
+        getDbTranslations.execute(new TranslationDbObserver(),
+                GetDbTranslations.GetTranslationsDbParams.getParamsObj(type));
     }
 
-    @Override
-    public void onCompleteAddingToDb() {
-        updateDataFragments();
+    public void deleteFromDb(int spinnerPos) {
+
+        currentTypeLoad = null;
+        currentSpinnerPos = spinnerPos;
+
+        if (!isHistoryTypeSpinSelection(spinnerPos)) {
+            for (InternalTranslation translation : currentHistoryData) {
+                translation.setFavorite(false);
+            }
+
+            currentFavoriteData.clear();
+        } else
+            currentHistoryData.clear();
+
+        deleteTypeDb.clearDisposableObservers();
+
+        deleteTypeDb.execute(new DeleteObserver(),
+                DeleteTypeDb.DeleteRequestParams.getParamsObj(TypeSaveTranslation.getTypeById(spinnerPos)));
     }
 
-    public void addRemoveFavoriteTranslationDb(InternalTranslation translation, boolean remove) {
-        setUpdateHistoryFragment(translation.getType());
+    public void addRemoveFavoriteDb(InternalTranslation internalTranslation, boolean check) {
+        super.addRemoveFavoriteTranslation(internalTranslation, check);
 
-        super.addRemoveFavoriteTranslation(translation, remove);
+
+        for (InternalTranslation translation : currentHistoryData) {
+            if (translation.equals(internalTranslation)) {
+                translation.setFavorite(!check);
+            }
+        }
+
+        currentFavoriteData.clear();
+        loadTranslationFromDb(TypeSaveTranslation.FAVORITE, currentSpinnerPos);
     }
 
-    public void loadTranslationDb(@TypeSaveTranslation.TypeName
-                                          String type) {
+    public void showLoadedDataForPosition(int posSpinner) {
+
+        if (posSpinner == -1)
+            return;
+
+        currentSpinnerPos = posSpinner;
+
+        if (currentTypeLoad == null) {
+            showLoadedCurrentData();
+            return;
+        }
+
+        if (!isHistoryTypeSpinSelection(currentSpinnerPos) && currentTypeLoad.equals(TypeSaveTranslation.FAVORITE))
+            getAttachView().showLoadedData(currentFavoriteData);
+        else
+            showLoadedCurrentData();
+    }
+
+    public void showLoadedCurrentData() {
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
             return;
         }
 
-        getAttachView().clearViewPagerFragment(type);
-
-        getTranslationsDb.execute(new TranslationDbObserver(),
-                GetTranslationsDb.GetTranslationsDbParams.getParamsObj(type));
+        if (isHistoryTypeSpinSelection(currentSpinnerPos))
+            getAttachView().showLoadedData(currentHistoryData);
+        else
+            getAttachView().showLoadedData(currentFavoriteData);
     }
 
-    public void deleteTranslationsByCategory(String type){
-        setUpdateHistoryFragment(type);
-
-        if (!isViewAttach()) {
-            Log.e(TAG, "View is detached");
-            return;
-        }
-
-        getAttachView().clearViewPagerFragment(type);
-
-        deleteTypeDb.execute(new DeleteDbObserver(),
-                DeleteTypeDb.DeleteRequestParams.getParamsObj(type));
+    private boolean isHistoryTypeSpinSelection(int posSpinner) {
+        return TypeSaveTranslation.getTypeById(posSpinner).equals(TypeSaveTranslation.HISTORY);
     }
 
-    public void showLoadedDbData(InternalTranslation translation) {
+    private void divideToCategories(List<InternalTranslation> data) {
 
-        if (!isViewAttach()) {
-            Log.e(TAG, "View is detached");
-            return;
-        }
-
-        currentData.add(translation);
-
-        getAttachView().updateLoadedData(translation);
+        for (InternalTranslation t : data)
+            if (t.getType().equals(TypeSaveTranslation.HISTORY))
+                currentHistoryData.add(t);
+            else
+                currentFavoriteData.add(t);
     }
 
     @Override
     public void detachView() {
         super.detachView();
 
-        currentData.clear();
-        currentData = null;
+        getDbTranslations.dispose();
+        deleteTypeDb.dispose();
 
-        getTranslationsDb.dispose();
+        currentHistoryData.clear();
+        currentHistoryData = null;
+
+        currentFavoriteData.clear();
+        currentFavoriteData = null;
     }
 
     @Override
     public void restoreStateData(Bundle savedInstateState) {
-        ArrayList<InternalTranslation> data = savedInstateState.getParcelableArrayList(KEY_DATA);
-        if (data != null){
-            for (InternalTranslation it: data)
-                showLoadedDbData(it);
-        }
+        ArrayList<InternalTranslation> dataHistory = savedInstateState.getParcelableArrayList(KEY_HISTORY);
+        if (dataHistory != null)
+            currentHistoryData.addAll(dataHistory);
+
+        ArrayList<InternalTranslation> dataFavorite = savedInstateState.getParcelableArrayList(KEY_FAVORITE);
+        if (dataFavorite != null)
+            currentFavoriteData.addAll(dataFavorite);
     }
 
     @Override
     public void prepareForChangeState(Bundle outSate) {
-        outSate.putParcelableArrayList(KEY_DATA, new ArrayList<Parcelable>(currentData));
+        outSate.putParcelableArrayList(KEY_HISTORY, new ArrayList<Parcelable>(currentHistoryData));
+        outSate.putParcelableArrayList(KEY_FAVORITE, new ArrayList<Parcelable>(currentFavoriteData));
     }
 
-    public final class TranslationDbObserver extends DisposableObserver<InternalTranslation> {
+    @Override
+    public void onCompleteAddToFavoriteDb() {
+        //stub
+    }
+
+    private final class TranslationDbObserver extends DisposableObserver<List<InternalTranslation>> {
 
         @Override
-        public void onNext(InternalTranslation translation) {
-            showLoadedDbData(translation);
+        public void onNext(List<InternalTranslation> translations) {
+            divideToCategories(translations);
         }
 
         @Override
         public void onError(Throwable e) {
+            Log.e(TAG, "DeleteObserver: ", e);
         }
 
         @Override
         public void onComplete() {
+            showLoadedDataForPosition(currentSpinnerPos);
         }
     }
 
-    public final class DeleteDbObserver extends DisposableObserver<Boolean> {
-
-        @Override
-        public void onNext(Boolean bool) {
-            if (bool)
-                getAttachView().notifyUser("Переводов больше нет!");
-        }
+    private final class DeleteObserver extends DisposableCompletableObserver {
 
         @Override
         public void onError(Throwable e) {
-
+            Log.e(TAG, "DeleteObserver: ", e);
         }
 
         @Override
         public void onComplete() {
-            updateDataFragments();
+            showLoadedCurrentData();
         }
-    }
-
-    private void setUpdateHistoryFragment(String type){
-        updateHistoryFragment = type.equals(TypeSaveTranslation.FAVORITE);
-    }
-
-    private void updateDataFragments(){
-        if (updateHistoryFragment)
-            loadTranslationDb(null);
-        else
-            loadTranslationDb(TypeSaveTranslation.FAVORITE);
     }
 }

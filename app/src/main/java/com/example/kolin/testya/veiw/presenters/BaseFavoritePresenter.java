@@ -8,7 +8,7 @@ import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableCompletableObserver;
 
 /**
  * Created by kolin on 03.04.2017.
@@ -27,9 +27,7 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         addRemoveTranslationDb = new AddRemoveTranslationDb();
     }
 
-    public abstract void onNextAddingToDb();
-
-    public abstract void onCompleteAddingToDb();
+    public abstract void onCompleteAddToFavoriteDb();
 
     protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove){
         addRemoveTranslationDb.clearDisposableObservers();
@@ -47,22 +45,16 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         addRemoveTranslationDb.dispose();
     }
 
-    public final class AddFavoriteDbObserver extends DisposableObserver<Boolean>{
-
-        @Override
-        public void onNext(Boolean aBoolean) {
-            if (aBoolean)
-                onNextAddingToDb();
-        }
+    public final class AddFavoriteDbObserver extends DisposableCompletableObserver{
 
         @Override
         public void onError(Throwable e) {
-            Log.e(TAG, "AddFavoriteDbObserver - " + e.toString());
+            Log.e(TAG, "AddFavoriteDbObserver: ", e);
         }
 
         @Override
         public void onComplete() {
-            onCompleteAddingToDb();
+            onCompleteAddToFavoriteDb();
         }
     }
 }

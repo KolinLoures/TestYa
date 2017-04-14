@@ -78,13 +78,19 @@ public class HistoryFavoriteAdapter
         notifyItemInserted(data.size() - 1);
     }
 
-    public void addAll(List<InternalTranslation> translations){
-        data.clear();
+    public void addAll(List<InternalTranslation> translations) {
         data.addAll(translations);
         notifyDataSetChanged();
     }
 
-    public List<InternalTranslation> getAdapterData(){
+    public void addNewDataToFilter(List<InternalTranslation> translations) {
+        if (filter == null)
+            getFilter();
+
+        filter.addNewData(translations);
+    }
+
+    public List<InternalTranslation> getAdapterData() {
         return data;
     }
 

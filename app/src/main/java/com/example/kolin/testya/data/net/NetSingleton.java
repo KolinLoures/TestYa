@@ -14,22 +14,23 @@ public class NetSingleton {
 
     private static NetSingleton netSingleton = null;
 
-    private NetSingleton(){
+    private NetSingleton() {
     }
 
-    private OkHttpClient provideOkHttpClient(){
+
+
+    private OkHttpClient provideOkHttpClient() {
+
         HttpLoggingInterceptor loggingInterceptor =
                 new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
-
-
         return new OkHttpClient.Builder()
-                .addNetworkInterceptor(loggingInterceptor)
                 .addInterceptor(loggingInterceptor)
                 .build();
     }
 
-    private Retrofit provideRetrofit(){
+
+    private Retrofit provideRetrofit() {
         return new Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(NetTranslator.BASE_URL_TRNSL)
@@ -38,12 +39,12 @@ public class NetSingleton {
                 .build();
     }
 
-    public NetTranslator provideTranslator(){
+    public NetTranslator provideTranslator() {
         return provideRetrofit().create(NetTranslator.class);
     }
 
-    public static NetSingleton providenetSingleton(){
-        if (netSingleton == null){
+    public static NetSingleton provideneSingleton() {
+        if (netSingleton == null) {
             netSingleton = new NetSingleton();
         }
         return netSingleton;

@@ -1,5 +1,6 @@
 package com.example.kolin.testya.domain;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -21,15 +22,15 @@ import io.reactivex.functions.Function;
  * Created by kolin on 31.03.2017.
  */
 
-public class GetTranslation extends BaseUseCase<InternalTranslation, GetTranslation.TranslationParams> {
+public class GetTranslation extends BaseObservableUseCase<InternalTranslation, GetTranslation.TranslationParams> {
 
     private static final int DELAY = 500;
 
     private NetTranslator netTranslator;
     private IQueries queries;
 
-    public GetTranslation() {
-        this.netTranslator = NetSingleton.providenetSingleton().provideTranslator();
+    public GetTranslation(Context context) {
+        this.netTranslator = NetSingleton.provideneSingleton().provideTranslator();
         this.queries = new QueriesImpl();
     }
 

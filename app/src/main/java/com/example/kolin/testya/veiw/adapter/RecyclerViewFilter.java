@@ -50,4 +50,9 @@ public abstract class RecyclerViewFilter<T> extends Filter {
     protected void publishResults(CharSequence constraint, FilterResults results) {
         publishFilterResult((List<T>) results.values);
     }
+
+    public void addNewData(List<T> data){
+        this.data.clear();
+        this.data.addAll(data);
+    }
 }
