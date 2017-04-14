@@ -163,7 +163,8 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
         list.add(getString(R.string.favorite));
         spinnerAdapter = new SpinnerCategoryAdapter(getContext(), list,
                 new int[]{
-                        R.drawable.ic_bookmark_gray_24dp}
+                        R.drawable.ic_access_time_black_24dp,
+                        R.drawable.ic_bookmark_black_24dp}
         );
 
         spinner.setAdapter(spinnerAdapter);
