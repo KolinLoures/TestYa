@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.InfoFragment;
-import com.example.kolin.testya.veiw.NewFragment;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 import com.example.kolin.testya.veiw.fragment.Updatable;
 
@@ -21,7 +21,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 //    private boolean isAddTitle;
 
     private TranslatorFragment translatorFragment;
-    private NewFragment newFragment;
+    private HistoryFavoriteFragment historyFavoriteFragment;
     private InfoFragment infoFragment;
 
     public ViewPagerAdapter(FragmentManager fm, boolean isAddTitle) {
@@ -38,7 +38,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new TranslatorFragment();
             case 1:
-                return new NewFragment();
+                return new HistoryFavoriteFragment();
             case 2:
                 return new InfoFragment();
             default:
@@ -55,7 +55,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 translatorFragment = (TranslatorFragment) fragment;
                 break;
             case 1:
-                newFragment = (NewFragment) fragment;
+                historyFavoriteFragment = (HistoryFavoriteFragment) fragment;
                 break;
             case 2:
                 infoFragment = (InfoFragment) fragment;

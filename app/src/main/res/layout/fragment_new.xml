@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.kolin.testya.veiw.NewFragment">
+    tools:context="com.example.kolin.testya.veiw.HistoryFavoriteFragment">
 
 
     <FrameLayout
@@ -35,7 +35,7 @@
                 android:layout_gravity="end"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="16dp"
-                android:src="@drawable/ic_delete_black_24dp" />
+                android:src="@drawable/selector_delete_btn" />
 
         </LinearLayout>
 
@@ -54,7 +54,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="@string/no_translations"
             android:textAlignment="center"
-            android:visibility="invisible"
+            android:visibility="gone"
             tools:visibility="visible" />
 
         <LinearLayout

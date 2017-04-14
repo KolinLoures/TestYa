@@ -13,7 +13,7 @@ import io.reactivex.Observable;
  * Created by kolin on 09.04.2017.
  */
 
-public class GetLanguages extends BaseUseCase<ArrayMap<String, String>,
+public class GetLanguages extends BaseObservableUseCase<ArrayMap<String, String>,
         GetLanguages.GetLanguageParams> {
 
     private LanguageProperties languageProperties;

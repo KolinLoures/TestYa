@@ -14,6 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@drawable/vertical_divider_gray"
+        android:showDividers="middle"
         android:orientation="vertical">
 
         <com.example.kolin.testya.veiw.NonSwipeViewPager
@@ -28,8 +30,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            android:elevation="8dp"
-            app:tabMode="fixed" />
+            app:tabMode="fixed" >
+
+            <android.support.design.widget.TabItem
+                android:icon="@drawable/selector_tab_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.TabItem
+                android:icon="@drawable/selector_tab_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.TabItem
+                android:icon="@drawable/selector_tab_3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.design.widget.TabLayout>
 
     </LinearLayout>
 

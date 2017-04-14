@@ -53,19 +53,16 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         languages = new ArrayMap<>();
         currentDefList = new ArrayList<>();
 
-        getTranslation = new GetTranslation();
-        getDictionary = new GetDictionary();
+        getTranslation = new GetTranslation(view.getContext());
+        getDictionary = new GetDictionary(view.getContext());
         getLanguages = new GetLanguages(view.getContext());
 
         this.currentText = "";
     }
 
     @Override
-    public void onNextAddingToDb() {
-    }
-
-    @Override
-    public void onCompleteAddingToDb() {
+    public void onCompleteAddToFavoriteDb() {
+        //stub
     }
 
     public void addRemoveTranslationDb(boolean remove) {
@@ -83,17 +80,24 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             return;
         }
 
-        if (currentText.equals(text) && currentLangFrom.equals(langFrom) && currentLangTo.equals(langTo))
+        getAttachView().showLoadingProgress(false);
+        getTranslation.clearDisposableObservers();
+
+
+        if (currentText.equals(text) && currentLangFrom.equals(langFrom) && currentLangTo.equals(langTo)) {
             return;
+        }
 
         getAttachView().showTranslationCard(false);
         getAttachView().showDictionaryCard(false);
         getAttachView().showDetermineLang(false);
 
+        clear();
+
         String lang = buildLangString(langFrom, langTo);
 
+
         if (!text.isEmpty() && !text.equals("") && lang != null) {
-            getTranslation.clearDisposableObservers();
             getAttachView().showLoadingProgress(true);
 
             getTranslation.execute(new TranslatorObserver(),
@@ -145,11 +149,9 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
                 return;
             }
 
-            this.currentDefList.clear();
             this.currentDefList.addAll(defList);
 
             getAttachView().showDictionaryCard(true);
-
             getAttachView().showDictionary(defList);
         }
     }
@@ -199,6 +201,12 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         outSate.putParcelable(KEY_CURR_TRANS, currentTranslation);
         outSate.putParcelableArrayList(KEY_CURR_DIC, new ArrayList<Parcelable>(currentDefList));
         outSate.putSerializable(KEY_LANGUAGES, new HashMap<>(languages));
+    }
+
+    public void clear(){
+        currentText = "";
+        currentTranslation = null;
+        currentDefList.clear();
     }
 
     public void clearDisposables() {
@@ -256,7 +264,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             getAttachView().showLoadingProgress(false);
             getAttachView().showError(true);
 
-
+            e.printStackTrace();
             Log.e(TAG, "TranslatorObservable: ", e);
         }
 
@@ -271,6 +279,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         @Override
         public void onNext(List<Def> defList) {
+            currentDefList.clear();
             showDictionaryResult(defList);
         }
 

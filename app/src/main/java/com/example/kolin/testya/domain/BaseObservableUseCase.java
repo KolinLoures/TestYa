@@ -10,11 +10,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by kolin on 31.03.2017.
  */
 
-public abstract class BaseUseCase<T, RequestParams> {
+public abstract class BaseObservableUseCase<T, RequestParams> {
 
     private CompositeDisposable compositeDisposable;
 
-    public BaseUseCase() {
+    public BaseObservableUseCase() {
         this.compositeDisposable = new CompositeDisposable();
     }
 

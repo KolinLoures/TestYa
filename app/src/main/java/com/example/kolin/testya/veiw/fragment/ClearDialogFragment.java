@@ -1,12 +1,16 @@
 package com.example.kolin.testya.veiw.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.*;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -69,11 +73,25 @@ public class ClearDialogFragment extends DialogFragment {
         String title = getArguments().getString(KEY_TITLE);
 
         textTitle.setText(title);
-        textContent.setText(String.format("%s %s ?", getString(R.string.dialog_question), title));
+        textContent.setText(String.format("%s \"%s\" ?", getString(R.string.dialog_question), title));
 
         initializeListener();
         btnCancel.setOnClickListener(onClickListener);
         btnYes.setOnClickListener(onClickListener);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        ViewGroup.LayoutParams params = dialog.getWindow().getAttributes();
+        // Assign window properties to fill the parent
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+
+        return dialog;
     }
 
     private void initializeListener() {
@@ -102,12 +120,6 @@ public class ClearDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        onClickListener = null;
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
@@ -116,5 +128,6 @@ public class ClearDialogFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        onClickListener = null;
     }
 }

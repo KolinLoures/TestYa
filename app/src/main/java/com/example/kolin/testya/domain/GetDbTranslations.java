@@ -18,12 +18,12 @@ import io.reactivex.functions.Function;
  * Created by kolin on 06.04.2017.
  */
 
-public class GetTranslationsDb extends BaseUseCase<List<InternalTranslation>,
-        GetTranslationsDb.GetTranslationsDbParams> {
+public class GetDbTranslations extends BaseObservableUseCase<List<InternalTranslation>,
+        GetDbTranslations.GetTranslationsDbParams> {
 
     private IQueries iQueries;
 
-    public GetTranslationsDb() {
+    public GetDbTranslations() {
         this.iQueries = new QueriesImpl();
     }
 

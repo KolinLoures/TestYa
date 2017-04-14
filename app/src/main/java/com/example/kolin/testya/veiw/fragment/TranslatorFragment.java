@@ -10,12 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -158,8 +155,10 @@ public class TranslatorFragment extends Fragment implements
                 presenter.addRemoveTranslationDb(!checkBox.isChecked());
                 break;
             case R.id.translation_clear_edit_btn:
-                presenter.clearDisposables();
                 editTextTranslate.getText().clear();
+                textTransResult.setText("");
+                presenter.clear();
+                presenter.clearDisposables();
                 showDetermineLang(false);
                 break;
             case R.id.translation_btn_from:
@@ -230,23 +229,11 @@ public class TranslatorFragment extends Fragment implements
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString().trim();
+                if (text.isEmpty()) {
+                    textTransResult.setText("");
+                }
                 setVisibleClearBtn(!text.isEmpty());
                 presenter.loadTranslation(text, btnFrom.getText().toString(), btnTo.getText().toString());
-            }
-        });
-
-        editTextTranslate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                    editTextTranslate.clearFocus();
-
-                    InputMethodManager imm =
-                            (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(editTextTranslate.getWindowToken(), 0);
-                }
-                return false;
             }
         });
     }

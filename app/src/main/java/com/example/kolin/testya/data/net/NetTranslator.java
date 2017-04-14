@@ -4,7 +4,6 @@ import com.example.kolin.testya.data.entity.Translation;
 import com.example.kolin.testya.data.entity.dictionary.Dictionary;
 
 import io.reactivex.Observable;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -27,7 +26,6 @@ public interface NetTranslator {
 
 
     @POST("translate")
-    @Headers({"Content-Type: application/x-www-form-urlencoded"})
     Observable<Translation> getTranslation(@Query("key") String key,
                                            @Query(value = "text", encoded = true) String text,
                                            @Query("lang") String lang);

@@ -7,15 +7,13 @@ import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.Completable;
 
 /**
  * Created by kolin on 03.04.2017.
  */
 
-public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTranslationDb.AddTranslationParams> {
+public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTranslationDb.AddTranslationParams> {
 
 
     private IQueries queries;
@@ -25,8 +23,8 @@ public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTransl
     }
 
     @Override
-    public Observable<Boolean> createObservable(final AddTranslationParams addTranslationParams) {
-        return Observable.fromCallable(new Callable<Boolean>() {
+    public Completable createCompletable(final AddTranslationParams addTranslationParams) {
+        return Completable.fromCallable(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return queries.addOrRemoveTranslation(
@@ -41,7 +39,8 @@ public class AddRemoveTranslationDb extends BaseUseCase<Boolean, AddRemoveTransl
 
     public final static class AddTranslationParams {
         private final InternalTranslation obj;
-        private final @TypeSaveTranslation.TypeName String type;
+        @TypeSaveTranslation.TypeName
+        private final  String type;
         private final boolean remove;
 
         private AddTranslationParams(InternalTranslation obj,
