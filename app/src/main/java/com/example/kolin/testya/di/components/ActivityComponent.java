@@ -1,6 +1,9 @@
-package com.example.kolin.testya.di;
+package com.example.kolin.testya.di.components;
 
 import android.app.Activity;
+
+import com.example.kolin.testya.di.ActivityScope;
+import com.example.kolin.testya.di.modules.ActivityModule;
 
 import dagger.Component;
 

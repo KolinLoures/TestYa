@@ -7,10 +7,10 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.kolin.testya.di.ActivityModule;
-import com.example.kolin.testya.di.DaggerViewComponent;
 import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.ViewComponent;
+import com.example.kolin.testya.di.components.DaggerViewComponent;
+import com.example.kolin.testya.di.components.ViewComponent;
+import com.example.kolin.testya.di.modules.ActivityModule;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.NonSwipeViewPager;

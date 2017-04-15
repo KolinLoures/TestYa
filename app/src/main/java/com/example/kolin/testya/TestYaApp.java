@@ -2,9 +2,9 @@ package com.example.kolin.testya;
 
 import android.app.Application;
 
-import com.example.kolin.testya.di.AppComponent;
-import com.example.kolin.testya.di.AppModule;
-import com.example.kolin.testya.di.DaggerAppComponent;
+import com.example.kolin.testya.di.components.AppComponent;
+import com.example.kolin.testya.di.components.DaggerAppComponent;
+import com.example.kolin.testya.di.modules.AppModule;
 
 
 /**

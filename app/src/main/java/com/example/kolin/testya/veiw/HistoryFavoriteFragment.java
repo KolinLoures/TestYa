@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.ViewComponent;
+import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.adapter.SpinnerCategoryAdapter;

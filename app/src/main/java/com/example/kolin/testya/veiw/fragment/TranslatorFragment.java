@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.ViewComponent;
+import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.ITranslatorView;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;

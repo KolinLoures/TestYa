@@ -1,4 +1,4 @@
-package com.example.kolin.testya.di;
+package com.example.kolin.testya.di.components;
 
 import android.content.Context;
 
@@ -6,6 +6,8 @@ import com.example.kolin.testya.data.db.DataBaseHelper;
 import com.example.kolin.testya.data.db.IQueries;
 import com.example.kolin.testya.data.languages.LanguageProperties;
 import com.example.kolin.testya.data.net.NetTranslator;
+import com.example.kolin.testya.di.modules.AppModule;
+import com.example.kolin.testya.di.modules.DataModule;
 
 import javax.inject.Singleton;
 

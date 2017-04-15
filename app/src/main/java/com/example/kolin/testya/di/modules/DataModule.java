@@ -1,4 +1,4 @@
-package com.example.kolin.testya.di;
+package com.example.kolin.testya.di.modules;
 
 import android.content.Context;
 
