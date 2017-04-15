@@ -1,18 +1,17 @@
 package com.example.kolin.testya.domain;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.data.db.IQueries;
-import com.example.kolin.testya.data.db.QueriesImpl;
 import com.example.kolin.testya.data.entity.Translation;
-import com.example.kolin.testya.data.net.NetSingleton;
 import com.example.kolin.testya.data.net.NetTranslator;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -29,9 +28,10 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
     private NetTranslator netTranslator;
     private IQueries queries;
 
-    public GetTranslation(Context context) {
-        this.netTranslator = NetSingleton.provideneSingleton().provideTranslator();
-        this.queries = new QueriesImpl();
+    @Inject
+    GetTranslation(IQueries queries, NetTranslator netTranslator) {
+        this.netTranslator = netTranslator;
+        this.queries = queries;
     }
 
     @Override

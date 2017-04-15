@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.entity.dictionary.Def;
+import com.example.kolin.testya.di.ProvideComponent;
+import com.example.kolin.testya.di.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.ITranslatorView;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
@@ -31,6 +33,8 @@ import com.example.kolin.testya.veiw.presenters.TranslatorPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 public class TranslatorFragment extends Fragment implements
@@ -64,7 +68,8 @@ public class TranslatorFragment extends Fragment implements
     private DictionaryAdapter dictionaryAdapter;
     private SectionedDictionaryAdapter sectionedDictionaryAdapter;
 
-    private TranslatorPresenter presenter;
+    @Inject
+    TranslatorPresenter presenter;
 
     public TranslatorFragment() {
         setRetainInstance(true);
@@ -75,9 +80,12 @@ public class TranslatorFragment extends Fragment implements
         return new TranslatorFragment();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
     }
 
     @Override
@@ -115,7 +123,6 @@ public class TranslatorFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new TranslatorPresenter();
 
         dictionaryAdapter = new DictionaryAdapter();
         sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
@@ -246,11 +253,7 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public void onDetach() {
         super.onDetach();
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
         presenter.detachView();
         sectionedDictionaryAdapter = null;
         dictionaryAdapter = null;

@@ -1,15 +1,15 @@
 package com.example.kolin.testya.domain;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.data.entity.dictionary.Dictionary;
-import com.example.kolin.testya.data.net.NetSingleton;
 import com.example.kolin.testya.data.net.NetTranslator;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -26,8 +26,9 @@ public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionar
 
     private NetTranslator netTranslator;
 
-    public GetDictionary(Context context) {
-        this.netTranslator = NetSingleton.provideneSingleton().provideTranslator();
+    @Inject
+    public GetDictionary(NetTranslator netTranslator) {
+        this.netTranslator = netTranslator;
     }
 
     @Override

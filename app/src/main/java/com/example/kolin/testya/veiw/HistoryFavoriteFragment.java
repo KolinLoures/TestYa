@@ -17,6 +17,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.di.ProvideComponent;
+import com.example.kolin.testya.di.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.adapter.SpinnerCategoryAdapter;
@@ -26,6 +28,8 @@ import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class HistoryFavoriteFragment extends Fragment implements NewView, Updatable, ClearDialogFragment.ClearDialogListener {
 
@@ -38,7 +42,8 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     private Toolbar toolbar;
     private ImageButton btnDelete;
 
-    private HistoryFavoritePresenter presenter;
+    @Inject
+    HistoryFavoritePresenter presenter;
 
     private SpinnerCategoryAdapter spinnerAdapter;
     private HistoryFavoriteAdapter adapter;
@@ -58,9 +63,12 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
         return new HistoryFavoriteFragment();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
     }
 
     @Override
@@ -86,7 +94,6 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new HistoryFavoritePresenter();
         presenter.attacheView(this);
 
         if (savedInstanceState != null)

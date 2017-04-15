@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
+import com.example.kolin.testya.di.ActivityScope;
+import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.DeleteTypeDb;
 import com.example.kolin.testya.domain.GetDbTranslations;
 import com.example.kolin.testya.domain.model.InternalTranslation;
@@ -14,13 +16,15 @@ import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by kolin on 13.04.2017.
  */
-
+@ActivityScope
 public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
 
     private static final String TAG = HistoryFavoritePresenter.class.getSimpleName();
@@ -38,12 +42,20 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
     private int currentSpinnerPos;
     private String currentTypeLoad;
 
+    @Inject
+    HistoryFavoritePresenter(AddRemoveTranslationDb addRemoveTranslationDb,
+                             GetDbTranslations getDbTranslations,
+                             DeleteTypeDb deleteTypeDb) {
+        super(addRemoveTranslationDb);
+
+        this.getDbTranslations = getDbTranslations;
+        this.deleteTypeDb = deleteTypeDb;
+    }
+
     @Override
     public void attacheView(@NonNull HistoryFavoriteFragment view) {
         super.attacheView(view);
 
-        getDbTranslations = new GetDbTranslations();
-        deleteTypeDb = new DeleteTypeDb();
 
         currentHistoryData = new ArrayList<>();
         currentFavoriteData = new ArrayList<>();

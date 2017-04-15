@@ -14,7 +14,7 @@ public class NetSingleton {
 
     private static NetSingleton netSingleton = null;
 
-    private NetSingleton() {
+    public NetSingleton() {
     }
 
 

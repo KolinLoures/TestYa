@@ -21,8 +21,8 @@ public class QueriesImpl implements IQueries {
 
     protected DataBaseHelper helper;
 
-    public QueriesImpl() {
-        this.helper = DataBaseHelper.getDataBaseHelper();
+    public QueriesImpl(DataBaseHelper dataBaseHelper) {
+        this.helper = dataBaseHelper;
     }
 
     @Override

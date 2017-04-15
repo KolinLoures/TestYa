@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     static final String TYPE = "type";
 
 
-    private DataBaseHelper(Context context) {
+    public DataBaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
