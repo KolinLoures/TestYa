@@ -7,7 +7,6 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.example.kolin.testya.data.entity.dictionary.Def;
-import com.example.kolin.testya.di.ActivityScope;
 import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.GetDictionary;
 import com.example.kolin.testya.domain.GetLanguages;
@@ -27,7 +26,6 @@ import io.reactivex.observers.DisposableObserver;
 /**
  * Created by kolin on 31.03.2017.
  */
-@ActivityScope
 public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragment> {
 
     private static final String TAG = TranslatorPresenter.class.getSimpleName();

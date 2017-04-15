@@ -251,13 +251,20 @@ public class TranslatorFragment extends Fragment implements
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
 
         presenter.detachView();
         sectionedDictionaryAdapter = null;
         dictionaryAdapter = null;
         onClickListener = null;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+
     }
 
     @Override

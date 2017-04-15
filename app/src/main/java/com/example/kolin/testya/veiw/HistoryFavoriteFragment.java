@@ -74,7 +74,7 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_new, container, false);
 
         toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
@@ -223,13 +223,19 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        presenter.detachView();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
 
         adapter.clear();
         adapter = null;
 
-        presenter.detachView();
     }
 
     @Override

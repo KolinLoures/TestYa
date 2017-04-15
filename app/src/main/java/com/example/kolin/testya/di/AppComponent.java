@@ -5,12 +5,13 @@ import android.content.Context;
 import com.example.kolin.testya.data.db.DataBaseHelper;
 import com.example.kolin.testya.data.db.IQueries;
 import com.example.kolin.testya.data.languages.LanguageProperties;
-import com.example.kolin.testya.data.net.NetSingleton;
 import com.example.kolin.testya.data.net.NetTranslator;
 
 import javax.inject.Singleton;
 
 import dagger.Component;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 /**
  * Created by kolin on 15.04.2017.
@@ -28,7 +29,9 @@ public interface AppComponent {
 
     LanguageProperties getLangProperties();
 
-    NetSingleton getNetSingleton();
+    OkHttpClient getOkHttpClient();
+
+    Retrofit getRetrofit();
 
     NetTranslator getNetTranslator();
 
