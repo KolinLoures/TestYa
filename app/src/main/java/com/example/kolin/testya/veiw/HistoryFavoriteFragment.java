@@ -75,17 +75,17 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
         toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
-        btnDelete = (ImageButton) view.findViewById(R.id.fragment_new_delete);
+        btnDelete = (ImageButton) view.findViewById(R.id.fragment_hf_delete);
 
-        searchView = (SearchView) view.findViewById(R.id.fragment_new_search);
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_new_rv);
+        searchView = (SearchView) view.findViewById(R.id.fragment_hf_search);
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_hf_rv);
         textEmpty = (TextView) view.findViewById(R.id.fragment_new_text_empty);
         mainContent = view.findViewById(R.id.fragment_common_main_content);
 
-        spinner = (Spinner) view.findViewById(R.id.fragment_new_spinner);
+        spinner = (Spinner) view.findViewById(R.id.fragment_hf_spinner);
         return view;
     }
 

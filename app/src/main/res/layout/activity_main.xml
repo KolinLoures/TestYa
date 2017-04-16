@@ -14,9 +14,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/vertical_divider_gray"
-        android:showDividers="middle"
-        android:orientation="vertical">
+        android:divider="@drawable/divider_vertical_gray"
+        android:orientation="vertical"
+        android:showDividers="middle">
 
         <com.example.kolin.testya.veiw.NonSwipeViewPager
             android:id="@+id/main_view_pager"
@@ -26,26 +26,30 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/main_tab_layout"
-            style="@style/CustomBottomTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            app:tabMode="fixed" >
+            app:tabBackground="?attr/selectableItemBackground"
+            app:tabIndicatorColor="@color/colorAccent"
+            app:tabIndicatorHeight="4dp"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabSelectedTextColor="@color/colorBlack">
 
             <android.support.design.widget.TabItem
-                android:icon="@drawable/selector_tab_1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:icon="@drawable/selector_tab_1" />
 
             <android.support.design.widget.TabItem
-                android:icon="@drawable/selector_tab_2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:icon="@drawable/selector_tab_2" />
 
             <android.support.design.widget.TabItem
-                android:icon="@drawable/selector_tab_3"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:icon="@drawable/selector_tab_3" />
 
         </android.support.design.widget.TabLayout>
 
