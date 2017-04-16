@@ -18,19 +18,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fragment_common_main_content"
-        android:divider="@drawable/vertical_divider_gray"
+        android:divider="@drawable/divider_vertical_gray"
         android:orientation="vertical"
         android:showDividers="middle">
 
         <SearchView
-            android:id="@+id/fragment_new_search"
+            android:id="@+id/fragment_hf_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:iconifiedByDefault="false"
             android:queryBackground="@android:color/transparent" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_new_rv"
+            android:id="@+id/fragment_hf_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

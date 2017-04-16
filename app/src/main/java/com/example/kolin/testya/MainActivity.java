@@ -7,6 +7,10 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.kolin.testya.di.ProvideComponent;
+import com.example.kolin.testya.di.components.DaggerViewComponent;
+import com.example.kolin.testya.di.components.ViewComponent;
+import com.example.kolin.testya.di.modules.ActivityModule;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.NonSwipeViewPager;
@@ -16,16 +20,21 @@ import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
-        HistoryFavoriteFragment.OnInteractionNewFragment {
+        HistoryFavoriteFragment.OnInteractionNewFragment,
+        ProvideComponent<ViewComponent> {
 
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
     private ViewPagerAdapter adapter;
 
+    private ViewComponent viewComponent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initializeViewComponent();
 
         viewPager = (NonSwipeViewPager) findViewById(R.id.main_view_pager);
 
@@ -58,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    //TODO: substitute first tab icon or selector
     private void setupTabListener() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -74,12 +82,6 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void onClickItem(InternalTranslation internalTranslation, boolean clicked) {
@@ -90,5 +92,18 @@ public class MainActivity extends AppCompatActivity implements
         TranslatorFragment item = (TranslatorFragment) adapter.instantiateItem(viewPager, 0);
 
         ((DataUpdatable) item).update(pair);
+    }
+
+
+    private void initializeViewComponent() {
+        this.viewComponent = DaggerViewComponent.builder()
+                .appComponent(((TestYaApp) getApplication()).getAppComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
+    }
+
+    @Override
+    public ViewComponent getComponent() {
+        return viewComponent;
     }
 }

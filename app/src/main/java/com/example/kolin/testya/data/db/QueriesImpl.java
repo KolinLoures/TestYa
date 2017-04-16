@@ -21,8 +21,8 @@ public class QueriesImpl implements IQueries {
 
     protected DataBaseHelper helper;
 
-    public QueriesImpl() {
-        this.helper = DataBaseHelper.getDataBaseHelper();
+    public QueriesImpl(DataBaseHelper dataBaseHelper) {
+        this.helper = dataBaseHelper;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class QueriesImpl implements IQueries {
             query = String.format("SELECT * FROM %s", DataBaseHelper.TABLE);
         else
             query = String.format(
-                    "SELECT * FROM %s WHERE %s = '%s'",
+                    "SELECT * FROM %s WHERE %s = \"%s\"",
                     DataBaseHelper.TABLE, DataBaseHelper.TYPE, type);
 
         Cursor cursor = db.rawQuery(query, null);
@@ -173,7 +173,7 @@ public class QueriesImpl implements IQueries {
         SQLiteDatabase db = helper.getReadableDatabase();
 
         String query = String.format(
-                "SELECT * FROM %s WHERE %s = '%s' AND %s = '%s' AND %s = '%s' AND %s = '%s'",
+                "SELECT * FROM %s WHERE %s = \"%s\" AND %s = \"%s\" AND %s = \"%s\" AND %s = \"%s\"",
                 DataBaseHelper.TABLE,
                 DataBaseHelper.TEXT_FROM,
                 translation.getTextFrom(),

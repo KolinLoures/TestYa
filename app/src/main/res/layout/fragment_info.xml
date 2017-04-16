@@ -1,55 +1,60 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:fragment="com.example.kolin.testya.InfoFragment">
 
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/main_toolbar" />
-
-    </FrameLayout>
-
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:src="@drawable/yandex_translate" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/fragment_info_translator_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:autoLink="web"
-        android:textColorLink="@color/colorRed"
-        android:text="@string/translate_with_yandex"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-        android:textColor="@color/colorBlack" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/fragment_info_dictionary_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:autoLink="web"
-        android:textColorLink="@color/colorRed"
-        android:text="@string/dictionary_with_yandex"
+            <include layout="@layout/main_toolbar" />
 
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-        android:textColor="@color/colorBlack" />
+        </FrameLayout>
 
-    <Button
-        android:id="@+id/fragment_info_update_btn"
-        android:layout_width="match_parent"
-        android:textColor="@color/colorRed"
-        android:text="@string/update_language_properties"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/yandex_translate" />
+
+        <TextView
+            android:id="@+id/fragment_info_translator_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:autoLink="web"
+            android:text="@string/translate_with_yandex"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textColor="@color/colorBlack"
+            android:textColorLink="@color/colorRed" />
+
+        <TextView
+            android:id="@+id/fragment_info_dictionary_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:autoLink="web"
+            android:text="@string/dictionary_with_yandex"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+
+            android:textColor="@color/colorBlack"
+            android:textColorLink="@color/colorRed" />
+
+        <Button
+            android:id="@+id/fragment_info_update_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/update_language_properties"
+            android:textColor="@color/colorRed" />
 
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

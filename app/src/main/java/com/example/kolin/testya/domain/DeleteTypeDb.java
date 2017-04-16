@@ -1,9 +1,10 @@
 package com.example.kolin.testya.domain;
 
 import com.example.kolin.testya.data.db.IQueries;
-import com.example.kolin.testya.data.db.QueriesImpl;
 
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import io.reactivex.Completable;
 
@@ -15,8 +16,9 @@ public class DeleteTypeDb extends BaseCompletableUseCase<DeleteTypeDb.DeleteRequ
 
     private IQueries queries;
 
-    public DeleteTypeDb() {
-        this.queries = new QueriesImpl();
+    @Inject
+    public DeleteTypeDb(IQueries queries) {
+        this.queries = queries;
     }
 
     @Override

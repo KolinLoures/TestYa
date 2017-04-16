@@ -20,16 +20,18 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
 
     private AddRemoveTranslationDb addRemoveTranslationDb;
 
+    BaseFavoritePresenter(AddRemoveTranslationDb addRemoveTranslationDb) {
+        this.addRemoveTranslationDb = addRemoveTranslationDb;
+    }
+
     @Override
     public void attacheView(@NonNull V view) {
         super.attacheView(view);
-
-        addRemoveTranslationDb = new AddRemoveTranslationDb();
     }
 
     public abstract void onCompleteAddToFavoriteDb();
 
-    protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove){
+    protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove) {
         addRemoveTranslationDb.clearDisposableObservers();
         addRemoveTranslationDb.execute(
                 new AddFavoriteDbObserver(),
@@ -45,7 +47,7 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         addRemoveTranslationDb.dispose();
     }
 
-    public final class AddFavoriteDbObserver extends DisposableCompletableObserver{
+    public final class AddFavoriteDbObserver extends DisposableCompletableObserver {
 
         @Override
         public void onError(Throwable e) {

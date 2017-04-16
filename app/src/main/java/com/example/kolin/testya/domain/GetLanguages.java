@@ -1,11 +1,12 @@
 package com.example.kolin.testya.domain;
 
-import android.content.Context;
 import android.util.ArrayMap;
 
 import com.example.kolin.testya.data.languages.LanguageProperties;
 
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 
@@ -18,8 +19,9 @@ public class GetLanguages extends BaseObservableUseCase<ArrayMap<String, String>
 
     private LanguageProperties languageProperties;
 
-    public GetLanguages(Context context) {
-        this.languageProperties = new LanguageProperties(context);
+    @Inject
+    GetLanguages(LanguageProperties languageProperties) {
+        this.languageProperties = languageProperties;
     }
 
     @Override

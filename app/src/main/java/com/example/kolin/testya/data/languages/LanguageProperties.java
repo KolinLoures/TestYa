@@ -7,7 +7,6 @@ import android.util.ArrayMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Properties;
 
 /**
  * Created by kolin on 09.04.2017.
@@ -15,13 +14,11 @@ import java.util.Properties;
 
 public class LanguageProperties {
 
-    private Properties properties;
     private Context context;
 
 
     public LanguageProperties(Context context) {
         this.context = context;
-        properties = new Properties();
     }
 
     public ArrayMap<String, String> getSupportLanguage() throws IOException {

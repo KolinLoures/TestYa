@@ -7,6 +7,7 @@ import android.util.ArrayMap;
 import android.util.Log;
 
 import com.example.kolin.testya.data.entity.dictionary.Def;
+import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.GetDictionary;
 import com.example.kolin.testya.domain.GetLanguages;
 import com.example.kolin.testya.domain.GetTranslation;
@@ -18,12 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by kolin on 31.03.2017.
  */
-
 public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragment> {
 
     private static final String TAG = TranslatorPresenter.class.getSimpleName();
@@ -46,17 +48,24 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     private List<Def> currentDefList;
     private ArrayMap<String, String> languages;
 
+    @Inject
+    TranslatorPresenter(AddRemoveTranslationDb addRemoveTranslationDb,
+                               GetTranslation getTranslation,
+                               GetDictionary getDictionary,
+                               GetLanguages getLanguages) {
+        super(addRemoveTranslationDb);
+
+        this.getTranslation = getTranslation;
+        this.getDictionary = getDictionary;
+        this.getLanguages = getLanguages;
+    }
+
     @Override
     public void attacheView(@NonNull TranslatorFragment view) {
         super.attacheView(view);
 
-        languages = new ArrayMap<>();
-        currentDefList = new ArrayList<>();
-
-        getTranslation = new GetTranslation(view.getContext());
-        getDictionary = new GetDictionary(view.getContext());
-        getLanguages = new GetLanguages(view.getContext());
-
+        this.languages = new ArrayMap<>();
+        this.currentDefList = new ArrayList<>();
         this.currentText = "";
     }
 
@@ -73,7 +82,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         getLanguages.execute(new LanguageObserver(), GetLanguages.GetLanguageParams.getParamsObj(true));
     }
 
-    public void loadTranslation(String text, String langFrom, String langTo) {
+    public void loadTranslation(String text, String langFrom, String langTo, boolean loadFromNetworkOnly) {
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
@@ -81,8 +90,6 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         }
 
         getAttachView().showLoadingProgress(false);
-        getTranslation.clearDisposableObservers();
-
 
         if (currentText.equals(text) && currentLangFrom.equals(langFrom) && currentLangTo.equals(langTo)) {
             return;
@@ -100,8 +107,11 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         if (!text.isEmpty() && !text.equals("") && lang != null) {
             getAttachView().showLoadingProgress(true);
 
+
+            getTranslation.clearDisposableObservers();
+
             getTranslation.execute(new TranslatorObserver(),
-                    GetTranslation.TranslationParams.getEntity(text, lang));
+                    GetTranslation.TranslationParams.getEntity(text, lang, loadFromNetworkOnly));
         }
     }
 
@@ -201,6 +211,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         outSate.putParcelable(KEY_CURR_TRANS, currentTranslation);
         outSate.putParcelableArrayList(KEY_CURR_DIC, new ArrayList<Parcelable>(currentDefList));
         outSate.putSerializable(KEY_LANGUAGES, new HashMap<>(languages));
+
     }
 
     public void clear(){

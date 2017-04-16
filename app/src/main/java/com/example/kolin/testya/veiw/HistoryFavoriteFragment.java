@@ -17,6 +17,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.di.ProvideComponent;
+import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.adapter.SpinnerCategoryAdapter;
@@ -26,6 +28,8 @@ import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class HistoryFavoriteFragment extends Fragment implements NewView, Updatable, ClearDialogFragment.ClearDialogListener {
 
@@ -38,7 +42,8 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     private Toolbar toolbar;
     private ImageButton btnDelete;
 
-    private HistoryFavoritePresenter presenter;
+    @Inject
+    HistoryFavoritePresenter presenter;
 
     private SpinnerCategoryAdapter spinnerAdapter;
     private HistoryFavoriteAdapter adapter;
@@ -58,26 +63,29 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
         return new HistoryFavoriteFragment();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_new, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_history_favorite, container, false);
 
         toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
-        btnDelete = (ImageButton) view.findViewById(R.id.fragment_new_delete);
+        btnDelete = (ImageButton) view.findViewById(R.id.fragment_hf_delete);
 
-        searchView = (SearchView) view.findViewById(R.id.fragment_new_search);
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_new_rv);
+        searchView = (SearchView) view.findViewById(R.id.fragment_hf_search);
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_hf_rv);
         textEmpty = (TextView) view.findViewById(R.id.fragment_new_text_empty);
         mainContent = view.findViewById(R.id.fragment_common_main_content);
 
-        spinner = (Spinner) view.findViewById(R.id.fragment_new_spinner);
+        spinner = (Spinner) view.findViewById(R.id.fragment_hf_spinner);
         return view;
     }
 
@@ -86,7 +94,6 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new HistoryFavoritePresenter();
         presenter.attacheView(this);
 
         if (savedInstanceState != null)
@@ -216,13 +223,19 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        presenter.detachView();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
 
         adapter.clear();
         adapter = null;
 
-        presenter.detachView();
     }
 
     @Override

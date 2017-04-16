@@ -2,10 +2,11 @@ package com.example.kolin.testya.domain;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.data.db.IQueries;
-import com.example.kolin.testya.data.db.QueriesImpl;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import io.reactivex.Completable;
 
@@ -18,8 +19,9 @@ public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTran
 
     private IQueries queries;
 
-    public AddRemoveTranslationDb() {
-        this.queries = new QueriesImpl();
+    @Inject
+    public AddRemoveTranslationDb(IQueries queries) {
+        this.queries = queries;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTran
     public final static class AddTranslationParams {
         private final InternalTranslation obj;
         @TypeSaveTranslation.TypeName
-        private final  String type;
+        private final String type;
         private final boolean remove;
 
         private AddTranslationParams(InternalTranslation obj,
@@ -54,7 +56,7 @@ public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTran
         public static AddTranslationParams getParamsObj(InternalTranslation obj,
                                                         @TypeSaveTranslation.TypeName String type,
                                                         boolean remove
-        ){
+        ) {
             return new AddTranslationParams(obj, type, remove);
         }
     }

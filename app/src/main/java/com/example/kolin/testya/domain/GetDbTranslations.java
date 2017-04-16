@@ -2,12 +2,13 @@ package com.example.kolin.testya.domain;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
 import com.example.kolin.testya.data.db.IQueries;
-import com.example.kolin.testya.data.db.QueriesImpl;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -23,8 +24,9 @@ public class GetDbTranslations extends BaseObservableUseCase<List<InternalTransl
 
     private IQueries iQueries;
 
-    public GetDbTranslations() {
-        this.iQueries = new QueriesImpl();
+    @Inject
+    GetDbTranslations(IQueries queries) {
+        this.iQueries = queries;
     }
 
     @Override
