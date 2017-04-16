@@ -7,6 +7,7 @@ import com.example.kolin.testya.data.entity.dictionary.Dictionary;
 import com.example.kolin.testya.data.net.NetTranslator;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -37,7 +38,7 @@ public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionar
                 NetTranslator.API_KEY_DICT,
                 dictionaryParams.text,
                 dictionaryParams.lang,
-                "ru")
+                dictionaryParams.ui)
                 .flatMap(new Function<Dictionary, ObservableSource<List<Def>>>() {
                     @Override
                     public ObservableSource<List<Def>> apply(@io.reactivex.annotations.NonNull
@@ -48,13 +49,16 @@ public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionar
                 .delay(DELAY_MILLISECONDS, TimeUnit.MILLISECONDS);
     }
 
+    //TODO: add support of ui other languages param
     public static final class DictionaryParams{
         private final String text;
         private final String lang;
-        //TODO: add support of ui param
-        private String ui;
+        private final String ui;
 
         private DictionaryParams(String text, String lang) {
+            String language = Locale.getDefault().getLanguage();
+            //till support two ui parameters RU and EN
+            this.ui = !language.equals("ru") && !language.equals("en") ? "en" : language;
             this.text = text;
             this.lang = lang;
         }

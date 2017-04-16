@@ -17,6 +17,7 @@ import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -79,7 +80,8 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     }
 
     public void loadSupportLanguages() {
-        getLanguages.execute(new LanguageObserver(), GetLanguages.GetLanguageParams.getParamsObj(true));
+        getLanguages.execute(new LanguageObserver(),
+                GetLanguages.GetLanguageParams.getParamsObj(Locale.getDefault().getLanguage()));
     }
 
     public void loadTranslation(String text, String langFrom, String langTo, boolean loadFromNetworkOnly) {
