@@ -1,6 +1,5 @@
 package com.example.kolin.testya.domain;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.example.kolin.testya.data.TypeSaveTranslation;
@@ -9,13 +8,17 @@ import com.example.kolin.testya.data.entity.Translation;
 import com.example.kolin.testya.data.net.NetTranslator;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 /**
  * Created by kolin on 31.03.2017.
@@ -35,9 +38,11 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
     }
 
     @Override
-    public Observable<InternalTranslation> createObservable(@NonNull final
-                                                                TranslationParams translationParams) {
-        return netTranslator
+    public Observable<InternalTranslation> createObservable(final TranslationParams translationParams) {
+
+        final Observable<InternalTranslation> observable;
+
+        Observable<InternalTranslation> netObservable = netTranslator
                 .getTranslation(
                         NetTranslator.API_KEY_TRNSL,
                         translationParams.text,
@@ -55,7 +60,45 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
                         temp.setType(TypeSaveTranslation.HISTORY);
                         return temp;
                     }
-                })
+                });
+
+        if (translationParams.loadFromNetworkOnly) {
+
+            Observable<InternalTranslation> dbObservable = Observable
+                    .fromCallable(new Callable<List<InternalTranslation>>() {
+                        @Override
+                        public List<InternalTranslation> call() throws Exception {
+                            return queries.getTranslations(null);
+                        }
+                    })
+                    .flatMap(new Function<List<InternalTranslation>, ObservableSource<InternalTranslation>>() {
+                        @Override
+                        public ObservableSource<InternalTranslation> apply(@io.reactivex.annotations.NonNull List<InternalTranslation> translations) throws Exception {
+                            return Observable.fromIterable(translations);
+                        }
+                    }).filter(new Predicate<InternalTranslation>() {
+                        @Override
+                        public boolean test(@io.reactivex.annotations.NonNull InternalTranslation internalTranslation) throws Exception {
+                            return internalTranslation.getTextFrom().equals(translationParams.text) &&
+                                    internalTranslation.getLang().equals(translationParams.lang);
+                        }
+                    });
+
+            observable = Observable
+                    .concat(dbObservable, netObservable)
+                    .firstElement()
+                    .flatMapObservable(new Function<InternalTranslation, ObservableSource<? extends InternalTranslation>>() {
+                        @Override
+                        public ObservableSource<? extends InternalTranslation> apply(@io.reactivex.annotations.NonNull InternalTranslation internalTranslation) throws Exception {
+                            return Observable.just(internalTranslation);
+                        }
+                    });
+
+        } else
+            observable = netObservable;
+
+
+        return observable
                 .delay(DELAY, TimeUnit.MILLISECONDS)
                 .doOnNext(new Consumer<InternalTranslation>() {
                     @Override
@@ -77,14 +120,16 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
 
         private final String text;
         private final String lang;
+        private final boolean loadFromNetworkOnly;
 
-        public TranslationParams(String text, String lang) {
+        public TranslationParams(String text, String lang, boolean loadFromNetworkOnly) {
             this.text = text;
             this.lang = lang;
+            this.loadFromNetworkOnly = loadFromNetworkOnly;
         }
 
-        public static TranslationParams getEntity(String text, String lang) {
-            return new TranslationParams(text, lang);
+        public static TranslationParams getEntity(String text, String lang, boolean checkInDb) {
+            return new TranslationParams(text, lang, checkInDb);
         }
     }
 

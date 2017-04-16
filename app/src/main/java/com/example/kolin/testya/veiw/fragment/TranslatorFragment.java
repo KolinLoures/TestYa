@@ -64,6 +64,7 @@ public class TranslatorFragment extends Fragment implements
 
     private View.OnClickListener onClickListener;
 
+    private boolean blockTextWatcher;
 
     private DictionaryAdapter dictionaryAdapter;
     private SectionedDictionaryAdapter sectionedDictionaryAdapter;
@@ -235,12 +236,14 @@ public class TranslatorFragment extends Fragment implements
 
             @Override
             public void afterTextChanged(Editable s) {
-                String text = s.toString().trim();
-                if (text.isEmpty()) {
-                    textTransResult.setText("");
+                if (!blockTextWatcher) {
+                    String text = s.toString().trim();
+                    if (text.isEmpty()) {
+                        textTransResult.setText("");
+                    }
+                    setVisibleClearBtn(!text.isEmpty());
+                    presenter.loadTranslation(text, btnFrom.getText().toString(), btnTo.getText().toString(), false);
                 }
-                setVisibleClearBtn(!text.isEmpty());
-                presenter.loadTranslation(text, btnFrom.getText().toString(), btnTo.getText().toString());
             }
         });
     }
@@ -391,7 +394,17 @@ public class TranslatorFragment extends Fragment implements
             btnFrom.setText(presenter.getNameLang(langFrom));
 
         btnTo.setText(presenter.getNameLang(langTo));
+
+        blockTextWatcher = true;
         editTextTranslate.setText(pair.second.getTextFrom());
+        blockTextWatcher = false;
+
+        presenter.loadTranslation(
+                editTextTranslate.getText().toString(),
+                btnFrom.getText().toString(),
+                btnTo.getText().toString(),
+                true
+        );
     }
 
     @Override
@@ -418,7 +431,8 @@ public class TranslatorFragment extends Fragment implements
         presenter.loadTranslation(
                 editTextTranslate.getText().toString(),
                 btnFrom.getText().toString(),
-                btnTo.getText().toString()
+                btnTo.getText().toString(),
+                false
         );
     }
 

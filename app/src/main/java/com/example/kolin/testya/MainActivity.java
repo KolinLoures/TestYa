@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    //TODO: substitute first tab icon or selector
     private void setupTabListener() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

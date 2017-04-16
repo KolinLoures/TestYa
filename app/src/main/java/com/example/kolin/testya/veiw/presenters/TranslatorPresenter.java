@@ -82,7 +82,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         getLanguages.execute(new LanguageObserver(), GetLanguages.GetLanguageParams.getParamsObj(true));
     }
 
-    public void loadTranslation(String text, String langFrom, String langTo) {
+    public void loadTranslation(String text, String langFrom, String langTo, boolean loadFromNetworkOnly) {
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
@@ -111,7 +111,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             getTranslation.clearDisposableObservers();
 
             getTranslation.execute(new TranslatorObserver(),
-                    GetTranslation.TranslationParams.getEntity(text, lang));
+                    GetTranslation.TranslationParams.getEntity(text, lang, loadFromNetworkOnly));
         }
     }
 
