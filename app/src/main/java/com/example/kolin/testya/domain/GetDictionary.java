@@ -58,7 +58,7 @@ public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionar
         private DictionaryParams(String text, String lang) {
             String language = Locale.getDefault().getLanguage();
             //till support two ui parameters RU and EN
-            this.ui = !language.equals("ru") && !language.equals("en") ? "en" : language;
+            this.ui = language.equals("ru") || language.equals("en") ? language : "en";
             this.text = text;
             this.lang = lang;
         }
