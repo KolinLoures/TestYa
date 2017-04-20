@@ -12,7 +12,7 @@ import dagger.Component;
  */
 @ActivityScope
 @Component(dependencies = AppComponent.class, modules = ActivityModule.class)
-public interface ViewComponent extends ActivityComponent {
+public interface ViewComponent {
 
     void inject(TranslatorFragment translatorFragment);
 
