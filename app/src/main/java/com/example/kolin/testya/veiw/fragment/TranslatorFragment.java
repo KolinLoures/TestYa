@@ -441,13 +441,17 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void onChooseLanguageDialog(String lang, boolean isTextFrom) {
+        //help gc
         dialog = null;
+        //if dialog was invoke from btnFRom
         if (isTextFrom) {
+            //reverse lang if they equals
             if (lang.equals(btnTo.getText()))
                 btnTo.setText(btnFrom.getText());
 
             btnFrom.setText(lang);
         } else {
+            //reverse lang if they equals
             if (lang.equals(btnFrom.getText()))
                 btnFrom.setText(btnTo.getText());
 
@@ -455,6 +459,7 @@ public class TranslatorFragment extends Fragment implements
         }
 
 
+        //load new translation with new langs
         presenter.loadTranslation(
                 editTextTranslate.getText().toString(),
                 btnFrom.getText().toString(),
@@ -466,7 +471,7 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
+        //invoke necessary in presenter
         presenter.prepareForChangeState(outState);
     }
 }
