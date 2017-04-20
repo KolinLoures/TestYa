@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by kolin on 10.04.2017.
  *
- * Abstract class for Recycler view data Filter.
+ * Abstract class of Filter for Recycler view data.
  *
  */
 
