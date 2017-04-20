@@ -18,12 +18,15 @@ import io.reactivex.functions.Function;
 
 /**
  * Created by kolin on 01.04.2017.
+ *
+ * GetDictionary implementation of {@link BaseObservableUseCase}.
+ * Use Case to get Dictionary options from net.
  */
 
 public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionary.DictionaryParams> {
 
     //Delay for start dictionary search
-    private static final int DELAY_MILLISECONDS = 750;
+    private static final int DELAY = 750;
 
     private NetTranslator netTranslator;
 
@@ -46,7 +49,7 @@ public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionar
                         return Observable.just(dictionary.getDef());
                     }
                 })
-                .delay(DELAY_MILLISECONDS, TimeUnit.MILLISECONDS);
+                .delay(DELAY, TimeUnit.MILLISECONDS);
     }
 
     //TODO: add support of ui other languages param
@@ -63,7 +66,12 @@ public class GetDictionary extends BaseObservableUseCase<List<Def>, GetDictionar
             this.lang = lang;
         }
 
-        public static DictionaryParams getEntity(String text, String lang) {
+        /**
+         * Get Parameters object for {@link GetDictionary}
+         *
+         * @return Parameters object {@link GetDictionary.DictionaryParams}
+         */
+        public static DictionaryParams getParamsObj(String text, String lang) {
             return new DictionaryParams(text, lang);
         }
     }

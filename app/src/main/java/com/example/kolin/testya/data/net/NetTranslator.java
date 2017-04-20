@@ -25,12 +25,30 @@ public interface NetTranslator {
             "https://dictionary.yandex.net/api/v1/dicservice.json/lookup";
 
 
+    /**
+     * POST Method to get translation from yandex.
+     *
+     * @param key api key
+     * @param text text to translate
+     * @param lang direction of translation. Example "ru-en"
+     * @return Observable that emits {@link Translation} object.
+     */
     @POST("translate")
     Observable<Translation> getTranslation(@Query("key") String key,
                                            @Query(value = "text", encoded = true) String text,
                                            @Query("lang") String lang);
 
 
+    /**
+     * POST Method to get dictionary option from yandex.
+     *
+     * @param key api key
+     * @param text text for dictionary
+     * @param lang direction of language. Example "ru-en"
+     * @param ui The language of the user interface on which the names
+     *           of parts of speech in the dictionary will be displayed.
+     * @return  Observable that emits {@link Dictionary} object.
+     */
     @POST(NetTranslator.BASE_URL_DICT)
     Observable<Dictionary> getTranslationOptions(@Query("key") String key,
                                                  @Query(value = "text", encoded = true) String text,

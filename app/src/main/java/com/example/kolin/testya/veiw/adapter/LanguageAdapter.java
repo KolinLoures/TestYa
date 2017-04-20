@@ -15,6 +15,8 @@ import java.util.List;
 
 /**
  * Created by kolin on 09.04.2017.
+ *
+ * Adapter for chose language recycler view.
  */
 
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>

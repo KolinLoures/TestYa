@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by kolin on 13.04.2017.
+ *
+ * Custom adapter for spinner
  */
 
 public class SpinnerCategoryAdapter extends ArrayAdapter<String> {

@@ -12,6 +12,8 @@ import java.util.Arrays;
 
 /**
  * Created by kolin on 09.04.2017.
+ *
+ * Class that works with languages assets
  */
 
 public class LanguageProperties {
@@ -22,6 +24,18 @@ public class LanguageProperties {
         this.context = context;
     }
 
+    /**
+     *  Get support languages of translations and their codes from assets files
+     *  in translation with current system lang.
+     *
+     *
+     * @param lang Current system lang
+     * @return {@link ArrayMap} where key (language) {@link String}
+     *         and value (language code) {@link String}.
+     *         If file with lang not exist will return default EN file.
+     *
+     * @throws IOException
+     */
     public ArrayMap<String, String> getSupportLanguage(String lang) throws IOException {
 
         ArrayMap<String, String> temp = new ArrayMap<>();

@@ -1,4 +1,4 @@
-package com.example.kolin.testya.veiw;
+package com.example.kolin.testya.veiw.fragment;
 
 import android.content.Context;
 import android.os.Bundle;

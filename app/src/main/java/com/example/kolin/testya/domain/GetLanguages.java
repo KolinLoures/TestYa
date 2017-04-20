@@ -12,6 +12,9 @@ import io.reactivex.Observable;
 
 /**
  * Created by kolin on 09.04.2017.
+ *
+ * GetLanguages implementation of {@link BaseObservableUseCase}.
+ * Use Case to get support languages from asset folder.
  */
 
 public class GetLanguages extends BaseObservableUseCase<ArrayMap<String, String>,
@@ -35,6 +38,9 @@ public class GetLanguages extends BaseObservableUseCase<ArrayMap<String, String>
     }
 
 
+    /**
+     * Parameters class
+     */
     public static class GetLanguageParams {
         private final String lang;
 
@@ -42,6 +48,11 @@ public class GetLanguages extends BaseObservableUseCase<ArrayMap<String, String>
             this.lang = lang;
         }
 
+        /**
+         * Get Parameters object for {@link GetLanguages}
+         *
+         * @return Parameters object {@link GetLanguages.GetLanguageParams}
+         */
         public static GetLanguageParams getParamsObj(String lang) {
             return new GetLanguageParams(lang);
         }

@@ -5,18 +5,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by kolin on 02.04.2017.
+ * Data base helper that create main data base for app.
+ * Contains one table for history/favorites translations.
+ *
+ * Table
+ * |           |         |      |      |
+ * | TEXT_FROM | TEXT_TO | LANG | TYPE |
+ * |___________|_________|______|______|
+ * |           |         |      |      |
  */
-
 public class DataBaseHelper extends SQLiteOpenHelper {
-
-    private static DataBaseHelper dataBaseHelper = null;
 
     //DB info
     private static final String DB_NAME = "db_history_favorite";
     private static final int DB_VERSION = 1;
 
-    //Table
+    //Table name
     static final String TABLE = "history_favorite";
 
     //Table columns
@@ -50,15 +54,4 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public static synchronized DataBaseHelper getDataBaseHelper(Context context){
-        if (dataBaseHelper == null){
-            dataBaseHelper = new DataBaseHelper(context);
-        }
-
-        return dataBaseHelper;
-    }
-
-    public static DataBaseHelper getDataBaseHelper() {
-        return dataBaseHelper;
-    }
 }

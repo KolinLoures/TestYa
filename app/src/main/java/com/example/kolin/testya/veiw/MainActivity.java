@@ -1,28 +1,28 @@
-package com.example.kolin.testya;
+package com.example.kolin.testya.veiw;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.kolin.testya.R;
+import com.example.kolin.testya.TestYaApp;
 import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.DaggerViewComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.di.modules.ActivityModule;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.NonSwipeViewPager;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
-import com.example.kolin.testya.veiw.fragment.DataUpdatable;
+import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
-        HistoryFavoriteFragment.OnInteractionNewFragment,
+        HistoryFavoriteFragment.OnInteractionHistoryFavoriteFragment,
         ProvideComponent<ViewComponent> {
 
+    //Views
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
     private ViewPagerAdapter adapter;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements
 
         FragmentManager supportFragmentManager = getSupportFragmentManager();
 
-        adapter = new ViewPagerAdapter(supportFragmentManager, false);
+        adapter = new ViewPagerAdapter(supportFragmentManager);
 
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnable(false);
@@ -85,13 +85,12 @@ public class MainActivity extends AppCompatActivity implements
     @SuppressWarnings("unchecked")
     @Override
     public void onClickItem(InternalTranslation internalTranslation, boolean clicked) {
-        Pair<Boolean, InternalTranslation> pair = new Pair<>(clicked, internalTranslation);
         if (clicked)
             viewPager.setCurrentItem(0);
 
         TranslatorFragment item = (TranslatorFragment) adapter.instantiateItem(viewPager, 0);
 
-        ((DataUpdatable) item).update(pair);
+        ((DataUpdatable) item).update(clicked, internalTranslation);
     }
 
 

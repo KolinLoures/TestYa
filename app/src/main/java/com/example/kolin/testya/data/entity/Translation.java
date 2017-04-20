@@ -5,7 +5,10 @@ import android.os.Parcel;
 import java.util.List;
 
 /**
- * Created by kolin on 28.03.2017.
+ * Created by kolin on 01.04.2017.
+ *
+ *
+ * Data class for Translation.
  */
 
 public class Translation{

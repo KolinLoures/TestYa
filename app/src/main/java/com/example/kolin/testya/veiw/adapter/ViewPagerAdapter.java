@@ -5,31 +5,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.InfoFragment;
+import com.example.kolin.testya.veiw.MainActivity;
+import com.example.kolin.testya.veiw.Updatable;
+import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.fragment.InfoFragment;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
-import com.example.kolin.testya.veiw.fragment.Updatable;
 
 /**
  * Created by kolin on 21.03.2017.
+ *
+ * Adapter for view pager in {@link MainActivity}
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-//    private List<Fragment> fragments;
-//    private List<String> titlesList;
-//    private boolean isAddTitle;
 
     private TranslatorFragment translatorFragment;
     private HistoryFavoriteFragment historyFavoriteFragment;
     private InfoFragment infoFragment;
 
-    public ViewPagerAdapter(FragmentManager fm, boolean isAddTitle) {
+    public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
-//        fragments = new ArrayList<>();
-//        this.isAddTitle = isAddTitle;
-//        if (isAddTitle)
-//            titlesList = new ArrayList<>();
     }
 
     @Override
@@ -49,7 +45,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
-//        fragments.add(position, fragment);
         switch (position) {
             case 0:
                 translatorFragment = (TranslatorFragment) fragment;
@@ -63,22 +58,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         }
         return fragment;
     }
-
-//    public void addFragment(Fragment fragment, String title) {
-//        if (!fragments.contains(fragment)) {
-//            fragments.add(fragment);
-//            notifyDataSetChanged();
-//
-//            if (isAddTitle && title != null) {
-//                titlesList.add(title);
-//            }
-//        }
-//    }
-
-//    @Override
-//    public Fragment getItem(int position) {
-//        return fragments != null && !fragments.isEmpty() ? fragments.get(position) : null;
-//    }
 
     @Override
     public int getItemPosition(Object object) {
@@ -94,9 +73,4 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return 3;
     }
-
-//    @Override
-//    public CharSequence getPageTitle(int position) {
-//        return isAddTitle ? titlesList.get(position) : super.getPageTitle(position);
-//    }
 }

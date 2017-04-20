@@ -12,15 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by kolin on 03.04.2017.
+ * Class QueriesImpl for retrieving data from data base.
  */
 
 public class QueriesImpl implements IQueries {
 
+    //Tag for logging error
     private static final String TAG = QueriesImpl.class.getSimpleName();
 
     protected DataBaseHelper helper;
 
+    /**
+     * Constructor
+     *
+     * @param dataBaseHelper object {@link DataBaseHelper}
+     */
     public QueriesImpl(DataBaseHelper dataBaseHelper) {
         this.helper = dataBaseHelper;
     }

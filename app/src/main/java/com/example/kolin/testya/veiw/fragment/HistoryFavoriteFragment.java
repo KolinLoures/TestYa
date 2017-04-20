@@ -1,4 +1,4 @@
-package com.example.kolin.testya.veiw;
+package com.example.kolin.testya.veiw.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -20,10 +20,9 @@ import com.example.kolin.testya.R;
 import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.example.kolin.testya.veiw.Updatable;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.adapter.SpinnerCategoryAdapter;
-import com.example.kolin.testya.veiw.fragment.ClearDialogFragment;
-import com.example.kolin.testya.veiw.fragment.Updatable;
 import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
 
 import java.util.ArrayList;
@@ -31,13 +30,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class HistoryFavoriteFragment extends Fragment implements NewView, Updatable, ClearDialogFragment.ClearDialogListener {
+public class HistoryFavoriteFragment extends Fragment
+        implements HistoryFavoriteView, Updatable, ClearDialogFragment.ClearDialogListener {
 
+    //Views
     private SearchView searchView;
     private RecyclerView recyclerView;
     private TextView textEmpty;
     private View mainContent;
-
     private Spinner spinner;
     private Toolbar toolbar;
     private ImageButton btnDelete;
@@ -45,12 +45,15 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     @Inject
     HistoryFavoritePresenter presenter;
 
+    //adapters
     private SpinnerCategoryAdapter spinnerAdapter;
     private HistoryFavoriteAdapter adapter;
 
+    //queries list hints
     private List<String> queriesHints = new ArrayList<>();
 
-    public interface OnInteractionNewFragment {
+    //Callback interface
+    public interface OnInteractionHistoryFavoriteFragment {
         void onClickItem(InternalTranslation internalTranslation, boolean clicked);
     }
 
@@ -79,7 +82,6 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
 
         toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
         btnDelete = (ImageButton) view.findViewById(R.id.fragment_hf_delete);
-
         searchView = (SearchView) view.findViewById(R.id.fragment_hf_search);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_hf_rv);
         textEmpty = (TextView) view.findViewById(R.id.fragment_new_text_empty);
@@ -106,6 +108,7 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     }
 
     private void setListenerToClearButton() {
+        //set on click listener to button delete
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,10 +118,11 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     }
 
     private void setupSearchView() {
-
+        //add hints to list
         queriesHints.add(getString(R.string.search_in_history));
         queriesHints.add(getString(R.string.search_in_favorite));
 
+        //set query text listener
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -127,6 +131,7 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                //get adapter filter and filter data
                 adapter.getFilter().filter(newText);
                 return true;
             }
@@ -134,11 +139,13 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
     }
 
     private void setQueryHintBySelection(int selection) {
+        //set hints to search view in according with selection
         searchView.setQueryHint(queriesHints.get(selection));
     }
 
     private void setupRecyclerViewAdapter() {
         adapter = new HistoryFavoriteAdapter();
+        //set listener to adapter
         adapter.setListener(new HistoryFavoriteAdapter.OnClickHistoryFavoriteListener() {
             @Override
             public void checkFavorite(InternalTranslation translation, boolean check) {
@@ -147,19 +154,21 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
 
                 translation.setFavorite(!check);
 
-                if (getActivity() instanceof OnInteractionNewFragment)
-                    ((OnInteractionNewFragment) getActivity()).onClickItem(translation, false);
+                //update first fragment in view pager through OnInteractionHistoryFavoriteFragment
+                if (getActivity() instanceof OnInteractionHistoryFavoriteFragment)
+                    ((OnInteractionHistoryFavoriteFragment) getActivity()).onClickItem(translation, false);
 
             }
 
             @Override
             public void itemClick(InternalTranslation internalTranslation) {
-                if (getActivity() instanceof OnInteractionNewFragment)
-                    ((OnInteractionNewFragment) getActivity()).onClickItem(internalTranslation, true);
+                //update first fragment in view pager through OnInteractionHistoryFavoriteFragment
+                if (getActivity() instanceof OnInteractionHistoryFavoriteFragment)
+                    ((OnInteractionHistoryFavoriteFragment) getActivity()).onClickItem(internalTranslation, true);
             }
         });
 
-
+        //other settings to recycler view
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
@@ -175,9 +184,11 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
         );
 
         spinner.setAdapter(spinnerAdapter);
+        //set adapter spinner listener
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //update data in fragment in according with spinner position
                 presenter.showLoadedDataForPosition(position);
                 toolbar.setTitle(spinnerAdapter.getTextForPosition(position));
                 searchView.setQuery("", false);
@@ -185,31 +196,34 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
     @Override
     public void showLoadedData(List<InternalTranslation> data) {
         if (data.isEmpty()) {
+            //hide or show part of layout if data is empty
             btnDelete.setEnabled(false);
             showComponent(mainContent, false);
             showComponent(textEmpty, true);
         } else {
-
+            //hide or show part of layout if data is empty
             btnDelete.setEnabled(true);
             showComponent(mainContent, true);
             showComponent(textEmpty, false);
 
+            //clear adapter
             adapter.clear();
 
+            //add data to adapter
             adapter.addAll(data);
             adapter.addNewDataToFilter(data);
         }
     }
 
     private void showComponent(View component, boolean show) {
+        //set visibility to component
         if (show && component.getVisibility() == View.GONE)
             component.setVisibility(View.VISIBLE);
 
@@ -235,11 +249,11 @@ public class HistoryFavoriteFragment extends Fragment implements NewView, Updata
 
         adapter.clear();
         adapter = null;
-
     }
 
     @Override
     public void update() {
+        //load up-to-date data to presenter
         presenter.loadTranslationFromDb(null, spinner.getSelectedItemPosition());
     }
 

@@ -24,13 +24,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Dialog fragment to choose language
+ */
 public class LanguageDialogFragment extends DialogFragment {
 
+    //Argument keys
     private static final String KEY_LANG = "list_languages";
     private static final String KEY_SHOW = "show_determine_lang";
 
+    //Adapter
     private LanguageAdapter adapter;
 
+    //Views
     private RecyclerView recyclerView;
     private Button btnCancel;
     private Button btnYes;
@@ -42,7 +48,8 @@ public class LanguageDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    public interface OnIteractionLanguageDialog {
+    //Dialog fragment Callback interface
+    public interface OnInteractionLanguageDialog {
         void onChooseLanguageDialog(String lang, boolean isTextFrom);
     }
 
@@ -83,21 +90,12 @@ public class LanguageDialogFragment extends DialogFragment {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
 
         ViewGroup.LayoutParams params = dialog.getWindow().getAttributes();
-        // Assign window properties to fill the parent
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         dialog.getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         return dialog;
-    }
-
-    @SuppressWarnings("all")
-    @Override
-    public void onResume() {
-
-
-        super.onResume();
     }
 
     @Override
@@ -166,10 +164,10 @@ public class LanguageDialogFragment extends DialogFragment {
                 break;
             case R.id.dialog_btn_yes:
                 Fragment parentFragment = getParentFragment();
-                if (parentFragment != null && parentFragment instanceof LanguageDialogFragment.OnIteractionLanguageDialog) {
+                if (parentFragment != null && parentFragment instanceof OnInteractionLanguageDialog) {
                     String chose = adapter.getChose();
                     if (chose != null) {
-                        ((LanguageDialogFragment.OnIteractionLanguageDialog) parentFragment)
+                        ((OnInteractionLanguageDialog) parentFragment)
                                 .onChooseLanguageDialog(chose, getArguments().getBoolean(KEY_SHOW));
                         dismiss();
                     }

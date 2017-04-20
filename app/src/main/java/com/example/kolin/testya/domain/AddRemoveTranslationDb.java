@@ -12,6 +12,10 @@ import io.reactivex.Completable;
 
 /**
  * Created by kolin on 03.04.2017.
+ *
+ * AddRemoveTranslationDb implementation of {@link BaseCompletableUseCase}.
+ * Use Case represents work with adding and removing {@link InternalTranslation}
+ * object from Data Base.
  */
 
 public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTranslationDb.AddTranslationParams> {
@@ -39,6 +43,9 @@ public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTran
     }
 
 
+    /**
+     * Parameters class
+     */
     public final static class AddTranslationParams {
         private final InternalTranslation obj;
         @TypeSaveTranslation.TypeName
@@ -53,10 +60,14 @@ public class AddRemoveTranslationDb extends BaseCompletableUseCase<AddRemoveTran
             this.type = type;
         }
 
+        /**
+         * Get Parameters object for {@link AddRemoveTranslationDb}
+         *
+         * @return Parameters object {@link AddTranslationParams}
+         */
         public static AddTranslationParams getParamsObj(InternalTranslation obj,
                                                         @TypeSaveTranslation.TypeName String type,
-                                                        boolean remove
-        ) {
+                                                        boolean remove) {
             return new AddTranslationParams(obj, type, remove);
         }
     }

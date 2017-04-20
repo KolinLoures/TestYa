@@ -8,6 +8,10 @@ import java.lang.ref.WeakReference;
 
 /**
  * Created by kolin on 31.03.2017.
+ *
+ * Abstract Presenter class
+ *
+ * @param <V> view.
  */
 
 public abstract class BasePresenter<V> {
