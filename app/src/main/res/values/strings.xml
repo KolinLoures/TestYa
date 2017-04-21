@@ -8,6 +8,7 @@
     <string name="about">О приложении</string>
     <string name="search_in_history">Найти в истории</string>
     <string name="search_in_favorite">Найти в избранном</string>
+    <string name="english">английский</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cancel">Отмена</string>
