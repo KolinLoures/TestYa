@@ -13,6 +13,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  * | TEXT_FROM | TEXT_TO | LANG | TYPE |
  * |___________|_________|______|______|
  * |           |         |      |      |
+ *
+ * todo: add time stamp to table
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
