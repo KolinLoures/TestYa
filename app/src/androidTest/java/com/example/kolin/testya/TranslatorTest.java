@@ -21,6 +21,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by kolin on 21.04.2017.
+ *
+ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
 @RunWith(AndroidJUnit4.class)
 public class TranslatorTest {
@@ -30,7 +32,7 @@ public class TranslatorTest {
 
     private static final String textToTranslate = "привет";
     private static final String textResultTranslate = "hi";
-    private static final int sizeSupLangiages = 90;
+    private static final int sizeRecyclerLanguages = 90;
 
     @Test
     public void testTranslation() {
@@ -77,7 +79,7 @@ public class TranslatorTest {
         //check recycler view in dialog is display
         onView(withId(R.id.dialog_language_rv)).check(ViewAssertions.matches(isDisplayed()));
         //check size of adapter in recycler view
-        onView(withId(R.id.dialog_language_rv)).check(ViewAssertions.matches(Util.checkListSize(sizeSupLangiages + 1)));
+        onView(withId(R.id.dialog_language_rv)).check(ViewAssertions.matches(Util.checkListSize(sizeRecyclerLanguages + 1)));
         //check "english" language in recycler view
         onView(withId(R.id.dialog_language_rv))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
