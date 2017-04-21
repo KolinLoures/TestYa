@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
- *
+ *  Sectioned adapter for parts of speech in dictionary
  */
 
 public class SectionedDictionaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
