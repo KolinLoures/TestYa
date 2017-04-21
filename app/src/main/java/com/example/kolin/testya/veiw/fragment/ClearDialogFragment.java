@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -88,6 +89,9 @@ public class ClearDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        //set feature with no title (title visible in Lollipop device)
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         ViewGroup.LayoutParams params = dialog.getWindow().getAttributes();
         // Assign window properties to fill the parent
