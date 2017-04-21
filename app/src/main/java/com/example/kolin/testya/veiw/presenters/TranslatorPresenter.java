@@ -105,18 +105,21 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             return;
         }
 
-        //hide loading progress view
-        getAttachView().showLoadingProgress(false);
-
         //do not load the same
         if (currentText.equals(text) && currentLangFrom.equals(langFrom) && currentLangTo.equals(langTo)) {
             return;
         }
 
+        //hide loading progress view
+        getAttachView().showLoadingProgress(false);
+
         //hide unnecessary parts of layouts
         getAttachView().showTranslationCard(false);
         getAttachView().showDictionaryCard(false);
         getAttachView().showDetermineLang(false);
+
+        //clear observer (we do not need data from old observer)
+        getTranslation.clearDisposableObservers();
 
         //clear current data
         clear();
@@ -128,8 +131,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         if (!text.isEmpty() && !text.equals("") && lang != null) {
             getAttachView().showLoadingProgress(true);
 
-
-            getTranslation.clearDisposableObservers();
+            currentText = text;
 
             //execute getTranslation use case
             getTranslation.execute(new TranslatorObserver(),
@@ -158,7 +160,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         //ste current data;
         currentTranslation = translation;
-        currentText = currentTranslation.getTextFrom();
+//        currentText = currentTranslation.getTextFrom();
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
@@ -234,8 +236,10 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             languages.putAll(mapLang);
 
         InternalTranslation translation = savedInstateState.getParcelable(KEY_CURR_TRANS);
-        if (translation != null)
+        if (translation != null) {
+            currentText = translation.getTextFrom();
             showTranslationResult(translation);
+        }
 
 
         ArrayList<Def> def = savedInstateState.getParcelableArrayList(KEY_CURR_DIC);
@@ -250,7 +254,6 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         outSate.putParcelable(KEY_CURR_TRANS, currentTranslation);
         outSate.putParcelableArrayList(KEY_CURR_DIC, new ArrayList<Parcelable>(currentDefList));
         outSate.putSerializable(KEY_LANGUAGES, new HashMap<>(languages));
-
     }
 
     /**
