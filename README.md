@@ -6,7 +6,7 @@ Test task for Yandex mobilization 2017
 2. More than 60 languages
 3. Includes translation options
 4. History of translations
-5. Favorities translation
+5. Favorites translation
 6. Language definition
 
 ## Project contains
