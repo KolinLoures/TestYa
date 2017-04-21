@@ -16,13 +16,17 @@ import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 
+/**
+ * Dialog Fragment that ask user permission for delete content
+ */
 public class ClearDialogFragment extends DialogFragment {
 
+    //Argument key
     private static final String KEY_TITLE = "title";
 
+    //Views
     private TextView textTitle;
     private TextView textContent;
-
     private Button btnCancel;
     private Button btnYes;
 

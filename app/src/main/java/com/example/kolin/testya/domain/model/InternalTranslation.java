@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 /**
  * Created by kolin on 03.04.2017.
+ *
+ * InternalTranslation class used in the all layers in applications.
+ *
  */
 
 public class InternalTranslation implements Parcelable {

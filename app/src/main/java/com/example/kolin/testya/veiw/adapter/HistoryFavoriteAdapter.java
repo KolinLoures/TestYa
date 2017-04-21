@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by kolin on 06.04.2017.
+ *
+ * Adapter for history and favorite recycler view
  */
 
 public class HistoryFavoriteAdapter

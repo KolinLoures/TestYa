@@ -17,6 +17,10 @@ import io.reactivex.functions.Function;
 
 /**
  * Created by kolin on 06.04.2017.
+ *
+ * GetDbTranslations implementation of {@link BaseCompletableUseCase}.
+ * Use Case represents work with getting {@link InternalTranslation} object
+ * from data base in according with type {@link TypeSaveTranslation}.
  */
 
 public class GetDbTranslations extends BaseObservableUseCase<List<InternalTranslation>,
@@ -56,41 +60,22 @@ public class GetDbTranslations extends BaseObservableUseCase<List<InternalTransl
                 });
     }
 
-
-    //    @Override
-//    public Observable<InternalTranslation> createObservable(
-//            final GetTranslationsDbParams params) {
-//        return Observable
-//                .fromCallable(new Callable<List<InternalTranslation>>() {
-//                    @Override
-//                    public List<InternalTranslation> call() throws Exception {
-//                        return iQueries.getTranslations(params.type);
-//                    }
-//                })
-//                .flatMap(new Function<List<InternalTranslation>, ObservableSource<InternalTranslation>>() {
-//                    @Override
-//                    public ObservableSource<InternalTranslation> apply(@NonNull List<InternalTranslation> translations) throws Exception {
-//                        Collections.reverse(translations);
-//                        return Observable.fromIterable(translations);
-//                    }
-//                })
-//                .doOnNext(new Consumer<InternalTranslation>() {
-//                    @Override
-//                    public void accept(@NonNull InternalTranslation translation) throws Exception {
-//
-//                        if (translation.getType().equals(TypeSaveTranslation.HISTORY))
-//                            translation.setFavorite(iQueries.isFavorite(translation));
-//                    }
-//                });
-//    }
-
+    /**
+     * Parameters class
+     */
     public static class GetTranslationsDbParams {
         private String type;
+
 
         private GetTranslationsDbParams(String type) {
             this.type = type;
         }
 
+        /**
+         * Get Parameters object for {@link GetDbTranslations}
+         *
+         * @return Parameters object {@link GetDbTranslations.GetTranslationsDbParams}
+         */
         public static GetTranslationsDbParams getParamsObj(@TypeSaveTranslation.TypeName
                                                                    String type) {
             return new GetTranslationsDbParams(type);

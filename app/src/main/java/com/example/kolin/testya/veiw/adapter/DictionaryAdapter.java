@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
+ *
+ * Adapter for dictionary recycler view
  */
 
 public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.DictionaryViewHolder> {

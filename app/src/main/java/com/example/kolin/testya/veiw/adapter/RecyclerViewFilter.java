@@ -7,6 +7,9 @@ import java.util.List;
 
 /**
  * Created by kolin on 10.04.2017.
+ *
+ * Abstract class of Filter for Recycler view data.
+ *
  */
 
 public abstract class RecyclerViewFilter<T> extends Filter {

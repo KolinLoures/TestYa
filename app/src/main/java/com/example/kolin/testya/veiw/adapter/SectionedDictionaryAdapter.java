@@ -6,18 +6,17 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
+ *
  */
 
 public class SectionedDictionaryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {

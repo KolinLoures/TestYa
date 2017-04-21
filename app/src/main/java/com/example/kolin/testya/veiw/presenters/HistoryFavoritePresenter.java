@@ -11,7 +11,7 @@ import com.example.kolin.testya.domain.AddRemoveTranslationDb;
 import com.example.kolin.testya.domain.DeleteTypeDb;
 import com.example.kolin.testya.domain.GetDbTranslations;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,23 +23,31 @@ import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by kolin on 13.04.2017.
+ *
+ * Presenter for {@link HistoryFavoriteFragment}
  */
 @ActivityScope
 public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavoriteFragment> {
 
+    //TAG for logging
     private static final String TAG = HistoryFavoritePresenter.class.getSimpleName();
 
+    //Key for bundles
     private static final String KEY_HISTORY = "history_data";
     private static final String KEY_FAVORITE = "favorite_data";
 
+    //Use cases
     private GetDbTranslations getDbTranslations;
     private DeleteTypeDb deleteTypeDb;
 
-
+    //Current data history (data for spinner position 0)
     private List<InternalTranslation> currentHistoryData;
+    //Current data favorite (data for spinner position 1)
     private List<InternalTranslation> currentFavoriteData;
 
+    //Current spinner position
     private int currentSpinnerPos;
+    //Current type loading
     private String currentTypeLoad;
 
     @Inject
@@ -56,16 +64,23 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
     public void attacheView(@NonNull HistoryFavoriteFragment view) {
         super.attacheView(view);
 
-
+        //initialize lists of current data
         currentHistoryData = new ArrayList<>();
         currentFavoriteData = new ArrayList<>();
     }
 
+    /**
+     * Executing {@link GetDbTranslations} use case.
+     *
+     * @param spinnerPos current spinner position
+     */
     public void loadTranslationFromDb(@TypeSaveTranslation.TypeName String type, int spinnerPos) {
 
+        //Setting current type and spinner position
         currentTypeLoad = type;
         currentSpinnerPos = spinnerPos;
 
+        //if we load all data from db we need to clear both lists
         if (type == null) {
             currentFavoriteData.clear();
             currentHistoryData.clear();
@@ -74,19 +89,28 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
 
         getDbTranslations.clearDisposableObservers();
 
+        //execute use case
         getDbTranslations.execute(new TranslationDbObserver(),
                 GetDbTranslations.GetTranslationsDbParams.getParamsObj(type));
     }
 
+    /**
+     * Executing {@link DeleteTypeDb} use case.
+     *
+     * @param spinnerPos current spinner position
+     */
     public void deleteFromDb(int spinnerPos) {
 
+        //set current data
         currentTypeLoad = null;
         currentSpinnerPos = spinnerPos;
 
+        //update data in history list if it necessary
         if (!isHistoryTypeSpinSelection(spinnerPos)) {
             for (InternalTranslation translation : currentHistoryData) {
                 translation.setFavorite(false);
             }
+
 
             currentFavoriteData.clear();
         } else
@@ -94,14 +118,18 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
 
         deleteTypeDb.clearDisposableObservers();
 
+        //execute delete use case
         deleteTypeDb.execute(new DeleteObserver(),
                 DeleteTypeDb.DeleteRequestParams.getParamsObj(TypeSaveTranslation.getTypeById(spinnerPos)));
     }
 
+    /**
+     * Executing {@link AddRemoveTranslationDb} use case.
+     */
     public void addRemoveFavoriteDb(InternalTranslation internalTranslation, boolean check) {
         super.addRemoveFavoriteTranslation(internalTranslation, check);
 
-
+        //update data in history list
         for (InternalTranslation translation : currentHistoryData) {
             if (translation.equals(internalTranslation)) {
                 translation.setFavorite(!check);
@@ -112,44 +140,73 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
         loadTranslationFromDb(TypeSaveTranslation.FAVORITE, currentSpinnerPos);
     }
 
+    /**
+     * Show loaded data in according with spinner position
+     *
+     * @param posSpinner spinner position
+     */
     public void showLoadedDataForPosition(int posSpinner) {
-
-        if (posSpinner == -1)
-            return;
-
-        currentSpinnerPos = posSpinner;
-
-        if (currentTypeLoad == null) {
-            showLoadedCurrentData();
-            return;
-        }
-
-        if (!isHistoryTypeSpinSelection(currentSpinnerPos) && currentTypeLoad.equals(TypeSaveTranslation.FAVORITE))
-            getAttachView().showLoadedData(currentFavoriteData);
-        else
-            showLoadedCurrentData();
-    }
-
-    public void showLoadedCurrentData() {
 
         if (!isViewAttach()) {
             Log.e(TAG, "View is detached");
             return;
         }
 
+        if (posSpinner == -1)
+            return;
+
+        //set current spinner position
+        currentSpinnerPos = posSpinner;
+
+        //show if current type NULL
+        if (currentTypeLoad == null) {
+            showLoadedCurrentData();
+            return;
+        }
+
+        //show favorite data
+        //this condition allow update only favorite part, because we do not need to update all time
+        //history data (main case to update history data is delete all from history)
+        if (!isHistoryTypeSpinSelection(currentSpinnerPos) && currentTypeLoad.equals(TypeSaveTranslation.FAVORITE))
+            getAttachView().showLoadedData(currentFavoriteData);
+        else
+            showLoadedCurrentData();
+    }
+
+    /**
+     * Show loaded data if we do not need spinner position
+     */
+    public void showLoadedCurrentData() {
+
+        if (!isViewAttach()) {
+            Log.e(TAG, "View is detached");
+            return;
+        }
         if (isHistoryTypeSpinSelection(currentSpinnerPos))
             getAttachView().showLoadedData(currentHistoryData);
         else
             getAttachView().showLoadedData(currentFavoriteData);
     }
 
+    /**
+     * Check if spinner position accord {@link TypeSaveTranslation#HISTORY} type.
+     *
+     * @param posSpinner spinner position
+     * @return is history section
+     */
     private boolean isHistoryTypeSpinSelection(int posSpinner) {
         return TypeSaveTranslation.getTypeById(posSpinner).equals(TypeSaveTranslation.HISTORY);
     }
 
+    /**
+     * Divide loaded data into two categories
+     *
+     * @param data loaded data
+     */
     private void divideToCategories(List<InternalTranslation> data) {
 
         for (InternalTranslation t : data)
+            //check type of object
             if (t.getType().equals(TypeSaveTranslation.HISTORY))
                 currentHistoryData.add(t);
             else
@@ -192,6 +249,7 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
         //stub
     }
 
+    //Observer for GetDbTranslations use case
     private final class TranslationDbObserver extends DisposableObserver<List<InternalTranslation>> {
 
         @Override
@@ -210,6 +268,7 @@ public class HistoryFavoritePresenter extends BaseFavoritePresenter<HistoryFavor
         }
     }
 
+    //Observer for DeleteTypeDb use case
     private final class DeleteObserver extends DisposableCompletableObserver {
 
         @Override

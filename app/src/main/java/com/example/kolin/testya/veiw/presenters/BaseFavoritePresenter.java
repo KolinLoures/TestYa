@@ -12,12 +12,17 @@ import io.reactivex.observers.DisposableCompletableObserver;
 
 /**
  * Created by kolin on 03.04.2017.
+ *
+ * BaseFavoritePresenter implements {@link BasePresenter}.
+ *
+ * Encapsulates logic of adding or removing favorite translations to data base.
  */
 
 public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePresenter<V> {
 
     private static final String TAG = BaseFavoritePresenter.class.getSimpleName();
 
+    //Use Case add/remove data base translation
     private AddRemoveTranslationDb addRemoveTranslationDb;
 
     BaseFavoritePresenter(AddRemoveTranslationDb addRemoveTranslationDb) {
@@ -29,8 +34,10 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         super.attacheView(view);
     }
 
+    //Abstract Method to notify that AddRemoveTranslationDb complete
     public abstract void onCompleteAddToFavoriteDb();
 
+    //execute use case
     protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove) {
         addRemoveTranslationDb.clearDisposableObservers();
         addRemoveTranslationDb.execute(
@@ -47,6 +54,7 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         addRemoveTranslationDb.dispose();
     }
 
+    //Observer for AddRemoveTranslationDb use case
     public final class AddFavoriteDbObserver extends DisposableCompletableObserver {
 
         @Override

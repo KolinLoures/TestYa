@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".veiw.MainActivity">
 
     <FrameLayout
         android:id="@+id/main_container_fragment"
@@ -39,16 +39,19 @@
             <android.support.design.widget.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/main_tab_first"
                 android:icon="@drawable/selector_tab_1" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/main_tab_second"
                 android:icon="@drawable/selector_tab_2" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/main_tab_third"
                 android:icon="@drawable/selector_tab_3" />
 
         </android.support.design.widget.TabLayout>

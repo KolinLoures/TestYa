@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 
 /**
  * Created by kolin on 21.03.2017.
+ *
+ * NonSwipeViewPager extends of {@link ViewPager}
+ * what blocking swipe events
  */
 
 public class NonSwipeViewPager extends ViewPager {

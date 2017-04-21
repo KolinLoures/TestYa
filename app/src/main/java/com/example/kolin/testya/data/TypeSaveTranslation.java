@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * Created by kolin on 02.04.2017.
+ *
+ * Class represent main categories of translations.
  */
 
 public class TypeSaveTranslation {

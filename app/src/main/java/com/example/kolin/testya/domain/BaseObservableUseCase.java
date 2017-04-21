@@ -8,6 +8,11 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by kolin on 31.03.2017.
+ *
+ * Abstract class for a Use Case (In terms of Clean Architecture).
+ *
+ * By convention each UseCase implementation will return the result using a {@link DisposableObserver}
+ * that will execute its job in a background thread and will post the result in the UI thread.
  */
 
 public abstract class BaseObservableUseCase<T, RequestParams> {
@@ -18,10 +23,20 @@ public abstract class BaseObservableUseCase<T, RequestParams> {
         this.compositeDisposable = new CompositeDisposable();
     }
 
-
+    /**
+     * Create {@link Observable} source which will be execute.
+     */
     public abstract Observable<T> createObservable(RequestParams params);
 
 
+    /**
+     * Executes the current use case.
+     *
+     * @param obs  {@link DisposableObserver} which will be listening to the observable build
+     *              by {@link #createObservable(RequestParams)} ()} method.
+     *
+     * @param params Parameters used to build/execute this use case.
+     */
     public void execute(DisposableObserver<T> obs, RequestParams params){
 
         final DisposableObserver<T> observer = createObservable(params)
@@ -32,12 +47,19 @@ public abstract class BaseObservableUseCase<T, RequestParams> {
         compositeDisposable.add(observer);
     }
 
+    /**
+     * Dispose all observers
+     */
     public void dispose(){
         if (!compositeDisposable.isDisposed()){
             compositeDisposable.dispose();
         }
     }
 
+
+    /**
+     * Clear all observers
+     */
     public void clearDisposableObservers(){
         if (!compositeDisposable.isDisposed()){
             compositeDisposable.clear();

@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">TestYa</string>
+
+
+    <string name="translator">Translator</string>
+    <string name="history">History</string>
+    <string name="favorite">Favorites</string>
+    <string name="about">About</string>
+    <string name="search_in_history">Search in history</string>
+    <string name="search_in_favorite">Search in favorites</string>
+    <string name="english">english</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="dialog_question">Are you sure that you want clear the \ncategory</string>
+    <string name="write_text">Type text</string>
+    <string name="translation_language">Translation Language</string>
+    <string name="chose_language">Select a language</string>
+    <string name="determine_language">define</string>
+    <string name="determined">defined</string>
+    <string name="chose_language_from">Select the language from which to translate</string>
+    <string name="error_message">Oops… something went wrong. \nCheck your Internet connection or \nrepeat the translation later.</string>
+    <string name="no_translations">Here is empty</string>
+    <string name="translate_with_yandex">Translated by the service \"Yandex-Translator \". \nLearn more about the service: \nhttp://translate.yandex.ru/</string>
+    <string name="dictionary_with_yandex">Detailed information about the translation \nis provided by the service \"Yandex-Dictionary\". \nLearn more about the service: \nhttps://tech.yandex.ru/dictionary/</string>
+</resources>

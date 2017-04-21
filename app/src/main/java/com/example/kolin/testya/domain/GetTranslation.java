@@ -22,10 +22,15 @@ import io.reactivex.functions.Predicate;
 
 /**
  * Created by kolin on 31.03.2017.
+ *
+ * GetTranslation implementation of {@link BaseObservableUseCase}.
+ * Use Case to get translation from net.
  */
 
 public class GetTranslation extends BaseObservableUseCase<InternalTranslation, GetTranslation.TranslationParams> {
 
+    // Delay for getting response from net and adding translation as history to data base.
+    // Add this delay, cause I do not want to overload my DB with responses, when user typing word.
     private static final int DELAY = 500;
 
     private NetTranslator netTranslator;
@@ -115,11 +120,14 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
                 });
     }
 
-
+    /**
+     * Parameters class
+     */
     public static final class TranslationParams {
 
         private final String text;
         private final String lang;
+        //if you want to load only from network
         private final boolean loadFromNetworkOnly;
 
         public TranslationParams(String text, String lang, boolean loadFromNetworkOnly) {
@@ -128,7 +136,13 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
             this.loadFromNetworkOnly = loadFromNetworkOnly;
         }
 
-        public static TranslationParams getEntity(String text, String lang, boolean checkInDb) {
+        /**
+         * Get Parameters object for {@link GetLanguages}
+         *
+         * @param checkInDb set to load only from network
+         * @return Parameters object {@link GetLanguages.GetLanguageParams}
+         */
+        public static TranslationParams getParamsObj(String text, String lang, boolean checkInDb) {
             return new TranslationParams(text, lang, checkInDb);
         }
     }
