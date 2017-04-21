@@ -11,7 +11,6 @@ import com.example.kolin.testya.TestYaApp;
 import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.DaggerViewComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
-import com.example.kolin.testya.di.modules.ActivityModule;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
 import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
@@ -97,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements
     private void initializeViewComponent() {
         this.viewComponent = DaggerViewComponent.builder()
                 .appComponent(((TestYaApp) getApplication()).getAppComponent())
-                .activityModule(new ActivityModule(this))
                 .build();
     }
 
