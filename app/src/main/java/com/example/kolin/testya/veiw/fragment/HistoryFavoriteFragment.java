@@ -260,6 +260,9 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public void onClickPositiveBtn() {
         presenter.deleteFromDb(spinner.getSelectedItemPosition());
+        //Update Translator fragment (if current translation on it was checked as favorite)
+        if (getActivity() instanceof OnInteractionHistoryFavoriteFragment)
+            ((OnInteractionHistoryFavoriteFragment) getActivity()).onClickItem(null, false);
     }
 
 

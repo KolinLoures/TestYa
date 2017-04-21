@@ -406,6 +406,11 @@ public class TranslatorFragment extends Fragment implements
             return;
         }
 
+        if (newData == null && btnAddFavorite.isChecked()) {
+            btnAddFavorite.setChecked(false);
+            return;
+        }
+
         if (!flag && !presenter.equalsTranslationToCurrent(newData))
             return;
 
