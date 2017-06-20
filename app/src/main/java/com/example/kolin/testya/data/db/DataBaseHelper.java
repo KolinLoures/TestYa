@@ -19,7 +19,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     //DB info
-    private static final String DB_NAME = "db_history_favorite";
+    private  static final String DB_NAME = "db_history_favorite";
     private static final int DB_VERSION = 1;
 
     //Table name
