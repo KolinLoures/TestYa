@@ -3,30 +3,29 @@ package com.example.kolin.testya.data.entity.dictionary;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.List;
-
 /**
  * Created by kolin on 01.04.2017.
+ *
+ * Data class for meaning and syn texts
  */
 
-public class Ex implements Parcelable {
-    private String text;
-    private List<Tr> tr = null;
+public class MeanSyn implements Parcelable {
 
-    protected Ex(Parcel in) {
+    private String text;
+
+    protected MeanSyn(Parcel in) {
         text = in.readString();
-        tr = in.createTypedArrayList(Tr.CREATOR);
     }
 
-    public static final Creator<Ex> CREATOR = new Creator<Ex>() {
+    public static final Creator<MeanSyn> CREATOR = new Creator<MeanSyn>() {
         @Override
-        public Ex createFromParcel(Parcel in) {
-            return new Ex(in);
+        public MeanSyn createFromParcel(Parcel in) {
+            return new MeanSyn(in);
         }
 
         @Override
-        public Ex[] newArray(int size) {
-            return new Ex[size];
+        public MeanSyn[] newArray(int size) {
+            return new MeanSyn[size];
         }
     };
 
@@ -38,12 +37,9 @@ public class Ex implements Parcelable {
         this.text = text;
     }
 
-    public List<Tr> getTr() {
-        return tr;
-    }
-
-    public void setTr(List<Tr> tr) {
-        this.tr = tr;
+    @Override
+    public String toString() {
+        return text;
     }
 
     @Override
@@ -54,6 +50,5 @@ public class Ex implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(text);
-        dest.writeTypedList(tr);
     }
 }

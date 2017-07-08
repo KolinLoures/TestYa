@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
+ *
+ * Data class for dictionary array
  */
 
 public class Def implements Parcelable {

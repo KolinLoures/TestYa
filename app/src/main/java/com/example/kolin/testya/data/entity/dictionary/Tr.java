@@ -7,15 +7,19 @@ import java.util.List;
 
 /**
  * Created by kolin on 01.04.2017.
+ *
+ *
+ * Data class for arrays of translations
  */
 
 public class Tr implements Parcelable {
 
     private String text;
     private String pos;
-    private List<Syn> syn = null;
-    private List<Mean> mean = null;
-    private List<Ex> ex = null;
+    //синонимы
+    private List<MeanSyn> syn = null;
+    //значения
+    private List<MeanSyn> mean = null;
 
     protected Tr(Parcel in) {
         text = in.readString();
@@ -50,28 +54,20 @@ public class Tr implements Parcelable {
         this.pos = pos;
     }
 
-    public List<Syn> getSyn() {
+    public List<MeanSyn> getSyn() {
         return syn;
     }
 
-    public void setSyn(List<Syn> syn) {
+    public void setSyn(List<MeanSyn> syn) {
         this.syn = syn;
     }
 
-    public List<Mean> getMean() {
+    public List<MeanSyn> getMean() {
         return mean;
     }
 
-    public void setMean(List<Mean> mean) {
+    public void setMean(List<MeanSyn> mean) {
         this.mean = mean;
-    }
-
-    public List<Ex> getEx() {
-        return ex;
-    }
-
-    public void setEx(List<Ex> ex) {
-        this.ex = ex;
     }
 
     @Override

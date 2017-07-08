@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.data.entity.dictionary.Mean;
+import com.example.kolin.testya.data.entity.dictionary.MeanSyn;
 import com.example.kolin.testya.data.entity.dictionary.Tr;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         holder.supportText.setVisibility(View.VISIBLE);
         holder.primaryText.setText(currentItem.getText());
 
-        List<Mean> mean = currentItem.getMean();
+        List<MeanSyn> mean = currentItem.getMean();
         if (mean != null) {
             supportText = TextUtils.join(", ", mean);
         }
