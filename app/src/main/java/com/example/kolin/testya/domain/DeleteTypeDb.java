@@ -42,7 +42,7 @@ public class DeleteTypeDb extends BaseCompletableUseCase<DeleteTypeDb.DeleteRequ
      */
     public static class DeleteRequestParams {
         private final String type;
-
+        private String omg;
 
         private DeleteRequestParams(String type) {
             this.type = type;
