@@ -9,10 +9,10 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Contains one table for history/favorites translations.
  *
  * Table
- * |           |         |      |      |
- * | TEXT_FROM | TEXT_TO | LANG | TYPE |
- * |___________|_________|______|______|
- * |           |         |      |      |
+ * |           |         |      |      |         |
+ * | TEXT_FROM | TEXT_TO | LANG | TYPE |  TIME   |
+ * |___________|_________|______|______|_________|
+ * |           |         |      |      |         |
  *
  * todo: add time stamp to table
  */
@@ -30,6 +30,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     static final String TEXT_TO = "text_to";
     static final String LANG = "lang";
     static final String TYPE = "type";
+    static final String TIME = "time_stamp";
 
 
     public DataBaseHelper(Context context) {
@@ -40,10 +41,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE +
                 "(" +
-                        TEXT_FROM + " TEXT," +
+                        TEXT_FROM + " TEXT PRIMARY KEY," +
                         TEXT_TO + " TEXT," +
-                        LANG + " LANG," +
-                        TYPE + " TYPE" +
+                        LANG + " TEXT," +
+                        TYPE + " TEXT" +
+                        TIME + " DATETIME DEFAULT CURRENT_TIMESTAMP" +
                 ")");
     }
 

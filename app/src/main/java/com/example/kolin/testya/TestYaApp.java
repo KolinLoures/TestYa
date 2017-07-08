@@ -19,8 +19,6 @@ public class TestYaApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-
-
         appComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))

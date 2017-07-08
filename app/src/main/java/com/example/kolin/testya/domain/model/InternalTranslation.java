@@ -3,22 +3,25 @@ package com.example.kolin.testya.domain.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.kolin.testya.data.entity.dictionary.Def;
+
+import java.util.List;
+
 /**
  * Created by kolin on 03.04.2017.
- *
+ * <p>
  * InternalTranslation class used in the all layers in applications.
- *
  */
 
 public class InternalTranslation implements Parcelable {
 
     private int code;
     private String lang;
-    private String textTo;
     private String textFrom;
-
-    private boolean isFavorite;
+    private String textTo;
     private String type;
+
+    private List<Def> def = null;
 
     public InternalTranslation() {
     }
@@ -28,7 +31,6 @@ public class InternalTranslation implements Parcelable {
         lang = in.readString();
         textTo = in.readString();
         textFrom = in.readString();
-        isFavorite = in.readByte() != 0;
         type = in.readString();
     }
 
@@ -76,20 +78,20 @@ public class InternalTranslation implements Parcelable {
         this.textFrom = textFrom;
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<Def> getDef() {
+        return def;
+    }
+
+    public void setDef(List<Def> def) {
+        this.def = def;
     }
 
     @Override
@@ -116,7 +118,6 @@ public class InternalTranslation implements Parcelable {
         dest.writeString(lang);
         dest.writeString(textTo);
         dest.writeString(textFrom);
-        dest.writeByte((byte) (isFavorite ? 1 : 0));
         dest.writeString(type);
     }
 }
