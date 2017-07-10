@@ -3,8 +3,8 @@ package com.example.kolin.testya.di.modules;
 import android.content.Context;
 
 import com.example.kolin.testya.data.db.DataBaseHelper;
-import com.example.kolin.testya.data.db.IQueries;
-import com.example.kolin.testya.data.db.QueriesImpl;
+import com.example.kolin.testya.data.db.Queries;
+import com.example.kolin.testya.data.db.TranslationDAO;
 import com.example.kolin.testya.data.languages.LanguageProperties;
 import com.example.kolin.testya.data.net.NetTranslator;
 
@@ -31,10 +31,11 @@ public class DataModule {
         return new DataBaseHelper(context);
     }
 
+
     @Provides
     @Singleton
-    IQueries providesQueriesImpl(DataBaseHelper dataBaseHelper){
-        return new QueriesImpl(dataBaseHelper);
+    TranslationDAO providesDao(DataBaseHelper dataBaseHelper){
+        return new Queries(dataBaseHelper);
     }
 
     @Provides

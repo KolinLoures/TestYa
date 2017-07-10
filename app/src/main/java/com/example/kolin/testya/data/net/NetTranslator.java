@@ -2,6 +2,7 @@ package com.example.kolin.testya.data.net;
 
 import com.example.kolin.testya.data.entity.Translation;
 import com.example.kolin.testya.data.entity.dictionary.Dictionary;
+import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import io.reactivex.Observable;
 import retrofit2.http.POST;

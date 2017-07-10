@@ -1,10 +1,9 @@
 package com.example.kolin.testya.data.db;
 
-import android.support.annotation.NonNull;
-
+import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
 
-import java.net.InterfaceAddress;
 import java.util.List;
 
 /**
@@ -13,17 +12,34 @@ import java.util.List;
 
 public interface TranslationDAO {
 
-    void addDBTranslation(@NonNull InternalTranslation translation);
+    List<HistoryFavoriteModel> getAllHistory();
 
-    List<InternalTranslation> getDBTranslations();
+    List<HistoryFavoriteModel> getAllFavorites();
 
-    void updateDBTranslation(@NonNull InternalTranslation translation);
+    InternalTranslation getEntityById(int id);
 
-    void deleteDBTranslation(@NonNull InternalTranslation translation);
+    boolean isFavorite(int id);
 
-    void clearDBTranslationsHistory();
+    void checkEntityToFavorite(int id);
 
-    void clearDBTranslationsFavorite();
+    void deleteAllFavorites();
 
-    boolean isFavorite(@NonNull InternalTranslation internalTranslation);
+    void deleteAllHistory();
+
+    void deleteEntityFromFavorites(int id);
+
+    void deleteEntityFromHistory(int id);
+
+    void clearUselessData();
+
+    void addToTable(String textFrom,
+                    String textTo,
+                    String lang,
+                    String dictionary);
+
+    InternalTranslation getEntity(String textFrom,
+                                  String textTo,
+                                  String lang);
+
+
 }

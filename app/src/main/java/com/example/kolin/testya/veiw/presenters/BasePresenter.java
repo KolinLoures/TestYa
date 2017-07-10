@@ -16,27 +16,27 @@ import java.lang.ref.WeakReference;
 
 public abstract class BasePresenter<V> {
 
-    private WeakReference<V> viewWeakReference = null;
+    private WeakReference<V> weakReference = null;
 
     @CallSuper
-    public void attacheView(@NonNull V view){
-        this.viewWeakReference = new WeakReference<>(view);
+    public void attachView(@NonNull V view){
+        weakReference = new WeakReference<>(view);
     }
 
     @CallSuper
     public void detachView(){
-        if (viewWeakReference != null){
-            viewWeakReference.clear();
-            viewWeakReference = null;
+        if (weakReference != null) {
+            weakReference.clear();
+            weakReference = null;
         }
     }
 
-    protected boolean isViewAttach(){
-        return viewWeakReference.get() != null && viewWeakReference != null;
+    public boolean isViewAttach(){
+        return weakReference.get() != null && weakReference != null;
     }
 
-    protected V getAttachView(){
-        return isViewAttach() ? viewWeakReference.get() : null;
+    public V getView(){
+        return isViewAttach() ? weakReference.get() : null;
     }
 
     public abstract void restoreStateData(Bundle savedInstateState);

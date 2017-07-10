@@ -1,12 +1,11 @@
 package com.example.kolin.testya.data.db;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.example.kolin.testya.data.TypeSaveTranslation;
+import com.example.kolin.testya.data.entity.dictionary.Dictionary;
+import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class Queries implements TranslationDAO {
 
-    private static final String TAG = Queries.class.getSimpleName();
+    private static final Gson gson = new Gson();
 
     DataBaseHelper helper;
 
@@ -26,205 +25,153 @@ public class Queries implements TranslationDAO {
     }
 
     @Override
-    public void addDBTranslation(@NonNull InternalTranslation translation) {
-        updateDBTranslation(translation);
-    }
-
-    @Override
-    public List<InternalTranslation> getDBTranslations() {
-        Cursor cursor = null;
-        SQLiteDatabase db = helper.getReadableDatabase();
-        List<InternalTranslation> result = new ArrayList<>();
-
-        String sqlSelect = String.format(
-                "SELECT * FROM %s",
-                DataBaseHelper.TABLE
+    public List<HistoryFavoriteModel> getAllHistory() {
+        return this.cursorToHistoryFavoriteModel(
+                helper.getCursor(FavoriteHistoryTableDB.getAllHistory())
         );
-
-        db.beginTransaction();
-
-        try {
-
-            cursor = db.rawQuery(sqlSelect, null);
-
-            if (cursor.moveToFirst()) {
-                do {
-                    InternalTranslation temp = new InternalTranslation();
-
-                    temp.setType(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TYPE)));
-                    temp.setLang(cursor.getString(cursor.getColumnIndex(DataBaseHelper.LANG)));
-                    temp.setCode(200);
-                    temp.setTextFrom(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TEXT_FROM)));
-                    temp.setTextTo(cursor.getString(cursor.getColumnIndex(DataBaseHelper.TEXT_TO)));
-
-                    result.add(temp);
-
-                } while (cursor.moveToNext());
-            }
-
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying to get from database");
-        } finally {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-            db.endTransaction();
-        }
-
-        return result;
     }
 
     @Override
-    public void updateDBTranslation(@NonNull InternalTranslation translation) {
-        Cursor cursor = null;
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        db.beginTransaction();
-
-        try {
-
-            String sqlUpdate = String.format(
-                    "UPDATE %s SET %s = '%s' AND %s = 'datetime()' WHERE %s = '%s' AND %s = '%s'",
-                    DataBaseHelper.TABLE,
-                    DataBaseHelper.TYPE,
-                    translation.getType(),
-                    DataBaseHelper.TIME,
-                    DataBaseHelper.TEXT_FROM,
-                    translation.getTextFrom(),
-                    DataBaseHelper.LANG,
-                    translation.getLang()
-            );
-
-            cursor = db.rawQuery(sqlUpdate, null);
-
-            if (cursor.getColumnCount() != 1) {
-
-                String sqlAdd = String.format(
-                        "INSERT INTO %s VALUES('%s','%s','%s','%s','datetime()')",
-                        DataBaseHelper.TABLE,
-                        translation.getTextFrom(),
-                        translation.getTextTo(),
-                        translation.getLang(),
-                        translation.getType()
-                );
-
-                db.execSQL(sqlAdd);
-                db.setTransactionSuccessful();
-            }
-
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying to add in database");
-        } finally {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-
-            db.endTransaction();
-        }
+    public List<HistoryFavoriteModel> getAllFavorites() {
+        return this.cursorToHistoryFavoriteModel(
+                helper.getCursor(FavoriteHistoryTableDB.getAllFavorites())
+        );
     }
 
     @Override
-    public void deleteDBTranslation(@NonNull InternalTranslation translation) {
-
-        if (translation.getType().equals(TypeSaveTranslation.FAVORITE)) {
-            translation.setType(TypeSaveTranslation.HISTORY);
-            updateDBTranslation(translation);
-            return;
-        }
-
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        db.beginTransaction();
-
-        try {
-            String sqlDelete = String.format(
-                    "DELETE FROM %s WHERE %s = '%s' AND %s = '%s'",
-                    DataBaseHelper.TABLE,
-                    DataBaseHelper.TEXT_FROM,
-                    translation.getTextFrom(),
-                    DataBaseHelper.LANG,
-                    translation.getLang()
-            );
-
-            db.execSQL(sqlDelete);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying delete from database");
-        } finally {
-            db.endTransaction();
-        }
+    public InternalTranslation getEntityById(int id) {
+        return this.cursorToInternalTranslation(
+                helper.getCursor(FavoriteHistoryTableDB.getEntityById(id)));
     }
 
     @Override
-    public void clearDBTranslationsHistory() {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.beginTransaction();
-        try {
-
-            String sqlClear = String.format(
-                    "DELETE FROM %s WHERE %s = '%s'",
-                    DataBaseHelper.TABLE,
-                    DataBaseHelper.TYPE,
-                    TypeSaveTranslation.HISTORY
-            );
-
-            db.execSQL(sqlClear);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying to delete all histories from data base");
-        } finally {
-            db.endTransaction();
+    public boolean isFavorite(int id) {
+        boolean isFavorite = false;
+        Cursor cursor = helper.getCursor(FavoriteHistoryTableDB.getIsFavorite(id));
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int isCol = cursor.getColumnIndex(FavoriteHistoryTableDB.IS_FAVORITE);
+                isFavorite = cursor.getInt(isCol) == 1;
+            } while (cursor.moveToNext());
         }
+
+        return isFavorite;
     }
 
     @Override
-    public void clearDBTranslationsFavorite() {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.beginTransaction();
-        try {
-
-            String sqlClear = String.format(
-                    "UPDATE %s SET %s = '%s' WHERE %s = '%s'",
-                    DataBaseHelper.TABLE,
-                    DataBaseHelper.TYPE,
-                    TypeSaveTranslation.HISTORY,
-                    DataBaseHelper.TYPE,
-                    TypeSaveTranslation.FAVORITE
-            );
-
-            db.execSQL(sqlClear);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying to delete all favorites from data base");
-        } finally {
-            db.endTransaction();
-        }
+    public void checkEntityToFavorite(int id) {
+        helper.execSQL(FavoriteHistoryTableDB.addEntityToFavorites(id));
     }
 
     @Override
-    public boolean isFavorite(@NonNull InternalTranslation translation) {
-        SQLiteDatabase db = helper.getReadableDatabase();
+    public void deleteAllFavorites() {
+        helper.execSQL(FavoriteHistoryTableDB.deleteAllFavorites());
+    }
 
-        String queryCheck = String.format(
-                "SELECT * FROM %s WHERE %s = '%s' AND %s = '%s' AND %s = '%s' AND %s = '%s'",
-                DataBaseHelper.TABLE,
-                DataBaseHelper.TEXT_FROM,
-                translation.getTextFrom(),
-                DataBaseHelper.TEXT_TO,
-                translation.getTextTo(),
-                DataBaseHelper.LANG,
-                translation.getLang(),
-                DataBaseHelper.TYPE,
-                TypeSaveTranslation.FAVORITE);
+    @Override
+    public void deleteAllHistory() {
+        helper.execSQL(FavoriteHistoryTableDB.deleteAllHistory());
+    }
 
-        Cursor cursor = db.rawQuery(queryCheck, null);
-        try {
-            return cursor.moveToFirst();
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying check from database");
-        } finally {
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
-            }
+    @Override
+    public void deleteEntityFromFavorites(int id) {
+        helper.execSQL(FavoriteHistoryTableDB.deleteEntityFromFavorite(id));
+    }
+
+    @Override
+    public void deleteEntityFromHistory(int id) {
+        helper.execSQL(FavoriteHistoryTableDB.deleteEntityFromHistory(id));
+    }
+
+    @Override
+    public void clearUselessData() {
+        helper.execSQL(FavoriteHistoryTableDB.clearData());
+    }
+
+    @Override
+    public void addToTable(String textFrom, String textTo, String lang, String dictionary) {
+        int id = -1;
+
+
+        Cursor cursor = helper.getCursor(FavoriteHistoryTableDB.getId(textFrom, textTo, lang));
+        if (cursor != null && cursor.moveToNext()) {
+            do {
+                int idCol = cursor.getColumnIndex(FavoriteHistoryTableDB.ID);
+                id = cursor.getInt(idCol);
+            } while (cursor.moveToNext());
+
+            cursor.close();
         }
-        return false;
+
+        helper.writeEntityToTable(
+                FavoriteHistoryTableDB.contentValues(textFrom, textTo, lang, dictionary),
+                id
+        );
+    }
+
+    @Override
+    public InternalTranslation getEntity(String textFrom, String textTo, String lang) {
+        return this.cursorToInternalTranslation(
+                helper.getCursor(FavoriteHistoryTableDB.getEntity(textFrom, textTo, lang)));
+    }
+
+    private List<HistoryFavoriteModel> cursorToHistoryFavoriteModel(Cursor cursor) {
+        List<HistoryFavoriteModel> temp = new ArrayList<>();
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            int idCol = cursor.getColumnIndex(FavoriteHistoryTableDB.ID);
+            int textFromCol = cursor.getColumnIndex(FavoriteHistoryTableDB.TEXT_FROM);
+            int textToCol = cursor.getColumnIndex(FavoriteHistoryTableDB.TEXT_TO);
+            int langCol = cursor.getColumnIndex(FavoriteHistoryTableDB.LANG);
+            int isCol = cursor.getColumnIndex(FavoriteHistoryTableDB.IS_FAVORITE);
+
+            do {
+                HistoryFavoriteModel historyFavoriteModel = new HistoryFavoriteModel();
+                historyFavoriteModel.setId(cursor.getInt(idCol));
+                historyFavoriteModel.setTextFrom(cursor.getString(textFromCol));
+                historyFavoriteModel.setTextTo(cursor.getString(textToCol));
+                historyFavoriteModel.setLang(cursor.getString(langCol));
+                historyFavoriteModel.setFavorite(cursor.getInt(isCol) == 1);
+
+                temp.add(historyFavoriteModel);
+
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+
+        return temp;
+    }
+
+    private InternalTranslation cursorToInternalTranslation(Cursor cursor) {
+
+        InternalTranslation translation = new InternalTranslation();
+
+        if (cursor != null && cursor.moveToFirst()) {
+
+            int idCol = cursor.getColumnIndex(FavoriteHistoryTableDB.ID);
+            int textFromCol = cursor.getColumnIndex(FavoriteHistoryTableDB.TEXT_FROM);
+            int textToCol = cursor.getColumnIndex(FavoriteHistoryTableDB.TEXT_TO);
+            int langCol = cursor.getColumnIndex(FavoriteHistoryTableDB.LANG);
+            int dicCol = cursor.getColumnIndex(FavoriteHistoryTableDB.DICTIONARY);
+            int isCol = cursor.getColumnIndex(FavoriteHistoryTableDB.IS_FAVORITE);
+
+            do {
+
+                translation.setId(cursor.getInt(idCol));
+                translation.setTextFrom(cursor.getString(textFromCol));
+                translation.setTextTo(cursor.getString(textToCol));
+                translation.setLang(cursor.getString(langCol));
+                translation.setDef(gson.fromJson(cursor.getString(dicCol), Dictionary.class).getDef());
+                translation.setFavorite(cursor.getInt(isCol) == 1);
+
+
+            } while (cursor.moveToNext());
+
+        }
+
+        return translation;
     }
 }

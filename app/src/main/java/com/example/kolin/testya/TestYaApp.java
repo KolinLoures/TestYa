@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.kolin.testya.di.components.AppComponent;
 import com.example.kolin.testya.di.components.DaggerAppComponent;
 import com.example.kolin.testya.di.modules.AppModule;
+import com.facebook.stetho.Stetho;
 
 
 /**
@@ -18,6 +19,8 @@ public class TestYaApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Stetho.initializeWithDefaults(this);
 
         appComponent = DaggerAppComponent
                 .builder()

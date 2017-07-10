@@ -1,67 +1,43 @@
 package com.example.kolin.testya.domain;
 
 import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.observers.DisposableObserver;
 
 /**
- * Created by kolin on 14.04.2017.
- *
- * Abstract class for a Use Case (In terms of Clean Architecture).
- *
- * By convention each UseCase implementation will return the result using a {@link DisposableCompletableObserver}
- * that will execute its job in a background thread and will post the result in the UI thread.
+ * Created by kolin on 10.07.2017.
  */
 
-public abstract class BaseCompletableUseCase<RequestParams> {
-
-    private CompositeDisposable compositeDisposable;
-
-    public BaseCompletableUseCase() {
-        this.compositeDisposable = new CompositeDisposable();
-    }
+public abstract class BaseCompletableUseCase<RequestParams> extends BaseObservableUseCase<Void, RequestParams> {
 
 
-    /**
-     * Create {@link Completable} source which will be execute.
-     */
     public abstract Completable createCompletable(RequestParams params);
 
-    /**
-     * Executes the current use case.
-     *
-     * @param obs  {@link DisposableCompletableObserver} which will be listening to the observable build
-     *              by {@link #createCompletable(RequestParams)} ()} method.
-     *
-     * @param params Parameters used to build/execute this use case.
-     */
-    public void execute(DisposableCompletableObserver obs, RequestParams params){
-
-        final DisposableCompletableObserver observer = createCompletable(params)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeWith(obs);
-
-        compositeDisposable.add(observer);
+    @Override
+    public final Observable<Void> createObservable(RequestParams params) {
+        return createCompletable(params).toObservable();
     }
 
-    /**
-     * Dispose all observers
-     */
-    public void dispose(){
-        if (!compositeDisposable.isDisposed()){
-            compositeDisposable.dispose();
-        }
-    }
+    public void execute(final DisposableCompletableObserver observer, RequestParams params) {
 
-    /**
-     * Clear all observers
-     */
-    public void clearDisposableObservers(){
-        if (!compositeDisposable.isDisposed()){
-            compositeDisposable.clear();
-        }
+        final DisposableObserver<Void> obs = new DisposableObserver<Void>() {
+            @Override
+            public void onNext(Void aVoid) {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                observer.onError(e);
+            }
+
+            @Override
+            public void onComplete() {
+                observer.onComplete();
+            }
+        };
+
+        super.execute(obs, params);
     }
 }

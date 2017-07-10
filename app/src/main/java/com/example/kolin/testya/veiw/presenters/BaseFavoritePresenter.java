@@ -4,9 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.example.kolin.testya.data.TypeSaveTranslation;
-import com.example.kolin.testya.domain.AddRemoveTranslationDb;
-import com.example.kolin.testya.domain.model.InternalTranslation;
+import com.example.kolin.testya.domain.AddRemoveFavoriteTranslationDb;
 
 import io.reactivex.observers.DisposableCompletableObserver;
 
@@ -23,28 +21,26 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
     private static final String TAG = BaseFavoritePresenter.class.getSimpleName();
 
     //Use Case add/remove data base translation
-    private AddRemoveTranslationDb addRemoveTranslationDb;
+    private AddRemoveFavoriteTranslationDb addRemoveTranslationDb;
 
-    BaseFavoritePresenter(AddRemoveTranslationDb addRemoveTranslationDb) {
+    BaseFavoritePresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb) {
         this.addRemoveTranslationDb = addRemoveTranslationDb;
     }
 
     @Override
-    public void attacheView(@NonNull V view) {
-        super.attacheView(view);
+    public void attachView(@NonNull V view) {
+        super.attachView(view);
     }
 
-    //Abstract Method to notify that AddRemoveTranslationDb complete
+    //Abstract Method to notify that AddRemoveFavoriteTranslationDb complete
     public abstract void onCompleteAddToFavoriteDb();
 
     //execute use case
-    protected void addRemoveFavoriteTranslation(InternalTranslation translation, boolean remove) {
+    protected void addRemoveFavoriteTranslation(int id, boolean remove) {
         addRemoveTranslationDb.clearDisposableObservers();
         addRemoveTranslationDb.execute(
                 new AddFavoriteDbObserver(),
-                AddRemoveTranslationDb.AddTranslationParams.getParamsObj(translation,
-                        TypeSaveTranslation.FAVORITE,
-                        remove)
+                AddRemoveFavoriteTranslationDb.Params.getParamsObject(id, remove)
         );
     }
 
@@ -54,7 +50,7 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
         addRemoveTranslationDb.dispose();
     }
 
-    //Observer for AddRemoveTranslationDb use case
+    //Observer for AddRemoveFavoriteTranslationDb use case
     public final class AddFavoriteDbObserver extends DisposableCompletableObserver {
 
         @Override

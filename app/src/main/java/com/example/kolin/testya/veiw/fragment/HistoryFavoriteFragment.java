@@ -96,7 +96,7 @@ public class HistoryFavoriteFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter.attacheView(this);
+        presenter.attachView(this);
 
         if (savedInstanceState != null)
             presenter.restoreStateData(savedInstanceState);
@@ -150,7 +150,7 @@ public class HistoryFavoriteFragment extends Fragment
             @Override
             public void checkFavorite(InternalTranslation translation, boolean check) {
 
-                presenter.addRemoveFavoriteDb(translation, check);
+//                presenter.addRemoveFavoriteDb(translation, check);
 
                 translation.setFavorite(!check);
 

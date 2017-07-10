@@ -1,21 +1,18 @@
 package com.example.kolin.testya.veiw.presenters;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.ArrayMap;
 import android.util.Log;
 
 import com.example.kolin.testya.data.entity.dictionary.Def;
-import com.example.kolin.testya.domain.AddRemoveTranslationDb;
-import com.example.kolin.testya.domain.GetDictionary;
+import com.example.kolin.testya.domain.AddRemoveFavoriteTranslationDb;
 import com.example.kolin.testya.domain.GetLanguages;
 import com.example.kolin.testya.domain.GetTranslation;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -43,7 +40,6 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
     //Use cases
     private GetTranslation getTranslation;
-    private GetDictionary getDictionary;
     private GetLanguages getLanguages;
 
     //Current data
@@ -55,20 +51,18 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     private ArrayMap<String, String> languages;
 
     @Inject
-    TranslatorPresenter(AddRemoveTranslationDb addRemoveTranslationDb,
+    TranslatorPresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb,
                                GetTranslation getTranslation,
-                               GetDictionary getDictionary,
                                GetLanguages getLanguages) {
         super(addRemoveTranslationDb);
 
         this.getTranslation = getTranslation;
-        this.getDictionary = getDictionary;
         this.getLanguages = getLanguages;
     }
 
     @Override
-    public void attacheView(@NonNull TranslatorFragment view) {
-        super.attacheView(view);
+    public void attachView(@NonNull TranslatorFragment view) {
+        super.attachView(view);
 
         this.languages = new ArrayMap<>();
         this.currentDefList = new ArrayList<>();
@@ -81,10 +75,10 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     }
 
     /**
-     * Execute {@link AddRemoveTranslationDb} use case.
+     * Execute {@link AddRemoveFavoriteTranslationDb} use case.
      */
     public void addRemoveTranslationDb(boolean remove) {
-        super.addRemoveFavoriteTranslation(currentTranslation, remove);
+        super.addRemoveFavoriteTranslation(currentTranslation.getId(), remove);
     }
 
     /**
@@ -105,18 +99,18 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             return;
         }
 
-        //do not load the same
-        if (currentText.equals(text) && currentLangFrom.equals(langFrom) && currentLangTo.equals(langTo)) {
-            return;
-        }
+//        //do not load the same
+//        if (currentText.equals(text) && currentLangFrom.equals(langFrom) && currentLangTo.equals(langTo)) {
+//            return;
+//        }
 
         //hide loading progress view
-        getAttachView().showLoadingProgress(false);
+        getView().showLoadingProgress(false);
 
         //hide unnecessary parts of layouts
-        getAttachView().showTranslationCard(false);
-        getAttachView().showDictionaryCard(false);
-        getAttachView().showDetermineLang(false);
+        getView().showTranslationCard(false);
+        getView().showDictionaryCard(false);
+        getView().showDetermineLang(false);
 
         //clear observer (we do not need data from old observer)
         getTranslation.clearDisposableObservers();
@@ -129,28 +123,14 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         //check if text is not empty
         if (!text.isEmpty() && !text.equals("") && lang != null) {
-            getAttachView().showLoadingProgress(true);
+            getView().showLoadingProgress(true);
 
             currentText = text;
 
             //execute getTranslation use case
-            getTranslation.execute(new TranslatorObserver(),
-                    GetTranslation.TranslationParams.getParamsObj(text, lang, loadFromNetworkOnly));
+
+            getTranslation.execute(new TranslatorObserver(), GetTranslation.TranslationParams.getParamsObj(text, lang));
         }
-    }
-
-    /**
-     * Execute {@link GetDictionary} use case
-     */
-    public void loadDictionaryResult() {
-
-        getDictionary.clearDisposableObservers();
-
-        getDictionary.execute(new DictionaryObserver(),
-                GetDictionary.DictionaryParams.getParamsObj(
-                        currentTranslation.getTextFrom(),
-                        currentTranslation.getLang()));
-
     }
 
     /**
@@ -172,22 +152,22 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             //retrieve determined lang from translation
             String determinedLang = translation.getLang().split("-")[0].toLowerCase();
             //show determined part of layout
-            getAttachView().showDetermineLang(true);
+            getView().showDetermineLang(true);
 
             //set to layout determined lang
-            getAttachView().setDetermineLanguage(getNameLang(determinedLang));
+            getView().setDetermineLanguage(getNameLang(determinedLang));
         }
 
         //show other parts of layouts
-        getAttachView().showTranslationCard(true);
-        getAttachView().showError(false);
+        getView().showTranslationCard(true);
+        getView().showError(false);
+        getView().showDictionaryCard(true);
         //show translation result
-        getAttachView().showTranslationResult(translation);
+        getView().showDictionary(translation.getDef());
+        getView().showTranslationResult(translation);
     }
 
-    /**
-     * Show dictionary result of {@link GetDictionary} use case
-     */
+
     private void showDictionaryResult(List<Def> defList) {
         //check if list is empty
         if (defList != null && defList.size() != 0) {
@@ -201,9 +181,9 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             this.currentDefList.addAll(defList);
 
             //show necessary part of layout
-            getAttachView().showDictionaryCard(true);
+            getView().showDictionaryCard(true);
             //show data
-            getAttachView().showDictionary(defList);
+            getView().showDictionary(defList);
         }
     }
 
@@ -219,7 +199,6 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         getTranslation.dispose();
         getLanguages.dispose();
-        getDictionary.dispose();
     }
 
     @SuppressWarnings("unchecked")
@@ -229,7 +208,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         currentLangFrom = savedInstateState.getString(KEY_CURR_FROM);
         currentLangTo = savedInstateState.getString(KEY_CURR_TO);
 
-        getAttachView().setLanguagesToButtons(currentLangFrom, currentLangTo);
+        getView().setLanguagesToButtons(currentLangFrom, currentLangTo);
 
         Map<String, String> mapLang = (Map<String, String>) savedInstateState.getSerializable(KEY_LANGUAGES);
         if (mapLang != null)
@@ -249,11 +228,11 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
     @Override
     public void prepareForChangeState(Bundle outSate) {
-        outSate.putString(KEY_CURR_FROM, currentLangFrom);
-        outSate.putString(KEY_CURR_TO, currentLangTo);
-        outSate.putParcelable(KEY_CURR_TRANS, currentTranslation);
-        outSate.putParcelableArrayList(KEY_CURR_DIC, new ArrayList<Parcelable>(currentDefList));
-        outSate.putSerializable(KEY_LANGUAGES, new HashMap<>(languages));
+//        outSate.putString(KEY_CURR_FROM, currentLangFrom);
+//        outSate.putString(KEY_CURR_TO, currentLangTo);
+//        outSate.putParcelable(KEY_CURR_TRANS, currentTranslation);
+//        outSate.putParcelableArrayList(KEY_CURR_DIC, new ArrayList<Parcelable>(currentDefList));
+//        outSate.putSerializable(KEY_LANGUAGES, new HashMap<>(languages));
     }
 
     /**
@@ -271,7 +250,6 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     public void clearDisposables() {
         getLanguages.clearDisposableObservers();
         getTranslation.clearDisposableObservers();
-        getDictionary.clearDisposableObservers();
     }
 
     /**
@@ -342,17 +320,17 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         @Override
         public void onError(Throwable e) {
-            getAttachView().showLoadingProgress(false);
-            getAttachView().showError(true);
 
-            e.printStackTrace();
+            getView().showLoadingProgress(false);
+            getView().showError(true);
+
             Log.e(TAG, "TranslatorObservable: ", e);
         }
 
         @Override
         public void onComplete() {
-            getAttachView().showLoadingProgress(false);
-            loadDictionaryResult();
+            getView().showLoadingProgress(false);
+//            loadDictionaryResult();
         }
     }
 
@@ -386,11 +364,11 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
             languages.putAll(stringStringArrayMap);
 
             if (currentLangFrom == null && currentLangTo == null) {
-                currentLangFrom = getNameLang("ru");
-                currentLangTo = getNameLang("en");
+                currentLangFrom = getNameLang("en");
+                currentLangTo = getNameLang("ru");
             }
 
-            getAttachView().setLanguagesToButtons(currentLangFrom, currentLangTo);
+            getView().setLanguagesToButtons(currentLangFrom, currentLangTo);
         }
 
         @Override

@@ -3,7 +3,7 @@ package com.example.kolin.testya.di.components;
 import android.content.Context;
 
 import com.example.kolin.testya.data.db.DataBaseHelper;
-import com.example.kolin.testya.data.db.IQueries;
+import com.example.kolin.testya.data.db.TranslationDAO;
 import com.example.kolin.testya.data.languages.LanguageProperties;
 import com.example.kolin.testya.data.net.NetTranslator;
 import com.example.kolin.testya.di.modules.AppModule;
@@ -27,7 +27,7 @@ public interface AppComponent {
 
     DataBaseHelper getDataBaseHelper();
 
-    IQueries provideQueriesImpl();
+    TranslationDAO provideDAO();
 
     LanguageProperties getLangProperties();
 

@@ -13,41 +13,21 @@ import java.util.List;
  * InternalTranslation class used in the all layers in applications.
  */
 
-public class InternalTranslation implements Parcelable {
+public class InternalTranslation {
 
-    private int code;
+    private int id;
     private String lang;
     private String textFrom;
     private String textTo;
-    private String type;
+
+    private boolean isFavorite;
 
     private List<Def> def = null;
 
-    public InternalTranslation() {
-    }
+    public InternalTranslation() {}
 
-    protected InternalTranslation(Parcel in) {
-        code = in.readInt();
-        lang = in.readString();
-        textTo = in.readString();
-        textFrom = in.readString();
-        type = in.readString();
-    }
-
-    public static final Creator<InternalTranslation> CREATOR = new Creator<InternalTranslation>() {
-        @Override
-        public InternalTranslation createFromParcel(Parcel in) {
-            return new InternalTranslation(in);
-        }
-
-        @Override
-        public InternalTranslation[] newArray(int size) {
-            return new InternalTranslation[size];
-        }
-    };
-
-    public int getCode() {
-        return code;
+    public int getId() {
+        return id;
     }
 
     public String getLang() {
@@ -58,8 +38,8 @@ public class InternalTranslation implements Parcelable {
         this.lang = lang;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTextTo() {
@@ -78,20 +58,20 @@ public class InternalTranslation implements Parcelable {
         this.textFrom = textFrom;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public List<Def> getDef() {
         return def;
     }
 
     public void setDef(List<Def> def) {
         this.def = def;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     @Override
@@ -105,19 +85,5 @@ public class InternalTranslation implements Parcelable {
         if (!textTo.equals(that.textTo)) return false;
         return textFrom.equals(that.textFrom);
 
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(code);
-        dest.writeString(lang);
-        dest.writeString(textTo);
-        dest.writeString(textFrom);
-        dest.writeString(type);
     }
 }

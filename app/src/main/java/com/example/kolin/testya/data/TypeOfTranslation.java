@@ -13,7 +13,7 @@ import java.util.List;
  * Class represent main categories of translations.
  */
 
-public class TypeSaveTranslation {
+public class TypeOfTranslation {
 
     private static List<String> list = new ArrayList<>();
 
@@ -29,15 +29,15 @@ public class TypeSaveTranslation {
     public static final String FAVORITE = "favorite";
 
     static {
-        list.add(TypeSaveTranslation.HISTORY);
-        list.add(TypeSaveTranslation.FAVORITE);
+        list.add(TypeOfTranslation.HISTORY);
+        list.add(TypeOfTranslation.FAVORITE);
     }
 
     public static String getTypeById(int id){
         return list.get(id);
     }
 
-    public static int getTypeId(String type){
+    public static int getTypeId(@TypeName String type){
         return list.indexOf(type);
     }
 }

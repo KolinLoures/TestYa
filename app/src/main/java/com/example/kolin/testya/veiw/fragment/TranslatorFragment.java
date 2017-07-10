@@ -45,15 +45,15 @@ public class TranslatorFragment extends Fragment implements
     private static final String TAG = TranslatorFragment.class.getSimpleName();
 
     //Views
-    private TextView textTransResult;
+    private TextView textTranslationResult;
     private TextView dictionaryTextHeader;
-    private EditText editTextTranslate;
+    private EditText editTextToTranslate;
     private RecyclerView recyclerViewDictionary;
     private CheckBox btnAddFavorite;
     private ImageButton btnClear;
     private Button btnFrom;
     private Button btnTo;
-    private ImageButton imBtmReverse;
+    private ImageButton btnReverseLangs;
     private TextView textDeterminedLanguage;
     private ProgressBar loadingProgress;
     private View translationCard;
@@ -96,11 +96,15 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_translator, container, false);
+        return inflater.inflate(R.layout.fragment_translator, container, false);
+    }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        editTextTranslate = (EditText) view.findViewById(R.id.translator_edit_text);
-        textTransResult = (TextView) view.findViewById(R.id.translation_card_text_result);
+        editTextToTranslate = (EditText) view.findViewById(R.id.translator_edit_text);
+        textTranslationResult = (TextView) view.findViewById(R.id.translation_card_text_result);
         recyclerViewDictionary = (RecyclerView) view.findViewById(R.id.dictionary_card_recycler_view);
         dictionaryTextHeader = (TextView) view.findViewById(R.id.dictionary_card_text_header);
         btnAddFavorite = (CheckBox) view.findViewById(R.id.translation_card_btn_favorite);
@@ -109,29 +113,21 @@ public class TranslatorFragment extends Fragment implements
         dictionaryCard = view.findViewById(R.id.dictionary_card);
         btnFrom = (Button) view.findViewById(R.id.translation_btn_from);
         btnTo = (Button) view.findViewById(R.id.translation_btn_to);
-        imBtmReverse = (ImageButton) view.findViewById(R.id.translation_img_btn_reverse);
+        btnReverseLangs = (ImageButton) view.findViewById(R.id.translation_img_btn_reverse);
         textDeterminedLanguage = (TextView) view.findViewById(R.id.translation_text_determined_lang);
         loadingProgress = (ProgressBar) view.findViewById(R.id.translation_progress_downloading);
         textViewError = (TextView) view.findViewById(R.id.translation_error_text);
 
 
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
         dictionaryAdapter = new DictionaryAdapter();
         sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
 
-        presenter.attacheView(this);
+        presenter.attachView(this);
 
-        if (savedInstanceState != null)
-            presenter.restoreStateData(savedInstanceState);
-        else
-            presenter.loadSupportLanguages();
+//        if (savedInstanceState != null)
+//            presenter.restoreStateData(savedInstanceState);
+//        else
+        presenter.loadSupportLanguages();
 
 
         setupEditTextChangeListener();
@@ -143,7 +139,7 @@ public class TranslatorFragment extends Fragment implements
         btnAddFavorite.setOnClickListener(onClickListener);
         btnTo.setOnClickListener(onClickListener);
         btnFrom.setOnClickListener(onClickListener);
-        imBtmReverse.setOnClickListener(onClickListener);
+        btnReverseLangs.setOnClickListener(onClickListener);
     }
 
     private void initializeOnClickListener() {
@@ -162,56 +158,56 @@ public class TranslatorFragment extends Fragment implements
                 CheckBox checkBox = (CheckBox) v;
                 presenter.addRemoveTranslationDb(!checkBox.isChecked());
                 break;
-            //click clear button
-            case R.id.translation_clear_edit_btn:
-                //clear all unnecessary texts
-                editTextTranslate.getText().clear();
-                textTransResult.setText("");
-                //clear presenters data
-                presenter.clear();
-                presenter.clearDisposables();
-                //hide unnecessary part of layouts
-                showDetermineLang(false);
-                break;
-            //click button from choose language
-            case R.id.translation_btn_from:
-                //language from allow to determine lang
-                List<String> listLanguages = presenter.getListLanguages();
-                //do not allow to choose same languages
-                if (btnFrom.getText().toString().equals(getString(R.string.determine_language)))
-                    listLanguages.remove(btnTo.getText().toString());
-                dialog = LanguageDialogFragment.newInstance(listLanguages, true);
-                //show choose language dialog
-                dialog.show(getChildFragmentManager(), "language_dialog_fragment");
-                break;
-            //click button to choose language
-            case R.id.translation_btn_to:
-                dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), false);
-                //show choose language dialog
-                dialog.show(getChildFragmentManager(), "language_dialog_fragment");
-                break;
-            //click reverse language button
-            case R.id.translation_img_btn_reverse:
-                //if reverse language between buttons success
-                if (reverseLanguages())
-                    //set to edit text Translated text
-                    editTextTranslate.setText(textTransResult.getText());
-                //notify user that smth wrong
-                else
-                    notifyUser(getString(R.string.chose_language_from));
-                break;
+//            //click clear button
+//            case R.id.translation_clear_edit_btn:
+//                //clear all unnecessary texts
+//                editTextToTranslate.getText().clear();
+//                textTranslationResult.setText("");
+//                //clear presenters data
+//                presenter.clear();
+//                presenter.clearDisposables();
+//                //hide unnecessary part of layouts
+//                showDetermineLang(false);
+//                break;
+//            //click button from choose language
+//            case R.id.translation_btn_from:
+//                //language from allow to determine lang
+//                List<String> listLanguages = presenter.getListLanguages();
+//                //do not allow to choose same languages
+//                if (btnFrom.getText().toString().equals(getString(R.string.determine_language)))
+//                    listLanguages.remove(btnTo.getText().toString());
+//                dialog = LanguageDialogFragment.newInstance(listLanguages, true);
+//                //show choose language dialog
+//                dialog.show(getChildFragmentManager(), "language_dialog_fragment");
+//                break;
+//            //click button to choose language
+//            case R.id.translation_btn_to:
+//                dialog = LanguageDialogFragment.newInstance(presenter.getListLanguages(), false);
+//                //show choose language dialog
+//                dialog.show(getChildFragmentManager(), "language_dialog_fragment");
+//                break;
+//            //click reverse language button
+//            case R.id.translation_img_btn_reverse:
+//                //if reverse language between buttons success
+//                if (reverseLanguages())
+//                    //set to edit text Translated text
+//                    editTextToTranslate.setText(textTranslationResult.getText());
+//                //notify user that smth wrong
+//                else
+//                    notifyUser(getString(R.string.chose_language_from));
+//                break;
         }
     }
 
     private boolean reverseLanguages() {
         //check code lang in presenter
-        String valueByKey = presenter.getCodeLang(btnFrom.getText().toString());
-        if (valueByKey != null) {
-            //reverse lang between buttons
-            String temp = btnTo.getText().toString();
-            setLanguagesToButtons(temp, btnFrom.getText().toString());
-            return true;
-        }
+//        String valueByKey = presenter.getCodeLang(btnFrom.getText().toString());
+//        if (valueByKey != null) {
+//            //reverse lang between buttons
+//            String temp = btnTo.getText().toString();
+//            setLanguagesToButtons(temp, btnFrom.getText().toString());
+//            return true;
+//        }
         return false;
     }
 
@@ -226,7 +222,7 @@ public class TranslatorFragment extends Fragment implements
                     btnTo.setText(lang);
                 }
 
-                editTextTranslate
+                editTextToTranslate
                         .setText(
                                 dictionaryAdapter.getDataAtPosition(
                                         sectionedDictionaryAdapter.sectionedPositionToPosition(position)
@@ -242,7 +238,7 @@ public class TranslatorFragment extends Fragment implements
 
     private void setupEditTextChangeListener() {
         //set text watcher to edit text
-        editTextTranslate.addTextChangedListener(new TextWatcher() {
+        editTextToTranslate.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -255,17 +251,18 @@ public class TranslatorFragment extends Fragment implements
             @Override
             public void afterTextChanged(Editable s) {
                 //check flag of blocking
-                if (!blockTextWatcher) {
-                    String text = s.toString().trim();
-                    if (text.isEmpty()) {
-                        //set trans result if text is empty
-                        textTransResult.setText("");
-                    }
-                    //set visible clear button
-                    setVisibleClearBtn(!text.isEmpty());
-                    //execute translation in presenter
-                    presenter.loadTranslation(text, btnFrom.getText().toString(), btnTo.getText().toString(), false);
-                }
+                presenter.loadTranslation(s.toString().trim(), btnFrom.getText().toString(), btnTo.getText().toString(), false);
+
+//                if (!blockTextWatcher) {
+//                    String text = s.toString().trim();
+//                    if (text.isEmpty()) {
+//                        //set trans result if text is empty
+//                        textTranslationResult.setText("");
+//                    }
+//                    //set visible clear button
+//                    setVisibleClearBtn(!text.isEmpty());
+//                    //execute translation in presenter
+//                }
             }
         });
     }
@@ -294,7 +291,7 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void showTranslationResult(InternalTranslation translation) {
-        textTransResult.setText(translation.getTextTo());
+        textTranslationResult.setText(translation.getTextTo());
         btnAddFavorite.setChecked(translation.isFavorite());
     }
 
@@ -399,6 +396,8 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void update(boolean flag, InternalTranslation newData) {
+        /*
+
         //flag - true was checked HistoryFavoriteFragment / false - was clicked HistoryFavoriteFragment
 
         //check presenter not null
@@ -432,16 +431,18 @@ public class TranslatorFragment extends Fragment implements
 
         //set text edit
         blockTextWatcher = true;
-        editTextTranslate.setText(newData.getTextFrom());
+        editTextToTranslate.setText(newData.getTextFrom());
         blockTextWatcher = false;
 
         //load translation with condition checking translation in data base
         presenter.loadTranslation(
-                editTextTranslate.getText().toString(),
+                editTextToTranslate.getText().toString(),
                 btnFrom.getText().toString(),
                 btnTo.getText().toString(),
                 true
         );
+
+        */
     }
 
     @Override
@@ -466,7 +467,7 @@ public class TranslatorFragment extends Fragment implements
 
         //load new translation with new langs
         presenter.loadTranslation(
-                editTextTranslate.getText().toString(),
+                editTextToTranslate.getText().toString(),
                 btnFrom.getText().toString(),
                 btnTo.getText().toString(),
                 false
