@@ -29,7 +29,6 @@ import com.example.kolin.testya.veiw.DataUpdatable;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
 import com.example.kolin.testya.veiw.presenters.TranslatorPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -224,6 +223,7 @@ public class TranslatorFragment extends Fragment implements
         });
 
         recyclerViewDictionary.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewDictionary.setAdapter(dictionaryAdapter);
 
 
     }
@@ -290,15 +290,7 @@ public class TranslatorFragment extends Fragment implements
     //TODO refactor this moment and add transcription
     @Override
     public void showDictionary(List<Def> defList) {
-        dictionaryAdapter.clearAdapter();
-        dictionaryTextHeader.setText(defList.get(0).getText());
-        int position = 0;
-        //add section to sectioned adapter (sections - part of speech)
-        for (Def def : defList) {
-            position += def.getTr().size();
-        }
-        for (Def def : defList)
-            dictionaryAdapter.addDataList(def.getTr());
+        dictionaryAdapter.addData(defList);
     }
 
     @Override

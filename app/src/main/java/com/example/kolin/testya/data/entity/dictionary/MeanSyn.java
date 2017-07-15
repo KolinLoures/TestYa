@@ -17,6 +17,10 @@ public class MeanSyn implements Parcelable {
         text = in.readString();
     }
 
+    public MeanSyn(String text) {
+        this.text = text;
+    }
+
     public static final Creator<MeanSyn> CREATOR = new Creator<MeanSyn>() {
         @Override
         public MeanSyn createFromParcel(Parcel in) {
