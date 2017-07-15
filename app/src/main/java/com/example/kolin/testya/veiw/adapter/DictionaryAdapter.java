@@ -36,7 +36,7 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
 
     @Override
     public DictionaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sub_item_dictionary_rv, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dictionary, parent, false);
         return new DictionaryViewHolder(view);
     }
 
@@ -72,8 +72,8 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         DictionaryViewHolder(View itemView) {
             super(itemView);
 
-            primaryText = (TextView) itemView.findViewById(R.id.sub_item_dic_primary_text);
-            supportText = (TextView) itemView.findViewById(R.id.sub_item_dic_sub_text);
+            primaryText = (TextView) itemView.findViewById(R.id.dictionary_syn_text);
+            supportText = (TextView) itemView.findViewById(R.id.dictionary_mean_text);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

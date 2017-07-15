@@ -27,7 +27,6 @@ import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.DataUpdatable;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
-import com.example.kolin.testya.veiw.adapter.SectionedDictionaryAdapter;
 import com.example.kolin.testya.veiw.presenters.TranslatorPresenter;
 
 import java.util.ArrayList;
@@ -71,7 +70,6 @@ public class TranslatorFragment extends Fragment implements
 
     //Adapters
     private DictionaryAdapter dictionaryAdapter;
-    private SectionedDictionaryAdapter sectionedDictionaryAdapter;
 
     @Inject
     TranslatorPresenter presenter;
@@ -120,7 +118,6 @@ public class TranslatorFragment extends Fragment implements
 
 
         dictionaryAdapter = new DictionaryAdapter();
-        sectionedDictionaryAdapter = new SectionedDictionaryAdapter(getContext(), dictionaryAdapter);
 
         presenter.attachView(this);
 
@@ -222,16 +219,11 @@ public class TranslatorFragment extends Fragment implements
                     btnTo.setText(lang);
                 }
 
-                editTextToTranslate
-                        .setText(
-                                dictionaryAdapter.getDataAtPosition(
-                                        sectionedDictionaryAdapter.sectionedPositionToPosition(position)
-                                ).getText());
+
             }
         });
 
         recyclerViewDictionary.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewDictionary.setAdapter(sectionedDictionaryAdapter);
 
 
     }
@@ -277,7 +269,6 @@ public class TranslatorFragment extends Fragment implements
         super.onDestroy();
 
         presenter.detachView();
-        sectionedDictionaryAdapter = null;
         dictionaryAdapter = null;
         onClickListener = null;
     }
@@ -301,16 +292,13 @@ public class TranslatorFragment extends Fragment implements
     public void showDictionary(List<Def> defList) {
         dictionaryAdapter.clearAdapter();
         dictionaryTextHeader.setText(defList.get(0).getText());
-        List<SectionedDictionaryAdapter.Section> sections = new ArrayList<>();
         int position = 0;
         //add section to sectioned adapter (sections - part of speech)
         for (Def def : defList) {
-            sections.add(new SectionedDictionaryAdapter.Section(position, def.getPos()));
             position += def.getTr().size();
         }
         for (Def def : defList)
             dictionaryAdapter.addDataList(def.getTr());
-        sectionedDictionaryAdapter.setSections(sections);
     }
 
     @Override
