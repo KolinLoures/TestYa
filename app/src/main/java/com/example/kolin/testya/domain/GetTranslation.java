@@ -47,12 +47,14 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
                         netTranslator.getTranslation(
                                 NetTranslator.API_KEY_TRNSL,
                                 translationParams.text,
-                                translationParams.lang),
+                                translationParams.lang)
+                                .delay(DELAY, TimeUnit.MILLISECONDS),
                         netTranslator.getTranslationOptions(
                                 NetTranslator.API_KEY_DICT,
                                 translationParams.text,
                                 translationParams.lang,
-                                "ru"),
+                                "ru")
+                                .delay(DELAY, TimeUnit.MILLISECONDS),
                         new BiFunction<Translation, Dictionary, InternalTranslation>() {
                             @Override
                             public InternalTranslation apply(
@@ -65,8 +67,7 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
                                 );
                             }
                         }
-                )
-                .delay(DELAY, TimeUnit.MILLISECONDS);
+                );
     }
 
     private InternalTranslation saveTranslationToDB(String textFrom, Translation translation, Dictionary dictionary) {
