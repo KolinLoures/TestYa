@@ -20,7 +20,6 @@ import com.example.kolin.testya.R;
 import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.Updatable;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.adapter.SpinnerCategoryAdapter;
 import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
@@ -31,7 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class HistoryFavoriteFragment extends Fragment
-        implements HistoryFavoriteView, Updatable, ClearDialogFragment.ClearDialogListener {
+        implements HistoryFavoriteView, ClearDialogFragment.ClearDialogListener {
 
     //Views
     private SearchView searchView;
@@ -250,12 +249,6 @@ public class HistoryFavoriteFragment extends Fragment
 
         adapter.clear();
         adapter = null;
-    }
-
-    @Override
-    public void update() {
-        //load up-to-date data to presenter
-        presenter.loadTranslationFromDb(null, spinner.getSelectedItemPosition());
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
 import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
+import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements
             viewPager.setCurrentItem(0);
 
         TranslatorFragment item = (TranslatorFragment) adapter.instantiateItem(viewPager, 0);
-
-        ((DataUpdatable) item).update(clicked, internalTranslation);
     }
 
 

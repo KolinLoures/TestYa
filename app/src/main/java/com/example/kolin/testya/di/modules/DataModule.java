@@ -7,6 +7,7 @@ import com.example.kolin.testya.data.db.Queries;
 import com.example.kolin.testya.data.db.TranslationDAO;
 import com.example.kolin.testya.data.languages.LanguageProperties;
 import com.example.kolin.testya.data.net.NetTranslator;
+import com.example.kolin.testya.data.preferences.LanguagePreferencesManager;
 
 import javax.inject.Singleton;
 
@@ -42,6 +43,12 @@ public class DataModule {
     @Singleton
     LanguageProperties providesLanguageProperties(Context context){
         return new LanguageProperties(context);
+    }
+
+    @Provides
+    @Singleton
+    LanguagePreferencesManager providesLangPreferencesManager(Context context){
+        return new LanguagePreferencesManager(context);
     }
 
     @Provides

@@ -2,7 +2,8 @@ package com.example.kolin.testya.di.components;
 
 import com.example.kolin.testya.di.ActivityScope;
 import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.fragment.TranslatorFragment;
+import com.example.kolin.testya.veiw.language.LanguageDialogFragment;
+import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
 import dagger.Component;
 
@@ -17,4 +18,5 @@ public interface ViewComponent {
 
     void inject(HistoryFavoriteFragment favoriteFragment);
 
+    void inject(LanguageDialogFragment languageDialogFragment);
 }

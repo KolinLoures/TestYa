@@ -9,21 +9,23 @@ import android.widget.Filterable;
 import android.widget.RadioButton;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.domain.model.Language;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kolin on 09.04.2017.
- *
+ * <p>
  * Adapter for chose language recycler view.
  */
 
 public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>
-implements Filterable{
+        implements Filterable {
 
+    private Language selectedLanguage;
     private RadioButton lastSelectedRadio;
-    private List<String> data;
+    private List<Language> data;
     private LanguageFilter filter;
 
 
@@ -39,8 +41,8 @@ implements Filterable{
 
     @Override
     public void onBindViewHolder(LanguageViewHolder holder, int position) {
-        String name = data.get(position);
-        holder.rdLanguage.setText(name);
+        Language currentItem = data.get(position);
+        holder.rdLanguage.setText(currentItem.getDef());
     }
 
     @Override
@@ -48,14 +50,25 @@ implements Filterable{
         return data.size();
     }
 
-    public void addAll(List<String> data) {
-        this.data.clear();
-        this.data.addAll(data);
-        notifyDataSetChanged();
+    public void add(Language language) {
+        this.data.add(language);
+        notifyItemInserted(this.data.size() - 1);
     }
 
-    public String getChose(){
-        return lastSelectedRadio != null ? lastSelectedRadio.getText().toString() : null;
+    private void clearAdapter(){
+        int oldSize = this.data.size();
+        this.data.clear();
+        notifyItemRangeRemoved(0, oldSize);
+    }
+
+    public void addAll(List<Language> languages){
+        clearAdapter();
+        this.data.addAll(languages);
+        notifyItemRangeInserted(0, languages.size());
+    }
+
+    public Language getChoseLanguage() {
+        return selectedLanguage != null ? selectedLanguage : null;
     }
 
     @Override
@@ -75,34 +88,38 @@ implements Filterable{
 
             rdLanguage = (RadioButton) itemView.findViewById(R.id.item_chose_language_rdBtn);
 
-            rdLanguage.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (lastSelectedRadio != null)
+                    if (lastSelectedRadio != null) {
                         lastSelectedRadio.setChecked(false);
+                    }
 
                     if (lastSelectedRadio != v) {
                         lastSelectedRadio = (RadioButton) v;
-                    } else
+                        selectedLanguage = data.get(getAdapterPosition());
+                    } else {
                         lastSelectedRadio = null;
+                        selectedLanguage = null;
+                    }
                 }
             });
         }
     }
 
-    private final class LanguageFilter extends RecyclerViewFilter<String>{
+    private final class LanguageFilter extends RecyclerViewFilter<Language> {
 
-        public LanguageFilter(List<String> data) {
+        public LanguageFilter(List<Language> data) {
             super(data);
         }
 
         @Override
-        public String inWhatObjValueSearch(String obj) {
-            return obj;
+        public String inWhatObjValueSearch(Language obj) {
+            return obj.getDef();
         }
 
         @Override
-        public void publishFilterResult(List<String> filterData) {
+        public void publishFilterResult(List<Language> filterData) {
             addAll(filterData);
         }
     }

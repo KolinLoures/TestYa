@@ -23,7 +23,7 @@ public abstract class BaseFavoritePresenter<V extends Fragment> extends BasePres
     //Use Case add/remove data base translation
     private AddRemoveFavoriteTranslationDb addRemoveTranslationDb;
 
-    BaseFavoritePresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb) {
+    public BaseFavoritePresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb) {
         this.addRemoveTranslationDb = addRemoveTranslationDb;
     }
 

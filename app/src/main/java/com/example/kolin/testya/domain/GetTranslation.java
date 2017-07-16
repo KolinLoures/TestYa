@@ -53,7 +53,7 @@ public class GetTranslation extends BaseObservableUseCase<InternalTranslation, G
                                 NetTranslator.API_KEY_DICT,
                                 translationParams.text,
                                 translationParams.lang,
-                                "ru")
+                                "en")
                                 .delay(DELAY, TimeUnit.MILLISECONDS),
                         new BiFunction<Translation, Dictionary, InternalTranslation>() {
                             @Override

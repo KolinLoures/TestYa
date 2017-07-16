@@ -56,7 +56,7 @@ public class TranslatorTest {
         onView(withId(R.id.dictionary_card_text_header))
                 .check(ViewAssertions.matches(withText(textToTranslate)));
         //check that dictionary contains smth
-        onView(withId(R.id.dictionary_card_recycler_view))
+        onView(withId(R.id.dictionary_recycler_view))
                 .check(ViewAssertions.matches(hasDescendant(withText(textResultTranslate))));
     }
 
@@ -66,7 +66,7 @@ public class TranslatorTest {
         onView(withId(R.id.translator_edit_text)).perform(ViewActions.replaceText(textToTranslate));
         //wait a bit
         Util.pauseTestFor(3000);
-        onView(withId(R.id.dictionary_card_recycler_view))
+        onView(withId(R.id.dictionary_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         //check edit text contains
         onView(withId(R.id.translator_edit_text)).check(ViewAssertions.matches(withText(textResultTranslate)));

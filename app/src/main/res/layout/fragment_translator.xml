@@ -6,7 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.example.kolin.testya.veiw.fragment.TranslatorFragment">
+    tools:context="com.example.kolin.testya.veiw.translator.TranslatorFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -19,30 +19,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:paddingStart="16dp"
             android:weightSum="1">
 
             <Button
                 android:id="@+id/translation_btn_from"
                 android:layout_width="0dp"
-                android:layout_weight="0.4"
                 android:layout_height="match_parent"
+                android:layout_weight="0.4"
                 android:background="?attr/selectableItemBackground"
-                android:textAllCaps="false"
-                tools:text="Английский"
-                android:textAlignment="viewEnd"
-                android:lines="1"
                 android:ellipsize="end"
+                android:lines="1"
+                android:textAlignment="viewEnd"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorBlack"
+                tools:text="Английский" />
 
             <ImageButton
                 android:id="@+id/translation_img_btn_reverse"
                 android:layout_width="0dp"
-                android:layout_weight="0.2"
-                android:layout_gravity="center_vertical"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.2"
                 android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_swap_horiz_black_24px" />
 
@@ -52,13 +51,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.4"
                 android:background="?attr/selectableItemBackground"
-                tools:text="Английский"
+                android:ellipsize="end"
                 android:lines="1"
                 android:textAlignment="viewStart"
-                android:ellipsize="end"
-                android:textAllCaps="false"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorBlack"
+                tools:text="Английский" />
 
         </LinearLayout>
 
@@ -106,28 +104,18 @@
                         android:id="@+id/translation_clear_edit_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:visibility="visible"
-                        android:visibility="gone"
                         android:background="?attr/selectableItemBackground"
-                        android:src="@drawable/ic_clear_black_24dp" />
-
-                    <TextView
-                        android:id="@+id/translation_text_determined_lang"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_clear_black_24dp"
                         android:visibility="gone"
-                        tools:visibility="visible"
-                        android:layout_gravity="center_vertical|end"
-                        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                        tools:text="Английский (определено)" />
+                        tools:visibility="visible" />
 
                     <ProgressBar
                         android:id="@+id/translation_progress_downloading"
                         android:layout_width="24dp"
-                        android:visibility="gone"
-                        tools:visibility="visible"
                         android:layout_height="24dp"
-                        android:layout_gravity="end" />
+                        android:layout_gravity="end"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
 
                 </FrameLayout>
 
@@ -143,19 +131,20 @@
                     android:id="@+id/translation_dictionary_card"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <include
                         android:id="@+id/translation_card"
-                        tools:visibility="visible"
+                        layout="@layout/translation_card"
                         android:visibility="gone"
-                        layout="@layout/translation_card" />
+                        tools:visibility="visible" />
 
                     <include
                         android:id="@+id/dictionary_card"
+                        layout="@layout/dictionary_card"
                         android:visibility="gone"
-                        tools:visibility="visible"
-                        layout="@layout/dictionary_card" />
+                        tools:visibility="visible" />
 
                 </LinearLayout>
 
@@ -163,9 +152,9 @@
                     android:id="@+id/translation_error_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:drawableTop="@drawable/ic_sentiment_very_dissatisfied_grey_24dp"
+                    android:padding="8dp"
                     android:text="@string/error_message"
                     android:textAlignment="center"
                     android:visibility="gone"

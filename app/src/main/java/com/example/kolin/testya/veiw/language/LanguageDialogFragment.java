@@ -1,4 +1,4 @@
-package com.example.kolin.testya.veiw.fragment;
+package com.example.kolin.testya.veiw.language;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,20 +18,23 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.di.ProvideComponent;
+import com.example.kolin.testya.di.components.ViewComponent;
+import com.example.kolin.testya.domain.model.Language;
 import com.example.kolin.testya.veiw.adapter.LanguageAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Dialog fragment to choose language
  */
-public class LanguageDialogFragment extends DialogFragment {
+public class LanguageDialogFragment extends DialogFragment implements ILanguageDialogView {
 
     //Argument keys
-    private static final String KEY_LANG = "list_languages";
-    private static final String KEY_SHOW = "show_determine_lang";
+    private static final String KEY = "type";
 
     //Adapter
     private LanguageAdapter adapter;
@@ -45,43 +47,43 @@ public class LanguageDialogFragment extends DialogFragment {
 
     private View.OnClickListener onClickListener;
 
+    //Presenter
+    @Inject
+    LanguageDialogPresenter presenter;
+
     public LanguageDialogFragment() {
         // Required empty public constructor
     }
 
+
     //Dialog fragment Callback interface
     public interface OnInteractionLanguageDialog {
-        void onChooseLanguageDialog(String lang, boolean isTextFrom);
+        void onChooseLanguageDialog(Language language, int typeDialog);
     }
 
 
-    public static LanguageDialogFragment newInstance(List<String> languages,
-                                                     boolean showDetermineLang) {
-        LanguageDialogFragment fragment = new LanguageDialogFragment();
-        Bundle args = new Bundle();
-        args.putStringArrayList(KEY_LANG, (ArrayList<String>) languages);
-        args.putBoolean(KEY_SHOW, showDetermineLang);
-        fragment.setArguments(args);
-        return fragment;
+    public static LanguageDialogFragment newInstance(@LanguageDialogType.TypeLangDialog
+                                                             int type) {
+        LanguageDialogFragment dialog = new LanguageDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(KEY, type);
+        dialog.setArguments(bundle);
+        return dialog;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
+        adapter = new LanguageAdapter();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_language_dialog, container, false);
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.dialog_language_rv);
-        btnCancel = (Button) view.findViewById(R.id.dialog_btn_cancel);
-        btnYes = (Button) view.findViewById(R.id.dialog_btn_yes);
-        searchView = (SearchView) view.findViewById(R.id.dialog_language_search);
-
-        return view;
+        return inflater.inflate(R.layout.fragment_language_dialog, container, false);
     }
 
 
@@ -105,14 +107,21 @@ public class LanguageDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.dialog_language_rv);
+        btnCancel = (Button) view.findViewById(R.id.dialog_btn_cancel);
+        btnYes = (Button) view.findViewById(R.id.dialog_btn_yes);
+        searchView = (SearchView) view.findViewById(R.id.dialog_language_search);
+
+        presenter.attachView(this);
+
         setupRecyclerViewAdapter();
         initializeListener();
         setupSearchViewListener();
 
-        setAdapterData();
-
         btnCancel.setOnClickListener(onClickListener);
         btnYes.setOnClickListener(onClickListener);
+
+        presenter.loadLanguages();
     }
 
     private void setupSearchViewListener() {
@@ -132,23 +141,14 @@ public class LanguageDialogFragment extends DialogFragment {
 
 
     private void setupRecyclerViewAdapter() {
-        adapter = new LanguageAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
     }
 
-    private void setAdapterData() {
-        ArrayList<String> list = getArguments().getStringArrayList(KEY_LANG);
-        if (list != null && adapter != null) {
-            Collections.sort(list);
-
-            if (getArguments().getBoolean(KEY_SHOW))
-                list.add(0, getString(R.string.determine_language));
-
-            adapter.addAll(list);
-        }
+    @Override
+    public void showLoadedLanguage(Language language) {
+        adapter.add(language);
     }
-
 
     private void initializeListener() {
         if (onClickListener == null)
@@ -166,18 +166,17 @@ public class LanguageDialogFragment extends DialogFragment {
                 dismiss();
                 break;
             case R.id.dialog_btn_yes:
-                Fragment parentFragment = getParentFragment();
-                if (parentFragment != null && parentFragment instanceof OnInteractionLanguageDialog) {
-                    String chose = adapter.getChose();
-                    if (chose != null) {
-                        ((OnInteractionLanguageDialog) parentFragment)
-                                .onChooseLanguageDialog(chose, getArguments().getBoolean(KEY_SHOW));
-                        dismiss();
-                    }
-                    else {
-                        showNotificationToast();
-                    }
+
+                Language choseLanguage = adapter.getChoseLanguage();
+
+                if (choseLanguage != null) {
+                    ((OnInteractionLanguageDialog) getParentFragment())
+                            .onChooseLanguageDialog(choseLanguage, getArguments().getInt(KEY));
+
+                    dismiss();
                 }
+                else
+                    showNotificationToast();
                 break;
         }
     }
@@ -194,11 +193,14 @@ public class LanguageDialogFragment extends DialogFragment {
     @Override
     public void dismiss() {
         super.dismiss();
+        presenter.disposeAll();
+        adapter = null;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        presenter.detachView();
         adapter = null;
         onClickListener = null;
     }

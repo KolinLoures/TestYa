@@ -1,10 +1,6 @@
-package com.example.kolin.testya.veiw.fragment;
+package com.example.kolin.testya.veiw.translator;
 
-import com.example.kolin.testya.data.entity.dictionary.Def;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.presenters.TranslatorPresenter;
-
-import java.util.List;
 
 /**
  * Created by kolin on 31.03.2017.
@@ -17,11 +13,15 @@ public interface ITranslatorView {
 
     void showTranslationResult(InternalTranslation translation);
 
-    void showDictionary(List<Def> defList);
+    void setLangFrom(String lang);
 
-    void setDetermineLanguage(String langFrom);
+    void setLangTo(String lang);
+
+    void setTranslatableText(String text);
 
     void notifyUser(String message);
+
+    void showTranslationDictionaryCard(boolean show);
 
     void showTranslationCard(boolean show);
 
@@ -30,9 +30,4 @@ public interface ITranslatorView {
     void showLoadingProgress(boolean show);
 
     void showError(boolean show);
-
-    void showDetermineLang(boolean show);
-
-    void setLanguagesToButtons(String langFrom, String langTo);
-
 }

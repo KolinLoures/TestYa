@@ -6,7 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.example.kolin.testya.veiw.fragment.TranslatorFragment">
+    tools:context="com.example.kolin.testya.veiw.translator.TranslatorFragment">
 
     <FrameLayout
         android:layout_width="match_parent"

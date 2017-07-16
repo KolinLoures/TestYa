@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="4dp"
-    tools:context="com.example.kolin.testya.veiw.fragment.LanguageDialogFragment">
+    tools:context="com.example.kolin.testya.veiw.language.LanguageDialogFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

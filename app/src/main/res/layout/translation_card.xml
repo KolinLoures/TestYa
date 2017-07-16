@@ -26,9 +26,9 @@
 
         <CheckBox
             android:id="@+id/translation_card_btn_favorite"
-            android:layout_gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:button="@drawable/selector_check_box" />
 
     </LinearLayout>
