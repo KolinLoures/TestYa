@@ -157,12 +157,10 @@ public class TranslatorFragment extends Fragment implements
             case R.id.translation_img_btn_reverse:
                 presenter.reverseLanguages();
                 break;
+            case R.id.translation_clear_edit_btn:
+                editTextToTranslate.setText("");
+                break;
         }
-    }
-
-    private boolean reverseLanguages() {
-
-        return false;
     }
 
     private void setupRecyclerViewAdapter() {
@@ -184,6 +182,13 @@ public class TranslatorFragment extends Fragment implements
 
             @Override
             public void afterTextChanged(Editable s) {
+
+                if (!s.toString().trim().isEmpty())
+                    btnClear.setVisibility(View.VISIBLE);
+                else
+                    btnClear.setVisibility(View.INVISIBLE);
+
+
                 presenter.loadTranslation(s.toString().trim());
             }
         });
@@ -309,10 +314,6 @@ public class TranslatorFragment extends Fragment implements
 
         if (!show && component.getVisibility() == View.VISIBLE)
             component.setVisibility(View.GONE);
-    }
-
-    private void setVisibleClearBtn(boolean show) {
-        showComponent(btnClear, show);
     }
 
     @Override

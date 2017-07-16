@@ -48,10 +48,15 @@ public class DictionaryAdapter extends RecyclerView.Adapter<DictionaryAdapter.Di
         List<MeanSyn> synList = new ArrayList<>();
         List<MeanSyn> meanList = new ArrayList<>();
 
+        holder.partOfSpeechText.setVisibility(View.VISIBLE);
+        holder.synText.setVisibility(View.VISIBLE);
+        holder.meanText.setVisibility(View.VISIBLE);
+
         if (position == 0 || (position > 0 && !this.data.get(position - 1).getPos().equals(currentItem.getPos()))) {
             holder.partOfSpeechText.setVisibility(View.VISIBLE);
             holder.partOfSpeechText.setText(currentItem.getPos());
-        }
+        } else
+            holder.partOfSpeechText.setVisibility(View.GONE);
 
         synList.add(0, new MeanSyn(currentItem.getText()));
 
