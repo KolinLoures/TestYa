@@ -26,6 +26,7 @@ import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.domain.model.Language;
+import com.example.kolin.testya.veiw.Updatable;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
 import com.example.kolin.testya.veiw.language.LanguageDialogFragment;
 import com.example.kolin.testya.veiw.language.LanguageDialogType;
@@ -37,7 +38,8 @@ import javax.inject.Inject;
 
 public class TranslatorFragment extends Fragment implements
         ITranslatorView,
-        LanguageDialogFragment.OnInteractionLanguageDialog {
+        LanguageDialogFragment.OnInteractionLanguageDialog,
+        Updatable{
 
     //TAG fo logging
     private static final String TAG = TranslatorFragment.class.getSimpleName();
@@ -233,6 +235,11 @@ public class TranslatorFragment extends Fragment implements
     }
 
     @Override
+    public void setFavoriteCheckBox(boolean check) {
+        btnAddFavorite.setChecked(check);
+    }
+
+    @Override
     public void setTranslatableText(String text, boolean blockTextWatcher) {
         this.blockTextWatcher = blockTextWatcher;
         editTextToTranslate.setText(text);
@@ -339,5 +346,10 @@ public class TranslatorFragment extends Fragment implements
                 break;
         }
         presenter.loadTranslation(editTextToTranslate.getText().toString().trim());
+    }
+
+    @Override
+    public void update() {
+        presenter.checkFavoriteIs();
     }
 }

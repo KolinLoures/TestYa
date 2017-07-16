@@ -1,4 +1,4 @@
-package com.example.kolin.testya.veiw.fragment;
+package com.example.kolin.testya.veiw.historyfavorite;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
 import com.example.kolin.testya.veiw.adapter.SpinnerCategoryAdapter;
-import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
+import com.example.kolin.testya.veiw.fragment.ClearDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;

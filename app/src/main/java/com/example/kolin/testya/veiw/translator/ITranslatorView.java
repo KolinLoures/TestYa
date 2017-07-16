@@ -17,6 +17,8 @@ public interface ITranslatorView {
 
     void setLangTo(String lang);
 
+    void setFavoriteCheckBox(boolean check);
+
     void setTranslatableText(String text, boolean blockTextWatcher);
 
     void notifyUser(String message);

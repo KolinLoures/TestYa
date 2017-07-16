@@ -1,7 +1,8 @@
-package com.example.kolin.testya.veiw.fragment;
+package com.example.kolin.testya.veiw.historyfavorite;
 
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.presenters.HistoryFavoritePresenter;
+import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoritePresenter;
 
 import java.util.List;
 

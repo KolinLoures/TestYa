@@ -1,4 +1,4 @@
-package com.example.kolin.testya.veiw.presenters;
+package com.example.kolin.testya.veiw.historyfavorite;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +10,7 @@ import com.example.kolin.testya.domain.AddRemoveFavoriteTranslationDb;
 import com.example.kolin.testya.domain.DeleteTypeDb;
 import com.example.kolin.testya.domain.GetHistoryFavoriteTranslationFromDb;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.presenters.BaseFavoritePresenter;
 
 import java.util.ArrayList;
 import java.util.List;

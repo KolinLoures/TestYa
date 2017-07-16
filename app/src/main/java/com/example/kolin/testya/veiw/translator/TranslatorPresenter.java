@@ -7,13 +7,17 @@ import android.util.Log;
 
 import com.example.kolin.testya.data.preferences.LanguagePreferencesManager;
 import com.example.kolin.testya.domain.AddRemoveFavoriteTranslationDb;
+import com.example.kolin.testya.domain.CheckFavoriteIs;
 import com.example.kolin.testya.domain.GetLanguages;
 import com.example.kolin.testya.domain.GetTranslation;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.domain.model.Language;
 import com.example.kolin.testya.veiw.presenters.BaseFavoritePresenter;
 
+import java.net.SocketException;
+
 import javax.inject.Inject;
+import javax.net.ssl.HttpsURLConnection;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -32,6 +36,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     //Use cases
     private GetTranslation getTranslationUseCase;
     private GetLanguages getLanguagesUseCase;
+    private CheckFavoriteIs checkFavoriteIsUseCase;
     private LanguagePreferencesManager prefManager;
 
     private Language langFrom;
@@ -44,11 +49,13 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     TranslatorPresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb,
                         GetTranslation getTranslationUseCase,
                         GetLanguages getLanguagesUseCase,
+                        CheckFavoriteIs checkFavoriteIsUseCase,
                         LanguagePreferencesManager prefManager) {
         super(addRemoveTranslationDb);
 
         this.getLanguagesUseCase = getLanguagesUseCase;
         this.getTranslationUseCase = getTranslationUseCase;
+        this.checkFavoriteIsUseCase = checkFavoriteIsUseCase;
         this.prefManager = prefManager;
     }
 
@@ -144,19 +151,45 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         currentTranslation = null;
         getTranslationUseCase.clearDisposableObservers();
 
-        showLoading(true);
+        showError(false);
         showDictionaryTranslationCard(false);
 
-        getTranslationUseCase.execute(
-                new GetTranslationObserver(),
-                GetTranslation.TranslationParams
-                        .getParamsObj(text, generateLangString(
-                                this.langFrom.getCode(),
-                                this.langTo.getCode())));
+        if (!text.isEmpty()) {
+            showLoading(true);
+
+            getTranslationUseCase.execute(
+                    new GetTranslationObserver(),
+                    GetTranslation.TranslationParams
+                            .getParamsObj(text, generateLangString(
+                                    this.langFrom.getCode(),
+                                    this.langTo.getCode())));
+
+        }
     }
 
     public void addFavorite(boolean check) {
         super.addRemoveFavoriteTranslation(currentTranslation.getId(), check);
+    }
+
+    public void setFavoriteCheck(boolean check) {
+        if (getView() == null) {
+            Log.e(TAG, "Presenter detached from view!");
+            return;
+        }
+
+        getView().setFavoriteCheckBox(check);
+    }
+
+    public void checkFavoriteIs() {
+        if (currentTranslation != null)
+            checkFavoriteIsUseCase.execute(new DisposableObserver<Boolean>() {
+                public void onNext(Boolean aBoolean) {
+                    currentTranslation.setFavorite(aBoolean);
+                    setFavoriteCheck(aBoolean);
+                }
+                public void onError(Throwable e) {}
+                public void onComplete() {}
+            }, CheckFavoriteIs.Params.getParamsObj(currentTranslation.getId()));
     }
 
     private void showLoading(boolean show) {
@@ -166,6 +199,15 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         }
 
         getView().showLoadingProgress(show);
+    }
+
+    private void showError(boolean show) {
+        if (getView() == null) {
+            Log.e(TAG, "Presenter detached from view!");
+            return;
+        }
+
+        getView().showError(show);
     }
 
     private void showDictionaryTranslationCard(boolean show) {
@@ -196,6 +238,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         //stub
     }
 
+
     @Override
     public void restoreStateData(Bundle savedInstateState) {
         Parcelable parcelable = savedInstateState.getParcelable(KEY_STATE);
@@ -212,6 +255,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     }
 
     public void disposeAll() {
+        checkFavoriteIsUseCase.dispose();
         getTranslationUseCase.dispose();
         getLanguagesUseCase.dispose();
     }
@@ -226,6 +270,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         @Override
         public void onError(Throwable e) {
             showLoading(false);
+            showError(true);
         }
 
         @Override

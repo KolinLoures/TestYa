@@ -2,7 +2,6 @@ package com.example.kolin.testya.data.db;
 
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
 
 import java.util.List;
 

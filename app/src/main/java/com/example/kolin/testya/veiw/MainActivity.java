@@ -13,7 +13,7 @@ import com.example.kolin.testya.di.components.DaggerViewComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
-import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
 
@@ -49,11 +49,12 @@ public class MainActivity extends AppCompatActivity implements
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 1)
+                if (position == 0)
                     adapter.notifyDataSetChanged();
 
                 TabLayout.Tab tabAt = tabLayout.getTabAt(position);
@@ -62,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
     }
 
@@ -74,10 +76,12 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
 

@@ -6,7 +6,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
 import com.example.kolin.testya.veiw.MainActivity;
-import com.example.kolin.testya.veiw.fragment.HistoryFavoriteFragment;
+import com.example.kolin.testya.veiw.Updatable;
+import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.fragment.InfoFragment;
 import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
@@ -60,6 +61,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
+        Fragment fragment = (Fragment) object;
+        if (fragment != null && fragment instanceof Updatable)
+            ((Updatable) fragment).update();
         return super.getItemPosition(object);
     }
 

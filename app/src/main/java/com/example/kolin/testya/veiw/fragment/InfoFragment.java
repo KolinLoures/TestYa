@@ -14,9 +14,6 @@ import com.example.kolin.testya.R;
 
 public class InfoFragment extends Fragment {
 
-
-
-
     public InfoFragment() {
         // Required empty public constructor
     }
