@@ -65,7 +65,7 @@ public class TranslatorFragment extends Fragment implements
     private View.OnClickListener onClickListener;
 
     //Variable to block text watcher
-    private boolean blockTextWatcher;
+    private boolean blockTextWatcher = false;
 
     //Adapters
     private DictionaryAdapter dictionaryAdapter;
@@ -120,6 +120,9 @@ public class TranslatorFragment extends Fragment implements
         presenter.attachView(this);
         presenter.loadLangFromPreferences();
 
+        if (savedInstanceState != null)
+            presenter.restoreStateData(savedInstanceState);
+
         setupEditTextChangeListener();
         setupRecyclerViewAdapter();
         initializeOnClickListener();
@@ -172,13 +175,10 @@ public class TranslatorFragment extends Fragment implements
         //set text watcher to edit text
         editTextToTranslate.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -188,8 +188,10 @@ public class TranslatorFragment extends Fragment implements
                 else
                     btnClear.setVisibility(View.INVISIBLE);
 
-
-                presenter.loadTranslation(s.toString().trim());
+                if (!blockTextWatcher)
+                    presenter.loadTranslation(s.toString().trim());
+                else
+                    blockTextWatcher = false;
             }
         });
     }
@@ -207,11 +209,12 @@ public class TranslatorFragment extends Fragment implements
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-
         presenter.detachView();
+        presenter.disposeAll();
         dictionaryAdapter = null;
         onClickListener = null;
+
+        super.onDestroy();
     }
 
     @Override
@@ -230,7 +233,8 @@ public class TranslatorFragment extends Fragment implements
     }
 
     @Override
-    public void setTranslatableText(String text) {
+    public void setTranslatableText(String text, boolean blockTextWatcher) {
+        this.blockTextWatcher = blockTextWatcher;
         editTextToTranslate.setText(text);
     }
 
@@ -305,7 +309,6 @@ public class TranslatorFragment extends Fragment implements
             card.setVisibility(View.GONE);
 
 
-
     }
 
     private void showComponent(View component, boolean show) {
@@ -327,7 +330,7 @@ public class TranslatorFragment extends Fragment implements
     @Override
     public void onChooseLanguageDialog(Language language,
                                        @LanguageDialogType.TypeLangDialog int typeDialog) {
-        switch (typeDialog){
+        switch (typeDialog) {
             case LanguageDialogType.TYPE_FROM:
                 presenter.setLangBtnFrom(language);
                 break;

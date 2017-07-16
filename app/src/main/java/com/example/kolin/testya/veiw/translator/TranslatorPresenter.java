@@ -1,6 +1,7 @@
 package com.example.kolin.testya.veiw.translator;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
@@ -25,6 +26,8 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
     //TAG for logging
     private static final String TAG = TranslatorPresenter.class.getSimpleName();
+
+    private static final String KEY_STATE = "current_translation";
 
     //Use cases
     private GetTranslation getTranslationUseCase;
@@ -124,7 +127,16 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         }
 
         if (currentTranslation != null)
-            getView().setTranslatableText(currentTranslation.getTextTo());
+            setTranslatableText(currentTranslation.getTextTo(), false);
+    }
+
+    public void setTranslatableText(String text, boolean blockTextWatcher) {
+        if (getView() == null) {
+            Log.e(TAG, "Presenter detached from view!");
+            return;
+        }
+
+        getView().setTranslatableText(text, blockTextWatcher);
     }
 
     public void loadTranslation(String text) {
@@ -186,12 +198,22 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
     @Override
     public void restoreStateData(Bundle savedInstateState) {
-
+        Parcelable parcelable = savedInstateState.getParcelable(KEY_STATE);
+        if (parcelable != null) {
+            InternalTranslation translation = (InternalTranslation) parcelable;
+            setTranslatableText(translation.getTextFrom(), true);
+            showTranslation(translation);
+        }
     }
 
     @Override
     public void prepareForChangeState(Bundle outSate) {
+        outSate.putParcelable(KEY_STATE, currentTranslation);
+    }
 
+    public void disposeAll() {
+        getTranslationUseCase.dispose();
+        getLanguagesUseCase.dispose();
     }
 
     private final class GetTranslationObserver extends DisposableObserver<InternalTranslation> {

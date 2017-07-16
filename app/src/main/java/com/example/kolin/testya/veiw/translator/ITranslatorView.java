@@ -17,7 +17,7 @@ public interface ITranslatorView {
 
     void setLangTo(String lang);
 
-    void setTranslatableText(String text);
+    void setTranslatableText(String text, boolean blockTextWatcher);
 
     void notifyUser(String message);
 
