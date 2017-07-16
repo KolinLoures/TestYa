@@ -4,32 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="16dp"
-    android:layout_marginStart="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp"
-    app:cardCornerRadius="2dp"
-    app:elevation="4dp">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="8dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/dictionary_card_text_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            android:textAllCaps="true"
             android:textColor="@color/colorBlack"
-            tools:text="Translation options" />
+            android:text="@string/dictionary" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dictionary_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

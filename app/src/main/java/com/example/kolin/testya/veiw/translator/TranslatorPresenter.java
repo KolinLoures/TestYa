@@ -151,6 +151,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
         currentTranslation = null;
         getTranslationUseCase.clearDisposableObservers();
 
+        showLoading(false);
         showError(false);
         showDictionaryTranslationCard(false);
 
@@ -165,6 +166,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
                                     this.langTo.getCode())));
 
         }
+
     }
 
     public void addFavorite(boolean check) {

@@ -2,26 +2,26 @@
     <string name="app_name">TestYa</string>
 
 
-    <string name="translator">Переводчик</string>
-    <string name="history">История</string>
-    <string name="favorite">Избранное</string>
-    <string name="about">О приложении</string>
-    <string name="search_in_history">Найти в истории</string>
-    <string name="search_in_favorite">Найти в избранном</string>
-    <string name="english">английский</string>
+    <string name="translator">Translator</string>
+    <string name="history">History</string>
+    <string name="favorite">Favorites</string>
+    <string name="about">About</string>
+    <string name="search_in_history">Search in history</string>
+    <string name="search_in_favorite">Search in favorites</string>
+    <string name="english">english</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="cancel">Отмена</string>
-    <string name="yes">Да</string>
-    <string name="dialog_question">Вы уверены, что хотите очистить \nкатегорию</string>
-    <string name="write_text">Введите текст</string>
-    <string name="translation_language">Язык перевода</string>
-    <string name="chose_language">Выберите язык</string>
-    <string name="determine_language">определить</string>
-    <string name="determined">определено</string>
-    <string name="chose_language_from">Выбирите язык с которого переводить</string>
-    <string name="error_message">Упс… что-то пошло не так. \nПроверьте ваше интернет соединение или \n повторите перевод позже.</string>
-    <string name="no_translations">Нет переводов</string>
-    <string name="translate_with_yandex">Переведено сервисом \"Яндекс-Переводчик\".\nПодробнее о сервисе:\nhttp://translate.yandex.ru/</string>
-    <string name="dictionary_with_yandex">Подробная информация о переводе\nпредоставлена сервисом \"Яндекс-Словарь\".\nПодробнее о сервисе:\nhttps://tech.yandex.ru/dictionary/</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="dialog_question">Are you sure that you want clear the \ncategory</string>
+    <string name="write_text">Type text</string>
+    <string name="translation_language">Translation Language</string>
+    <string name="chose_language">Select a language</string>
+    <string name="determine_language">define</string>
+    <string name="determined">defined</string>
+    <string name="chose_language_from">Select the language from which to translate</string>
+    <string name="error_message">Oops… something went wrong. \nCheck your Internet connection or \nrepeat the translation later.</string>
+    <string name="no_translations">Here is empty</string>
+    <string name="translate_with_yandex">Translated by the service \"Yandex-Translator \". \nLearn more about the service: \nhttp://translate.yandex.ru/</string>
+    <string name="dictionary_with_yandex">Detailed information about the translation \nis provided by the service \"Yandex-Dictionary\". \nLearn more about the service: \nhttps://tech.yandex.ru/dictionary/</string>
+    <string name="dictionary">Dictionary</string>
 </resources>
