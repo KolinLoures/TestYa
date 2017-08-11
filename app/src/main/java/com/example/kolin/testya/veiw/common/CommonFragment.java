@@ -6,16 +6,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.TypeOfTranslation;
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
+import com.example.kolin.testya.veiw.custom_views.CustomAppCompatEditText;
 
 import java.util.List;
 
@@ -32,7 +35,7 @@ public class CommonFragment extends Fragment
 
     private TextView emptyTextView;
     private View mainContent;
-    private SearchView searchView;
+    private CustomAppCompatEditText searchView;
     private RecyclerView recyclerView;
 
     private HistoryFavoriteAdapter adapter;
@@ -70,10 +73,10 @@ public class CommonFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         emptyTextView = (TextView) view.findViewById(R.id.fragment_common_text_empty);
         mainContent = view.findViewById(R.id.fragment_common_main_content);
-        searchView = (SearchView) view.findViewById(R.id.fragment_common_search);
+        searchView = (CustomAppCompatEditText) view.findViewById(R.id.fragment_common_search);
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_common_rv);
 
-        setupSearchViewQueryHint();
+        setupSearchView();
         setupRecyclerView();
     }
 
@@ -82,11 +85,31 @@ public class CommonFragment extends Fragment
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupSearchViewQueryHint() {
+    private void setupSearchView() {
         if (currentType != null && currentType.equals(TypeOfTranslation.HISTORY))
-            searchView.setQueryHint(getString(R.string.search_in_history));
+            searchView.setHint(getString(R.string.search_in_history));
         else if (currentType != null)
-            searchView.setQueryHint(getString(R.string.search_in_favorite));
+            searchView.setHint(getString(R.string.search_in_favorite));
+
+        searchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    v.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        searchView.setOnKeyBoardHideListener(new CustomAppCompatEditText.onKeyboardHideListener() {
+            @Override
+            public void onKeyboardHidden() {
+                searchView.clearFocus();
+            }
+        });
     }
 
     @Override

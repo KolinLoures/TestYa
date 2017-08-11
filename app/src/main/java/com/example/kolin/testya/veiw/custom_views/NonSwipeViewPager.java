@@ -1,4 +1,4 @@
-package com.example.kolin.testya.veiw;
+package com.example.kolin.testya.veiw.custom_views;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

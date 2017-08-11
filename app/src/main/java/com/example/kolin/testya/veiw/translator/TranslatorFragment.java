@@ -2,19 +2,26 @@ package com.example.kolin.testya.veiw.translator;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +35,7 @@ import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.domain.model.Language;
 import com.example.kolin.testya.veiw.Updatable;
 import com.example.kolin.testya.veiw.adapter.DictionaryAdapter;
+import com.example.kolin.testya.veiw.custom_views.CustomAppCompatEditText;
 import com.example.kolin.testya.veiw.language.LanguageDialogFragment;
 import com.example.kolin.testya.veiw.language.LanguageDialogType;
 
@@ -39,7 +47,7 @@ import javax.inject.Inject;
 public class TranslatorFragment extends Fragment implements
         ITranslatorView,
         LanguageDialogFragment.OnInteractionLanguageDialog,
-        Updatable{
+        Updatable {
 
     //TAG fo logging
     private static final String TAG = TranslatorFragment.class.getSimpleName();
@@ -47,7 +55,7 @@ public class TranslatorFragment extends Fragment implements
     //Views
     private TextView textTranslationResult;
     private TextView dictionaryTextHeader;
-    private EditText editTextToTranslate;
+    private CustomAppCompatEditText editTextToTranslate;
     private RecyclerView recyclerViewDictionary;
     private CheckBox btnAddFavorite;
     private ImageButton btnClear;
@@ -59,6 +67,7 @@ public class TranslatorFragment extends Fragment implements
     private View dictionaryCard;
     private View translationDictionaryCard;
     private TextView textViewError;
+    private View parentView;
 
     //Dialog
     private LanguageDialogFragment dialog;
@@ -103,7 +112,7 @@ public class TranslatorFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editTextToTranslate = (EditText) view.findViewById(R.id.translator_edit_text);
+        editTextToTranslate = (CustomAppCompatEditText) view.findViewById(R.id.translator_edit_text);
         textTranslationResult = (TextView) view.findViewById(R.id.translation_card_text_result);
         recyclerViewDictionary = (RecyclerView) view.findViewById(R.id.dictionary_recycler_view);
         dictionaryTextHeader = (TextView) view.findViewById(R.id.dictionary_card_text_header);
@@ -117,6 +126,7 @@ public class TranslatorFragment extends Fragment implements
         btnReverseLang = (ImageButton) view.findViewById(R.id.translation_img_btn_reverse);
         loadingProgress = (ProgressBar) view.findViewById(R.id.translation_progress_downloading);
         textViewError = (TextView) view.findViewById(R.id.translation_error_text);
+        parentView = view.findViewById(R.id.fragment_translator_parent_view);
 
 
         presenter.attachView(this);
@@ -176,15 +186,9 @@ public class TranslatorFragment extends Fragment implements
     private void setupEditTextChangeListener() {
         //set text watcher to edit text
         editTextToTranslate.addTextChangedListener(new TextWatcher() {
-            @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
             public void afterTextChanged(Editable s) {
-
                 if (!s.toString().trim().isEmpty())
                     btnClear.setVisibility(View.VISIBLE);
                 else
@@ -194,6 +198,26 @@ public class TranslatorFragment extends Fragment implements
                     presenter.loadTranslation(s.toString().trim());
                 else
                     blockTextWatcher = false;
+            }
+        });
+
+        editTextToTranslate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    v.clearFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        editTextToTranslate.setOnKeyBoardHideListener(new CustomAppCompatEditText.onKeyboardHideListener() {
+            @Override
+            public void onKeyboardHidden() {
+                editTextToTranslate.clearFocus();
             }
         });
     }
@@ -215,6 +239,7 @@ public class TranslatorFragment extends Fragment implements
         presenter.disposeAll();
         dictionaryAdapter = null;
         onClickListener = null;
+        editTextToTranslate.clearOnKeyBoardHideListener();
 
         super.onDestroy();
     }

@@ -1,7 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:id="@+id/fragment_common_text_empty"
@@ -14,19 +16,25 @@
         tools:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/fragment_common_main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_common_main_content"
         android:divider="@drawable/divider_vertical_gray"
-        android:orientation="vertical"
-        android:showDividers="middle">
+        android:orientation="vertical">
 
-        <SearchView
-            android:id="@+id/fragment_common_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:iconifiedByDefault="false"
-            android:queryBackground="@android:color/transparent" />
+         <com.example.kolin.testya.veiw.custom_views.CustomAppCompatEditText
+             android:layout_width="match_parent"
+             android:id="@+id/fragment_common_search"
+             android:background="@drawable/selector_search_edit"
+             android:maxLines="1"
+             android:inputType="text"
+             android:drawableStart="@drawable/ic_search_black_24dp"
+             android:drawablePadding="8dp"
+             android:paddingStart="16dp"
+             android:paddingEnd="16dp"
+             android:imeOptions="actionGo"
+             android:layout_height="48dp" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_common_rv"

@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_translator_parent_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
@@ -83,7 +84,7 @@
                 android:padding="16dp"
                 android:weightSum="1">
 
-                <EditText
+                <com.example.kolin.testya.veiw.custom_views.CustomAppCompatEditText
                     android:id="@+id/translator_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -91,8 +92,8 @@
                     android:background="@android:color/transparent"
                     android:gravity="start"
                     android:hint="@string/write_text"
-                    android:imeOptions="actionDone"
-                    android:inputType="textMultiLine"
+                    android:imeOptions="actionGo"
+                    android:inputType="text"
                     android:scrollbars="vertical" />
 
 

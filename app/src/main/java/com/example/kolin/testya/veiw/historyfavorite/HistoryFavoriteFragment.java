@@ -3,21 +3,19 @@ package com.example.kolin.testya.veiw.historyfavorite;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
-import com.example.kolin.testya.veiw.adapter.HistoryFavoriteAdapter;
+import com.example.kolin.testya.veiw.adapter.HistoryFavoriteViewPagerAdapter;
 import com.example.kolin.testya.veiw.fragment.ClearDialogFragment;
 
 import java.util.List;
@@ -27,19 +25,14 @@ import javax.inject.Inject;
 public class HistoryFavoriteFragment extends Fragment
         implements IHistoryFavoriteView, ClearDialogFragment.ClearDialogListener {
 
-    private Toolbar toolbar;
-    private ImageButton clearBtn;
-    private TextView emptyTextView;
-    private View mainContent;
-    private SearchView searchView;
-    private RecyclerView recyclerView;
+    private ImageButton btnDelete;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
-    private HistoryFavoriteAdapter adapter;
+    private HistoryFavoriteViewPagerAdapter viewPagerAdapter;
 
-
-    @Inject
-    HistoryFavoritePresenter presenter;
-
+    private TabLayout.OnTabSelectedListener tabSelectedListener;
+    private ViewPager.OnPageChangeListener viewPagerChangeListener;
 
 
 
@@ -56,7 +49,7 @@ public class HistoryFavoriteFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
+        viewPagerAdapter = new HistoryFavoriteViewPagerAdapter(getChildFragmentManager());
     }
 
     @Override
@@ -71,15 +64,38 @@ public class HistoryFavoriteFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toolbar = (Toolbar) view.findViewById(R.id.main_toolbar);
+        btnDelete = (ImageButton) view.findViewById(R.id.fragment_hf_delete);
+        tabLayout = (TabLayout) view.findViewById(R.id.fragment_hf_tab_layout);
+        viewPager = (ViewPager) view.findViewById(R.id.fragment_hf_view_pager);
 
+        viewPager.setAdapter(viewPagerAdapter);
 
-        presenter.attachView(this);
+        setupTabSelectedListener();
+        setupViewPageChangeListener();
+    }
 
-        if (savedInstanceState != null)
-            presenter.restoreStateData(savedInstanceState);
+    private void setupTabSelectedListener() {
+        tabSelectedListener = new TabLayout.OnTabSelectedListener() {
+            public void onTabSelected(TabLayout.Tab tab) { viewPager.setCurrentItem(tab.getPosition()); }
+            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {}
+        };
 
-        presenter.loadData();
+        tabLayout.addOnTabSelectedListener(tabSelectedListener);
+    }
+
+    private void setupViewPageChangeListener() {
+        viewPagerChangeListener = new ViewPager.OnPageChangeListener() {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageSelected(int position) {
+                TabLayout.Tab tabAt = tabLayout.getTabAt(position);
+                if (tabAt != null)
+                    tabAt.select();
+            }
+            public void onPageScrollStateChanged(int state) {}
+        };
+
+        viewPager.addOnPageChangeListener(viewPagerChangeListener);
     }
 
     @Override
@@ -87,9 +103,18 @@ public class HistoryFavoriteFragment extends Fragment
 
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onDestroyView() {
+        tabLayout.removeOnTabSelectedListener(tabSelectedListener);
+        viewPager.removeOnPageChangeListener(viewPagerChangeListener);
+
+        super.onDestroyView();
     }
 
     @Override
@@ -99,7 +124,6 @@ public class HistoryFavoriteFragment extends Fragment
 
     @Override
     public void onDetach() {
-        presenter.detachView();
         super.onDetach();
     }
 
@@ -110,6 +134,5 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        presenter.prepareForChangeState(outState);
     }
 }

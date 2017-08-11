@@ -12,6 +12,7 @@ import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.DaggerViewComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.veiw.adapter.MainViewPagerAdapter;
+import com.example.kolin.testya.veiw.custom_views.NonSwipeViewPager;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private ViewComponent viewComponent;
 
+    private ViewPager.OnPageChangeListener viewPageChangeListener;
+    private TabLayout.OnTabSelectedListener tabSelectedListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,24 +35,21 @@ public class MainActivity extends AppCompatActivity implements
 
         initializeViewComponent();
 
+        adapter = new MainViewPagerAdapter(getSupportFragmentManager());
+
         viewPager = (NonSwipeViewPager) findViewById(R.id.main_view_pager);
-
-        FragmentManager supportFragmentManager = getSupportFragmentManager();
-
-        adapter = new MainViewPagerAdapter(supportFragmentManager);
+        tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
 
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnable(false);
 
-        tabLayout = (TabLayout) findViewById(R.id.main_tab_layout);
         setupTabListener();
+        setupViewPageChangeListener();
+    }
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
+    private void setupViewPageChangeListener() {
+        viewPageChangeListener = new ViewPager.OnPageChangeListener() {
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
             public void onPageSelected(int position) {
                 if (position == 0)
                     adapter.notifyDataSetChanged();
@@ -57,28 +58,20 @@ public class MainActivity extends AppCompatActivity implements
                 if (tabAt != null)
                     tabAt.select();
             }
+            public void onPageScrollStateChanged(int state) {}
+        };
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+        viewPager.addOnPageChangeListener(viewPageChangeListener);
     }
 
     private void setupTabListener() {
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+        tabSelectedListener = new TabLayout.OnTabSelectedListener() {
+            public void onTabSelected(TabLayout.Tab tab) { viewPager.setCurrentItem(tab.getPosition()); }
+            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {}
+        };
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+        tabLayout.addOnTabSelectedListener(tabSelectedListener);
     }
 
 
@@ -91,5 +84,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public ViewComponent getComponent() {
         return viewComponent;
+    }
+
+    @Override
+    protected void onDestroy() {
+        viewPager.removeOnPageChangeListener(viewPageChangeListener);
+        tabLayout.removeOnTabSelectedListener(tabSelectedListener);
+
+        super.onDestroy();
     }
 }
