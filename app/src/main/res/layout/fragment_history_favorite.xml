@@ -22,45 +22,71 @@
             android:padding="16dp"
             android:src="@drawable/selector_delete_btn" />
 
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/fragment_hf_text_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:text="@string/no_translations"
-            android:textAlignment="center"
-            android:visibility="invisible"
-            tools:visibility="visible" />
-
-        <LinearLayout
-            android:id="@+id/fragment_hf_main_content"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fragment_hf_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@drawable/divider_vertical_gray"
-            android:orientation="vertical"
-            android:showDividers="middle">
+            app:tabMode="fixed"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@color/colorBlack"
+            android:layout_gravity="center">
 
-            <SearchView
-                android:id="@+id/fragment_hf_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:iconifiedByDefault="false"
-                android:queryHint="@string/search_in_favorite"
-                android:queryBackground="@android:color/transparent" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/history" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fragment_hf_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/favorite" />
 
-        </LinearLayout>
+        </android.support.design.widget.TabLayout>
 
     </FrameLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_hf_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--<FrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/fragment_hf_text_empty"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal|center_vertical"-->
+    <!--android:text="@string/no_translations"-->
+    <!--android:textAlignment="center"-->
+    <!--android:visibility="invisible"-->
+    <!--tools:visibility="visible" />-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/fragment_hf_main_content"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:divider="@drawable/divider_vertical_gray"-->
+    <!--android:orientation="vertical"-->
+    <!--android:showDividers="middle">-->
+
+    <!--<SearchView-->
+    <!--android:id="@+id/fragment_hf_search"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:iconifiedByDefault="false"-->
+    <!--android:queryHint="@string/search_in_favorite"-->
+    <!--android:queryBackground="@android:color/transparent" />-->
+
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/fragment_hf_rv"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--</FrameLayout>-->
 
 </LinearLayout>
