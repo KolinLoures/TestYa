@@ -1,5 +1,6 @@
 package com.example.kolin.testya.veiw.historyfavorite;
 
+import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoritePresenter;
@@ -14,7 +15,8 @@ import java.util.List;
  *
  */
 
-public interface HistoryFavoriteView {
+public interface IHistoryFavoriteView {
 
-    void showLoadedData(List<InternalTranslation> data);
+    void showLoadedFavorites(List<HistoryFavoriteModel> data);
+
 }

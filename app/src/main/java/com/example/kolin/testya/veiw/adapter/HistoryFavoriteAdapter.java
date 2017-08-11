@@ -10,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class HistoryFavoriteAdapter
         extends RecyclerView.Adapter<HistoryFavoriteAdapter.ViewHolder>
         implements Filterable {
 
-    private List<InternalTranslation> data;
+    private List<HistoryFavoriteModel> data;
     private HistoryFavoriteFilter filter;
 
     @Override
@@ -37,9 +38,9 @@ public class HistoryFavoriteAdapter
 
 
     public interface OnClickHistoryFavoriteListener {
-        void checkFavorite(InternalTranslation translation, boolean check);
+        void checkFavorite(HistoryFavoriteModel translation, boolean check);
 
-        void itemClick(InternalTranslation internalTranslation);
+        void itemClick(HistoryFavoriteModel internalTranslation);
     }
 
     private OnClickHistoryFavoriteListener listener;
@@ -58,7 +59,7 @@ public class HistoryFavoriteAdapter
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        InternalTranslation translation = data.get(position);
+        HistoryFavoriteModel translation = data.get(position);
         holder.chkBoxFavorite.setChecked(translation.isFavorite());
         holder.primaryText.setText(translation.getTextFrom());
         holder.secondaryText.setText(translation.getTextTo());
@@ -71,28 +72,29 @@ public class HistoryFavoriteAdapter
     }
 
     public void clear() {
-        data.clear();
-        notifyDataSetChanged();
+        int oldSize =  this.data.size();
+        this.data.clear();
+        notifyItemRangeRemoved(0, oldSize);
     }
 
-    public void add(InternalTranslation translation) {
+    public void add(HistoryFavoriteModel translation) {
         this.data.add(translation);
         notifyItemInserted(data.size() - 1);
     }
 
-    public void addAll(List<InternalTranslation> translations) {
+    public void addAll(List<HistoryFavoriteModel> translations) {
         data.addAll(translations);
         notifyDataSetChanged();
     }
 
-    public void addNewDataToFilter(List<InternalTranslation> translations) {
+    public void addNewDataToFilter(List<HistoryFavoriteModel> translations) {
         if (filter == null)
             getFilter();
 
         filter.addNewData(translations);
     }
 
-    public List<InternalTranslation> getAdapterData() {
+    public List<HistoryFavoriteModel> getAdapterData() {
         return data;
     }
 
@@ -137,19 +139,19 @@ public class HistoryFavoriteAdapter
 
     }
 
-    private class HistoryFavoriteFilter extends RecyclerViewFilter<InternalTranslation> {
+    private class HistoryFavoriteFilter extends RecyclerViewFilter<HistoryFavoriteModel> {
 
-        HistoryFavoriteFilter(List<InternalTranslation> data) {
+        HistoryFavoriteFilter(List<HistoryFavoriteModel> data) {
             super(data);
         }
 
         @Override
-        public String inWhatObjValueSearch(InternalTranslation obj) {
+        public String inWhatObjValueSearch(HistoryFavoriteModel obj) {
             return obj.getTextFrom();
         }
 
         @Override
-        public void publishFilterResult(List<InternalTranslation> filterData) {
+        public void publishFilterResult(List<HistoryFavoriteModel> filterData) {
             addAll(filterData);
         }
     }

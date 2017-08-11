@@ -23,7 +23,7 @@ import io.reactivex.functions.Function;
  * from data base in according with type {@link TypeOfTranslation}.
  */
 
-public class GetHistoryFavoriteTranslationFromDb extends BaseObservableUseCase<HistoryFavoriteModel,
+public class GetHistoryFavoriteTranslationFromDb extends BaseObservableUseCase<List<HistoryFavoriteModel>,
         GetHistoryFavoriteTranslationFromDb.Params> {
 
     private TranslationDAO queries;
@@ -34,40 +34,28 @@ public class GetHistoryFavoriteTranslationFromDb extends BaseObservableUseCase<H
     }
 
     @Override
-    public Observable<HistoryFavoriteModel> createObservable(final Params params) {
+    public Observable<List<HistoryFavoriteModel>> createObservable(final Params params) {
         return params.type.equals(TypeOfTranslation.FAVORITE)
                 ? getFavoritesFromDb()
                 : getHistoriesFromDb();
     }
 
-    private Observable<HistoryFavoriteModel> getHistoriesFromDb() {
+    private Observable<List<HistoryFavoriteModel>> getHistoriesFromDb() {
         return Observable
                 .fromCallable(new Callable<List<HistoryFavoriteModel>>() {
                     @Override
                     public List<HistoryFavoriteModel> call() throws Exception {
                         return queries.getAllHistory();
                     }
-                })
-                .flatMap(new Function<List<HistoryFavoriteModel>, ObservableSource<HistoryFavoriteModel>>() {
-                    @Override
-                    public ObservableSource<HistoryFavoriteModel> apply(@NonNull List<HistoryFavoriteModel> historyFavoriteModels) throws Exception {
-                        return Observable.fromIterable(historyFavoriteModels);
-                    }
                 });
     }
 
-    private Observable<HistoryFavoriteModel> getFavoritesFromDb() {
+    private Observable<List<HistoryFavoriteModel>> getFavoritesFromDb() {
         return Observable
                 .fromCallable(new Callable<List<HistoryFavoriteModel>>() {
                     @Override
                     public List<HistoryFavoriteModel> call() throws Exception {
                         return queries.getAllFavorites();
-                    }
-                })
-                .flatMap(new Function<List<HistoryFavoriteModel>, ObservableSource<HistoryFavoriteModel>>() {
-                    @Override
-                    public ObservableSource<HistoryFavoriteModel> apply(@NonNull List<HistoryFavoriteModel> historyFavoriteModels) throws Exception {
-                        return Observable.fromIterable(historyFavoriteModels);
                     }
                 });
     }

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,33 +13,14 @@
 
         <include layout="@layout/main_toolbar" />
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/fragment_hf_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end">
-
-            <Spinner
-                android:id="@+id/fragment_hf_spinner"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="match_parent"
-                android:spinnerMode="dropdown"
-                android:dropDownHorizontalOffset="10dp"
-                android:dropDownVerticalOffset="?actionBarSize"
-                android:background="?attr/selectableItemBackground"/>
-
-
-            <ImageButton
-                android:id="@+id/fragment_hf_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="?android:attr/selectableItemBackground"
-                android:padding="16dp"
-                android:src="@drawable/selector_delete_btn" />
-
-        </LinearLayout>
-
+            android:layout_gravity="end"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="16dp"
+            android:src="@drawable/selector_delete_btn" />
 
     </FrameLayout>
 
@@ -46,19 +28,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <TextView
-            android:id="@+id/fragment_new_text_empty"
+            android:id="@+id/fragment_hf_text_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:text="@string/no_translations"
             android:textAlignment="center"
-            android:visibility="gone"
+            android:visibility="invisible"
             tools:visibility="visible" />
 
         <LinearLayout
-            android:id="@+id/fragment_common_main_content"
+            android:id="@+id/fragment_hf_main_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@drawable/divider_vertical_gray"
@@ -70,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:iconifiedByDefault="false"
+                android:queryHint="@string/search_in_favorite"
                 android:queryBackground="@android:color/transparent" />
 
             <android.support.v7.widget.RecyclerView
@@ -80,6 +62,5 @@
         </LinearLayout>
 
     </FrameLayout>
-
 
 </LinearLayout>

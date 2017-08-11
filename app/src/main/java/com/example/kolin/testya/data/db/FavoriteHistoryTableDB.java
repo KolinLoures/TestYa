@@ -44,13 +44,13 @@ public class FavoriteHistoryTableDB {
     public static String getAllFavorites() {
         return "SELECT * FROM " + TABLE_NAME
                 + " WHERE " + IS_FAVORITE + " = 1"
-                + " ORDER BY" + TIME + " DESC";
+                + " ORDER BY " + TIME + " DESC";
     }
 
     public static String getAllHistory() {
         return "SELECT * FROM " + TABLE_NAME
                 + " WHERE " + IS_HISTORY + " = 1"
-                + " ORDER BY" + TIME + " DESC";
+                + " ORDER BY " + TIME + " DESC";
     }
 
 

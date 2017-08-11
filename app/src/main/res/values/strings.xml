@@ -24,4 +24,7 @@
     <string name="translate_with_yandex">Translated by the service \"Yandex-Translator \". \nLearn more about the service: \nhttp://translate.yandex.ru/</string>
     <string name="dictionary_with_yandex">Detailed information about the translation \nis provided by the service \"Yandex-Dictionary\". \nLearn more about the service: \nhttps://tech.yandex.ru/dictionary/</string>
     <string name="dictionary">Dictionary</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

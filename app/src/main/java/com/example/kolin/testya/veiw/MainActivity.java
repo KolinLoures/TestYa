@@ -18,7 +18,6 @@ import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
 
 public class MainActivity extends AppCompatActivity implements
-        HistoryFavoriteFragment.OnInteractionHistoryFavoriteFragment,
         ProvideComponent<ViewComponent> {
 
     //Views
@@ -83,15 +82,6 @@ public class MainActivity extends AppCompatActivity implements
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onClickItem(InternalTranslation internalTranslation, boolean clicked) {
-        if (clicked)
-            viewPager.setCurrentItem(0);
-
-        TranslatorFragment item = (TranslatorFragment) adapter.instantiateItem(viewPager, 0);
     }
 
 
