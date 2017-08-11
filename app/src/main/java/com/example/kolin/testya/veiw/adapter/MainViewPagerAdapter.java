@@ -17,14 +17,14 @@ import com.example.kolin.testya.veiw.translator.TranslatorFragment;
  * Adapter for view pager in {@link MainActivity}
  */
 
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
 
 
     private TranslatorFragment translatorFragment;
     private HistoryFavoriteFragment historyFavoriteFragment;
     private InfoFragment infoFragment;
 
-    public ViewPagerAdapter(FragmentManager fm) {
+    public MainViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 

@@ -11,10 +11,7 @@ import com.example.kolin.testya.TestYaApp;
 import com.example.kolin.testya.di.ProvideComponent;
 import com.example.kolin.testya.di.components.DaggerViewComponent;
 import com.example.kolin.testya.di.components.ViewComponent;
-import com.example.kolin.testya.domain.model.InternalTranslation;
-import com.example.kolin.testya.veiw.adapter.ViewPagerAdapter;
-import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoriteFragment;
-import com.example.kolin.testya.veiw.translator.TranslatorFragment;
+import com.example.kolin.testya.veiw.adapter.MainViewPagerAdapter;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -23,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements
     //Views
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
-    private ViewPagerAdapter adapter;
+    private MainViewPagerAdapter adapter;
 
     private ViewComponent viewComponent;
 
@@ -38,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements
 
         FragmentManager supportFragmentManager = getSupportFragmentManager();
 
-        adapter = new ViewPagerAdapter(supportFragmentManager);
+        adapter = new MainViewPagerAdapter(supportFragmentManager);
 
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnable(false);
