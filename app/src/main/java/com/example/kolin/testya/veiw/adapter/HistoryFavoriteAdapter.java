@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
-import com.example.kolin.testya.domain.model.InternalTranslation;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Created by kolin on 06.04.2017.
- *
+ * <p>
  * Adapter for history and favorite recycler view
  */
 
@@ -37,13 +37,15 @@ public class HistoryFavoriteAdapter
     }
 
 
-    public interface OnClickHistoryFavoriteListener {
-        void checkFavorite(HistoryFavoriteModel translation, boolean check);
+    public interface OnClickHistoryFavoriteCallback {
+        void checkFavorite(HistoryFavoriteModel model, boolean check);
 
-        void itemClick(HistoryFavoriteModel internalTranslation);
+        void itemClick(HistoryFavoriteModel model);
+
+        void longItemClick(HistoryFavoriteModel model);
     }
 
-    private OnClickHistoryFavoriteListener listener;
+    private OnClickHistoryFavoriteCallback listener;
 
     public HistoryFavoriteAdapter() {
         this.data = new ArrayList<>();
@@ -71,20 +73,60 @@ public class HistoryFavoriteAdapter
         return data.size();
     }
 
+
     public void clear() {
-        int oldSize =  this.data.size();
+        int oldSize = this.data.size();
         this.data.clear();
         notifyItemRangeRemoved(0, oldSize);
     }
 
     public void add(HistoryFavoriteModel translation) {
-        this.data.add(translation);
-        notifyItemInserted(data.size() - 1);
+        this.data.add(0, translation);
+        notifyItemInserted(0);
     }
 
     public void addAll(List<HistoryFavoriteModel> translations) {
-        data.addAll(translations);
-        notifyDataSetChanged();
+        this.data.clear();
+        this.data.addAll(translations);
+        notifyItemRangeInserted(0, translations.size());
+    }
+
+    public void removeEntity(HistoryFavoriteModel model) {
+        int i = this.data.indexOf(model);
+        this.data.remove(model);
+        notifyItemRemoved(i);
+    }
+
+    public void removeNonFavoritesEntity() {
+        Iterator<HistoryFavoriteModel> iterator = this.data.iterator();
+        while (iterator.hasNext()) {
+            HistoryFavoriteModel model = iterator.next();
+            if (!model.isFavorite()) {
+                int index = this.data.indexOf(model);
+                iterator.remove();
+                notifyItemRemoved(index);
+            }
+        }
+
+        boolean b = false;
+    }
+
+    public void updateEntityChecked(int id, boolean check) {
+        int i = -1;
+        for (int k = 0; k < this.data.size(); k++) {
+            if (this.data.get(k).getId() == id)
+                i = k;
+        }
+
+        this.data.get(i).setFavorite(check);
+        notifyItemChanged(i);
+    }
+
+    public void removeFavoritesFromHistory(){
+        for (int i = 0; i < this.data.size(); i++) {
+            this.data.get(i).setFavorite(false);
+            notifyItemChanged(i);
+        }
     }
 
     public void addNewDataToFilter(List<HistoryFavoriteModel> translations) {
@@ -98,7 +140,7 @@ public class HistoryFavoriteAdapter
         return data;
     }
 
-    public void setListener(OnClickHistoryFavoriteListener listener) {
+    public void setHistoryFavoriteCallback(OnClickHistoryFavoriteCallback listener) {
         this.listener = listener;
     }
 
@@ -122,7 +164,12 @@ public class HistoryFavoriteAdapter
                 public void onClick(View v) {
                     CheckBox checkBox = (CheckBox) v;
                     if (listener != null) {
-                        listener.checkFavorite(data.get(getAdapterPosition()), !checkBox.isChecked());
+                        HistoryFavoriteModel model = data.get(getAdapterPosition());
+                        boolean check = !checkBox.isChecked();
+
+                        model.setFavorite(!check);
+
+                        listener.checkFavorite(model, check);
                     }
                 }
             });
@@ -132,6 +179,19 @@ public class HistoryFavoriteAdapter
                 public void onClick(View v) {
                     if (listener != null)
                         listener.itemClick(data.get(getAdapterPosition()));
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null) {
+                        listener.longItemClick(data.get(getAdapterPosition()));
+                        data.remove(getAdapterPosition());
+                        notifyItemRemoved(getAdapterPosition());
+                        return true;
+                    }
+                    return false;
                 }
             });
         }

@@ -6,7 +6,10 @@
     android:weightSum="1"
     android:clickable="true"
     android:background="?android:attr/selectableItemBackground"
-    android:padding="16dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp">
 
     <CheckBox
         android:layout_gravity="center"
