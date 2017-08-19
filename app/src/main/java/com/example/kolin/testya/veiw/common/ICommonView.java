@@ -21,7 +21,7 @@ public interface ICommonView {
 
     void updateCheckEntity(HistoryFavoriteModel model);
 
-    void removeFavoritesFromFavortes();
+    void removeFavoritesFromFavorites();
 
     void showSnackBar();
 }

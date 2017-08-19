@@ -12,19 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.data.TypeOfTranslation;
-import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.veiw.CommonFragmentCallback;
 import com.example.kolin.testya.veiw.Updatable;
 import com.example.kolin.testya.veiw.adapter.HistoryFavoriteViewPagerAdapter;
 import com.example.kolin.testya.veiw.common.ICommonView;
 import com.example.kolin.testya.veiw.fragment.ClearDialogFragment;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 public class HistoryFavoriteFragment extends Fragment
         implements  ClearDialogFragment.ClearDialogListener,
@@ -162,7 +155,7 @@ public class HistoryFavoriteFragment extends Fragment
             ((ICommonView) viewPagerAdapter.getFragmentAtPosition(0)).deleteData();
         else {
             ((ICommonView) viewPagerAdapter.getFragmentAtPosition(1)).deleteData();
-            ((ICommonView) viewPagerAdapter.getFragmentAtPosition(0)).removeFavoritesFromFavortes();
+            ((ICommonView) viewPagerAdapter.getFragmentAtPosition(0)).removeFavoritesFromFavorites();
         }
     }
 

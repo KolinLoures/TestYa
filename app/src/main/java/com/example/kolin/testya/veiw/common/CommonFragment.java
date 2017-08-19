@@ -119,7 +119,6 @@ public class CommonFragment extends Fragment
             public void itemClick(HistoryFavoriteModel model) {
                 switch (currentType) {
                     case TypeOfTranslation.HISTORY:
-
                     case TypeOfTranslation.FAVORITE:
 
                         break;
@@ -243,7 +242,7 @@ public class CommonFragment extends Fragment
     }
 
     @Override
-    public void removeFavoritesFromFavortes() {
+    public void removeFavoritesFromFavorites() {
         recyclerAdapter.removeFavoritesFromHistory();
     }
 
