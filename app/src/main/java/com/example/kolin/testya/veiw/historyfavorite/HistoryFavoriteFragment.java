@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.kolin.testya.R;
+import com.example.kolin.testya.data.TypeOfTranslation;
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.veiw.CommonFragmentCallback;
 import com.example.kolin.testya.veiw.Updatable;
@@ -20,8 +21,9 @@ import com.example.kolin.testya.veiw.common.ICommonView;
 import com.example.kolin.testya.veiw.fragment.ClearDialogFragment;
 
 public class HistoryFavoriteFragment extends Fragment
-        implements  ClearDialogFragment.ClearDialogListener,
-        CommonFragmentCallback {
+        implements ClearDialogFragment.ClearDialogListener,
+        CommonFragmentCallback,
+        Updatable {
 
     private ImageButton btnDelete;
     private TabLayout tabLayout;
@@ -32,8 +34,13 @@ public class HistoryFavoriteFragment extends Fragment
     private TabLayout.OnTabSelectedListener tabSelectedListener;
     private ViewPager.OnPageChangeListener viewPagerChangeListener;
 
+    private OnHistoryFavoritesSelectedListener callback;
 
+    private boolean visible = true;
 
+    public interface OnHistoryFavoritesSelectedListener {
+        void onHistoryFavoriteEntitySelected(int id);
+    }
 
     public HistoryFavoriteFragment() {
         setRetainInstance(true);
@@ -92,9 +99,15 @@ public class HistoryFavoriteFragment extends Fragment
 
     private void setupTabSelectedListener() {
         tabSelectedListener = new TabLayout.OnTabSelectedListener() {
-            public void onTabSelected(TabLayout.Tab tab) { viewPager.setCurrentItem(tab.getPosition()); }
-            public void onTabUnselected(TabLayout.Tab tab) {}
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         };
 
         tabLayout.addOnTabSelectedListener(tabSelectedListener);
@@ -102,9 +115,11 @@ public class HistoryFavoriteFragment extends Fragment
 
     private void setupViewPageChangeListener() {
         viewPagerChangeListener = new ViewPager.OnPageChangeListener() {
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
             public void onPageSelected(int position) {
-                switch (position){
+                switch (position) {
                     case 0:
                         ((Updatable) viewPagerAdapter.getFragmentAtPosition(0)).update();
                         break;
@@ -119,7 +134,9 @@ public class HistoryFavoriteFragment extends Fragment
                 }
 
             }
-            public void onPageScrollStateChanged(int state) {}
+
+            public void onPageScrollStateChanged(int state) {
+            }
         };
 
         viewPager.addOnPageChangeListener(viewPagerChangeListener);
@@ -129,6 +146,19 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        if (context instanceof OnHistoryFavoritesSelectedListener)
+            this.callback = (OnHistoryFavoritesSelectedListener) context;
+        else
+            throw new ClassCastException(context.toString() +
+                    " must implement OnHistoryFavoritesSelectedListener");
+
+    }
+
+    @Override
+    public void onDetach() {
+        callback = null;
+        super.onDetach();
     }
 
     @Override
@@ -144,10 +174,6 @@ public class HistoryFavoriteFragment extends Fragment
         super.onDestroy();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     @Override
     public void onClickPositiveBtn() {
@@ -162,6 +188,12 @@ public class HistoryFavoriteFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void showTranslation(int id) {
+        if (this.callback != null)
+            callback.onHistoryFavoriteEntitySelected(id);
     }
 
     @Override
@@ -180,10 +212,18 @@ public class HistoryFavoriteFragment extends Fragment
     }
 
     @Override
-    public void setVisibilityToDeleteButton(boolean visible) {
-        if (visible)
-            btnDelete.setVisibility(View.VISIBLE);
-        else
-            btnDelete.setVisibility(View.INVISIBLE);
+    public void setVisibilityToDeleteButton(@TypeOfTranslation.TypeName
+                                                    String currentType, boolean visible) {
+        if (viewPager.getCurrentItem() == TypeOfTranslation.getTypeId(currentType))
+            if (visible)
+                btnDelete.setVisibility(View.VISIBLE);
+            else
+                btnDelete.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void update() {
+        ((ICommonView) viewPagerAdapter.getFragmentAtPosition(0)).loadCurrentData();
+        ((ICommonView) viewPagerAdapter.getFragmentAtPosition(1)).loadCurrentData();
     }
 }

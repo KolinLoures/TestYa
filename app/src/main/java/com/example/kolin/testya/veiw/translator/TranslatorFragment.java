@@ -270,6 +270,8 @@ public class TranslatorFragment extends Fragment implements
         editTextToTranslate.setText(text);
     }
 
+
+
     @Override
     public void showTranslationResult(InternalTranslation translation) {
         showTranslationCard(true);
@@ -341,6 +343,11 @@ public class TranslatorFragment extends Fragment implements
             card.setVisibility(View.GONE);
 
 
+    }
+
+    @Override
+    public void updateTranslation(int id) {
+        presenter.loadEntityById(id);
     }
 
     private void showComponent(View component, boolean show) {

@@ -1,6 +1,7 @@
 package com.example.kolin.testya.veiw.common;
 
 import android.content.Context;
+import android.icu.text.LocaleDisplayNames;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -8,6 +9,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +54,10 @@ public class CommonFragment extends Fragment
     @Inject
     CommonPresenter commonPresenter;
 
+    private TextWatcher watcher;
+
     public CommonFragment() {
-        // Required empty public constructor
+        setRetainInstance(true);
     }
 
 
@@ -68,6 +73,7 @@ public class CommonFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
         recyclerAdapter = new HistoryFavoriteAdapter();
@@ -93,7 +99,7 @@ public class CommonFragment extends Fragment
         setupRecyclerAdapterCallBack();
 
         commonPresenter.attachView(this);
-        commonPresenter.loadHistoryFavoriteFromDb(currentType);
+        commonPresenter.deleteAllTranslation(null);
     }
 
     private void setupRecyclerAdapterCallBack() {
@@ -117,12 +123,7 @@ public class CommonFragment extends Fragment
 
             @Override
             public void itemClick(HistoryFavoriteModel model) {
-                switch (currentType) {
-                    case TypeOfTranslation.HISTORY:
-                    case TypeOfTranslation.FAVORITE:
-
-                        break;
-                }
+                ((CommonFragmentCallback) getParentFragment()).showTranslation(model.getId());
             }
 
             @Override
@@ -146,17 +147,16 @@ public class CommonFragment extends Fragment
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-
                 checkSizeRecyclerAdapter();
             }
 
             @Override
             public void onItemRangeRemoved(int positionStart, int itemCount) {
                 super.onItemRangeRemoved(positionStart, itemCount);
-
                 checkSizeRecyclerAdapter();
             }
         };
+
         recyclerAdapter.registerAdapterDataObserver(recyclerAdapterDataObserver);
     }
 
@@ -174,10 +174,10 @@ public class CommonFragment extends Fragment
         searchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    v.clearFocus();
+                    searchView.clearFocus();
                     return true;
                 }
                 return false;
@@ -190,21 +190,40 @@ public class CommonFragment extends Fragment
                 searchView.clearFocus();
             }
         });
+
+        this.watcher = new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                recyclerAdapter.getFilter().filter(s);
+            }
+            public void afterTextChanged(Editable s) {
+                s.toString().trim();
+            }
+        };
+
+        searchView.addTextChangedListener(watcher);
     }
 
     private void checkSizeRecyclerAdapter() {
         if (recyclerAdapter.getItemCount() == 0) {
-            mainContent.setVisibility(View.INVISIBLE);
+            emptyTextView.setEnabled(false);
+            recyclerView.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
 
-            ((CommonFragmentCallback) getParentFragment()).setVisibilityToDeleteButton(false);
+            ((CommonFragmentCallback) getParentFragment()).setVisibilityToDeleteButton(currentType, false);
         } else {
-            mainContent.setVisibility(View.VISIBLE);
-            emptyTextView.setVisibility(View.INVISIBLE);
+            emptyTextView.setEnabled(true);
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.GONE);
 
-            ((CommonFragmentCallback) getParentFragment()).setVisibilityToDeleteButton(true);
+            ((CommonFragmentCallback) getParentFragment()).setVisibilityToDeleteButton(currentType, true);
         }
+    }
 
+    @Override
+    public void onDestroy() {
+        commonPresenter.detachView();
+        super.onDestroy();
     }
 
     @Override
@@ -214,11 +233,18 @@ public class CommonFragment extends Fragment
 
     @Override
     public void onDetach() {
-        commonPresenter.detachView();
         recyclerAdapter.setHistoryFavoriteCallback(null);
         recyclerAdapter.unregisterAdapterDataObserver(recyclerAdapterDataObserver);
+        searchView.removeTextChangedListener(watcher);
 
         super.onDetach();
+    }
+
+    @Override
+    public void loadCurrentData() {
+        recyclerAdapter.clear();
+        recyclerAdapter.clearFilter();
+        commonPresenter.loadHistoryFavoriteFromDb(currentType);
     }
 
     @Override
@@ -254,6 +280,7 @@ public class CommonFragment extends Fragment
     @Override
     public void deleteData() {
         recyclerAdapter.clear();
+        recyclerAdapter.clearFilter();
         commonPresenter.deleteAllTranslation(currentType);
     }
 

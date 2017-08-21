@@ -84,7 +84,7 @@
             android:padding="16dp"
             android:weightSum="1">
 
-            <EditText
+            <com.example.kolin.testya.veiw.custom_views.CustomAppCompatEditText
                 android:id="@+id/translator_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -108,16 +108,6 @@
                     android:background="?attr/selectableItemBackground"
                     android:src="@drawable/ic_clear_black_24dp"
                     android:visibility="gone"
-                    tools:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/translation_text_determined_lang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
-                    android:visibility="gone"
-                    tools:text="Английский (определено)"
                     tools:visibility="visible" />
 
                 <ProgressBar

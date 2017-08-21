@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 /**
  * Created by kolin on 11.08.2017.
@@ -34,7 +36,6 @@ public class CustomAppCompatEditText extends AppCompatEditText {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
             if (onKeyboardHideListener != null)
                 onKeyboardHideListener.onKeyboardHidden();
-            this.clearFocus();
         }
         return super.onKeyPreIme(keyCode, event);
     }

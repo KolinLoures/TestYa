@@ -54,8 +54,6 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
         if (type != null) {
             this.currentType = type;
 
-            favoriteTranslationFromDb.clearDisposableObservers();
-
             favoriteTranslationFromDb.execute(new GetHistoryFavorite(),
                     GetHistoryFavoriteTranslationFromDb.Params.getParamsObj(type));
         }
@@ -63,7 +61,7 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
     public void deleteAllTranslation(@TypeOfTranslation.TypeName String type){
         deleteTypeDb.execute(new DisposableCompletableObserver() {
-            public void onComplete() { showSnackBar(); }
+            public void onComplete() {}
             public void onError(Throwable e) { e.printStackTrace(); }
         }, DeleteTypeDb.Params.getParamsObject(type));
     }
@@ -106,12 +104,12 @@ public class CommonPresenter extends BaseFavoritePresenter<CommonFragment> {
 
     @Override
     public void detachView() {
-        super.detachView();
-
         favoriteTranslationFromDb.dispose();
         deleteHistoryEntityFromDB.dispose();
         deleteTypeDb.dispose();
         addRemoveFavoriteTranslationDb.dispose();
+
+        super.detachView();
     }
 
     @Override

@@ -32,4 +32,6 @@ public interface ITranslatorView {
     void showLoadingProgress(boolean show);
 
     void showError(boolean show);
+
+    void updateTranslation(int id);
 }

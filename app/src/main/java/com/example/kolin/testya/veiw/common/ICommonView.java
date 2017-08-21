@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface ICommonView {
 
+    void loadCurrentData();
+
     void showLoadedData(List<HistoryFavoriteModel> model);
 
     void showLoadedEntity(HistoryFavoriteModel model);

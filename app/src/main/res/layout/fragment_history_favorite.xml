@@ -13,8 +13,6 @@
 
         <include layout="@layout/main_toolbar" />
 
-
-
         <android.support.design.widget.TabLayout
             android:id="@+id/fragment_hf_tab_layout"
             android:layout_width="match_parent"
@@ -42,10 +40,11 @@
         <ImageButton
             android:id="@+id/fragment_hf_delete"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="end"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:src="@drawable/selector_delete_btn" />
 
 

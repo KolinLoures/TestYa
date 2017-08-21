@@ -39,9 +39,7 @@ public class HistoryFavoriteAdapter
 
     public interface OnClickHistoryFavoriteCallback {
         void checkFavorite(HistoryFavoriteModel model, boolean check);
-
         void itemClick(HistoryFavoriteModel model);
-
         void longItemClick(HistoryFavoriteModel model);
     }
 
@@ -80,13 +78,16 @@ public class HistoryFavoriteAdapter
         notifyItemRangeRemoved(0, oldSize);
     }
 
+    public void clearFilter(){
+        filter = null;
+    }
+
     public void add(HistoryFavoriteModel translation) {
         this.data.add(0, translation);
         notifyItemInserted(0);
     }
 
     public void addAll(List<HistoryFavoriteModel> translations) {
-        this.data.clear();
         this.data.addAll(translations);
         notifyItemRangeInserted(0, translations.size());
     }
@@ -107,8 +108,6 @@ public class HistoryFavoriteAdapter
                 notifyItemRemoved(index);
             }
         }
-
-        boolean b = false;
     }
 
     public void updateEntityChecked(int id, boolean check) {
@@ -118,8 +117,10 @@ public class HistoryFavoriteAdapter
                 i = k;
         }
 
-        this.data.get(i).setFavorite(check);
-        notifyItemChanged(i);
+        if (i != -1) {
+            this.data.get(i).setFavorite(check);
+            notifyItemChanged(i);
+        }
     }
 
     public void removeFavoritesFromHistory(){
@@ -212,6 +213,7 @@ public class HistoryFavoriteAdapter
 
         @Override
         public void publishFilterResult(List<HistoryFavoriteModel> filterData) {
+            clear();
             addAll(filterData);
         }
     }

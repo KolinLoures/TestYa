@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.kolin.testya.data.preferences.LanguagePreferencesManager;
 import com.example.kolin.testya.domain.AddRemoveFavoriteTranslationDb;
 import com.example.kolin.testya.domain.CheckFavoriteIs;
+import com.example.kolin.testya.domain.GetEntityFromDB;
 import com.example.kolin.testya.domain.GetLanguages;
 import com.example.kolin.testya.domain.GetTranslation;
 import com.example.kolin.testya.domain.model.InternalTranslation;
@@ -37,6 +38,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
     private GetTranslation getTranslationUseCase;
     private GetLanguages getLanguagesUseCase;
     private CheckFavoriteIs checkFavoriteIsUseCase;
+    private GetEntityFromDB getEntityFromDB;
     private LanguagePreferencesManager prefManager;
 
     private Language langFrom;
@@ -50,12 +52,14 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
                         GetTranslation getTranslationUseCase,
                         GetLanguages getLanguagesUseCase,
                         CheckFavoriteIs checkFavoriteIsUseCase,
+                        GetEntityFromDB getEntityFromDB,
                         LanguagePreferencesManager prefManager) {
         super(addRemoveTranslationDb);
 
         this.getLanguagesUseCase = getLanguagesUseCase;
         this.getTranslationUseCase = getTranslationUseCase;
         this.checkFavoriteIsUseCase = checkFavoriteIsUseCase;
+        this.getEntityFromDB = getEntityFromDB;
         this.prefManager = prefManager;
     }
 
@@ -167,6 +171,29 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
         }
 
+    }
+
+    public void loadEntityById(int id){
+        currentTranslation = null;
+        getTranslationUseCase.clearDisposableObservers();
+
+        showLoading(true);
+        showError(false);
+        showDictionaryTranslationCard(false);
+
+        getEntityFromDB.execute(new DisposableObserver<InternalTranslation>() {
+            public void onNext(InternalTranslation translation) {
+                setTranslatableText(translation.getTextFrom(), true);
+                showTranslation(translation);
+            }
+            public void onError(Throwable e) {
+                showLoading(false);
+                showError(true);
+            }
+            public void onComplete() {
+                showLoading(false);
+            }
+        }, GetEntityFromDB.Params.getParamsObject(id));
     }
 
     public void addFavorite(boolean check) {

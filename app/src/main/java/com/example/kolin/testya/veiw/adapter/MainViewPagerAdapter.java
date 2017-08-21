@@ -3,6 +3,7 @@ package com.example.kolin.testya.veiw.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.example.kolin.testya.veiw.MainActivity;
@@ -13,7 +14,7 @@ import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
 /**
  * Created by kolin on 21.03.2017.
- *
+ * <p>
  * Adapter for view pager in {@link MainActivity}
  */
 
@@ -23,6 +24,9 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     private TranslatorFragment translatorFragment;
     private HistoryFavoriteFragment historyFavoriteFragment;
     private InfoFragment infoFragment;
+
+    private SparseArray<Fragment> fragments = new SparseArray<>();
+
 
     public MainViewPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -45,6 +49,7 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        fragments.put(position, fragment);
         switch (position) {
             case 0:
                 translatorFragment = (TranslatorFragment) fragment;
@@ -59,14 +64,30 @@ public class MainViewPagerAdapter extends FragmentStatePagerAdapter {
         return fragment;
     }
 
-    @Override
-    public int getItemPosition(Object object) {
-        Fragment fragment = (Fragment) object;
-        if (fragment != null && fragment instanceof Updatable)
-            ((Updatable) fragment).update();
-        return super.getItemPosition(object);
+    public Fragment getFragmentAtPosition(int position){
+        return position >= 0 && position <= fragments.size() - 1
+                ? fragments.get(position)
+                : null;
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        int itemPosition = super.getItemPosition(object);
+        Fragment fragment = (Fragment) object;
+        if (fragment != null && fragment instanceof Updatable)
+            switch (itemPosition) {
+                case 0:
+                    ((Updatable) fragment).update();
+                    break;
+                case 1:
+                    ((Updatable) fragment).update();
+                    break;
+                case 2:
+                    ((Updatable) fragment).update();
+                    break;
+            }
+        return itemPosition;
+    }
 
 
     @Override

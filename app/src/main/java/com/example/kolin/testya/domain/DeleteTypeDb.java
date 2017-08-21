@@ -29,7 +29,7 @@ public class DeleteTypeDb extends BaseCompletableUseCase<DeleteTypeDb.Params> {
 
     @Override
     public Completable createCompletable(final Params params) {
-        if (params == null)
+        if (params.type == null)
             return completableClearUselessData();
         else
             return params.type.equals(TypeOfTranslation.FAVORITE)
