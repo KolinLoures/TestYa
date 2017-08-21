@@ -1,7 +1,6 @@
 package com.example.kolin.testya.veiw.common;
 
 import android.content.Context;
-import android.icu.text.LocaleDisplayNames;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -259,7 +258,7 @@ public class CommonFragment extends Fragment
 
     @Override
     public void removeEntity(HistoryFavoriteModel model) {
-        recyclerAdapter.removeEntity(model);
+        recyclerAdapter.removeEntityById(model);
     }
 
     @Override

@@ -16,20 +16,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
-        <ImageView
-            android:layout_width="0dp"
+        <FrameLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:adjustViewBounds="true"
-            android:src="@drawable/yandex_translate" />
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center_vertical"
+                android:padding="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_yandex_logo_en" />
+
+        </FrameLayout>
+
 
         <ScrollView
-            android:layout_weight="0.5"
             android:layout_width="0dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -19,9 +19,10 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:src="@drawable/yandex_translate" />
+            android:layout_height="150dp"
+            android:padding="16dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_yandex_logo_en" />
 
         <TextView
             android:id="@+id/fragment_info_translator_text"

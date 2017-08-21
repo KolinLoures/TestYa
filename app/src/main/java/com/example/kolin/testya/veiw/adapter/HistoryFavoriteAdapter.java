@@ -15,6 +15,7 @@ import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by kolin on 06.04.2017.
@@ -39,7 +40,9 @@ public class HistoryFavoriteAdapter
 
     public interface OnClickHistoryFavoriteCallback {
         void checkFavorite(HistoryFavoriteModel model, boolean check);
+
         void itemClick(HistoryFavoriteModel model);
+
         void longItemClick(HistoryFavoriteModel model);
     }
 
@@ -78,7 +81,7 @@ public class HistoryFavoriteAdapter
         notifyItemRangeRemoved(0, oldSize);
     }
 
-    public void clearFilter(){
+    public void clearFilter() {
         filter = null;
     }
 
@@ -92,10 +95,19 @@ public class HistoryFavoriteAdapter
         notifyItemRangeInserted(0, translations.size());
     }
 
-    public void removeEntity(HistoryFavoriteModel model) {
-        int i = this.data.indexOf(model);
-        this.data.remove(model);
-        notifyItemRemoved(i);
+    public void removeEntityById(HistoryFavoriteModel model) {
+        int index = -1;
+        for (HistoryFavoriteModel h : data) {
+            if (h.getId() == model.getId()) {
+                index = data.indexOf(h);
+                break;
+            }
+        }
+
+        if (index != -1) {
+            this.data.remove(index);
+            notifyItemRemoved(index);
+        }
     }
 
     public void removeNonFavoritesEntity() {
@@ -123,7 +135,7 @@ public class HistoryFavoriteAdapter
         }
     }
 
-    public void removeFavoritesFromHistory(){
+    public void removeFavoritesFromHistory() {
         for (int i = 0; i < this.data.size(); i++) {
             this.data.get(i).setFavorite(false);
             notifyItemChanged(i);
