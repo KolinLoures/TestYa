@@ -12,13 +12,13 @@
 
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
-    <string name="dialog_question">Are you sure that you want clear the \ncategory</string>
+    <string name="dialog_question">Are you sure that you want to clear the \ncategory</string>
     <string name="write_text">Type text</string>
     <string name="translation_language">Translation Language</string>
-    <string name="chose_language">Select a language</string>
+    <string name="chose_language">Select language</string>
     <string name="determine_language">define</string>
     <string name="determined">defined</string>
-    <string name="chose_language_from">Select the language from which to translate</string>
+    <string name="chose_language_from">Select language from</string>
     <string name="error_message">Oops… something went wrong. \nCheck your Internet connection or \nrepeat the translation later.</string>
     <string name="no_translations">Here is empty</string>
     <string name="translate_with_yandex">Translated by the service \"Yandex-Translator \". \nLearn more about the service: \nhttp://translate.yandex.ru/</string>
