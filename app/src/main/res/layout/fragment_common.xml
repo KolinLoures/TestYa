@@ -17,7 +17,7 @@
         android:id="@+id/fragment_common_main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/divider_vertical_gray"
+        android:divider="@drawable/divider_vertical"
         android:focusable="false"
         android:focusableInTouchMode="true"
         android:orientation="vertical">

@@ -4,6 +4,6 @@
 
     <item
         android:state_checked="false" android:drawable="@drawable/ic_bookmark_gray_24dp" />
-    <item android:state_checked="true" android:drawable="@drawable/ic_bookmark_yellow_24dp" />
+    <item android:state_checked="true" android:drawable="@drawable/ic_bookmark_dark_green_24dp" />
 
 </selector>

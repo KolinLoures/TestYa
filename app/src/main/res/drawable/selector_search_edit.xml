@@ -3,8 +3,8 @@
 
     <item
         android:state_focused="true"
-        android:drawable="@drawable/border_bottom_yellow" />
+        android:drawable="@drawable/border_bottom_selected" />
     <item
-        android:drawable="@drawable/border_bottom_gray" />
+        android:drawable="@drawable/border_bottom" />
 
 </selector>
