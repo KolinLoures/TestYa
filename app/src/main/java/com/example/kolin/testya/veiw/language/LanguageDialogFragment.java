@@ -18,15 +18,12 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.Language;
 import com.example.kolin.testya.veiw.adapter.LanguageAdapter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
 
 /**
  * Dialog fragment to choose language
@@ -76,7 +73,7 @@ public class LanguageDialogFragment extends DialogFragment implements ILanguageD
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
+        AndroidSupportInjection.inject(this);
         adapter = new LanguageAdapter();
     }
 

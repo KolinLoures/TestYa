@@ -48,7 +48,7 @@ public class TranslatorPresenter extends BaseFavoritePresenter<TranslatorFragmen
 
 
     @Inject
-    TranslatorPresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb,
+    public TranslatorPresenter(AddRemoveFavoriteTranslationDb addRemoveTranslationDb,
                         GetTranslation getTranslationUseCase,
                         GetLanguages getLanguagesUseCase,
                         CheckFavoriteIs checkFavoriteIsUseCase,

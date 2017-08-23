@@ -20,8 +20,6 @@ import android.widget.TextView;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.TypeOfTranslation;
-import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.HistoryFavoriteModel;
 import com.example.kolin.testya.veiw.CommonFragmentCallback;
 import com.example.kolin.testya.veiw.Updatable;
@@ -31,6 +29,8 @@ import com.example.kolin.testya.veiw.custom_views.CustomAppCompatEditText;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
 
 
 public class CommonFragment extends Fragment
@@ -74,7 +74,7 @@ public class CommonFragment extends Fragment
         super.onCreate(savedInstanceState);
 
 
-        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
+        AndroidSupportInjection.inject(this);
         recyclerAdapter = new HistoryFavoriteAdapter();
         currentType = getArguments().getString(KEY);
     }

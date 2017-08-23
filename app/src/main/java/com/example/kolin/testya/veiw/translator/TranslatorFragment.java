@@ -2,22 +2,17 @@ package com.example.kolin.testya.veiw.translator;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -29,8 +24,6 @@ import android.widget.Toast;
 
 import com.example.kolin.testya.R;
 import com.example.kolin.testya.data.entity.dictionary.Def;
-import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.domain.model.InternalTranslation;
 import com.example.kolin.testya.domain.model.Language;
 import com.example.kolin.testya.veiw.Updatable;
@@ -42,6 +35,8 @@ import com.example.kolin.testya.veiw.language.LanguageDialogType;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
 
 
 public class TranslatorFragment extends Fragment implements
@@ -98,7 +93,7 @@ public class TranslatorFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((ProvideComponent<ViewComponent>) getActivity()).getComponent().inject(this);
+        AndroidSupportInjection.inject(this);
         dictionaryAdapter = new DictionaryAdapter();
     }
 

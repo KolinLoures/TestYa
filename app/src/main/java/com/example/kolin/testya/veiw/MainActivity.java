@@ -3,31 +3,34 @@ package com.example.kolin.testya.veiw;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.kolin.testya.R;
-import com.example.kolin.testya.TestYaApp;
-import com.example.kolin.testya.di.ProvideComponent;
-import com.example.kolin.testya.di.components.DaggerViewComponent;
-import com.example.kolin.testya.di.components.ViewComponent;
 import com.example.kolin.testya.veiw.adapter.MainViewPagerAdapter;
 import com.example.kolin.testya.veiw.custom_views.NonSwipeViewPager;
 import com.example.kolin.testya.veiw.historyfavorite.HistoryFavoriteFragment;
 import com.example.kolin.testya.veiw.translator.ITranslatorView;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
+
 
 public class MainActivity extends AppCompatActivity implements
-        ProvideComponent<ViewComponent>,
-        HistoryFavoriteFragment.OnHistoryFavoritesSelectedListener{
+        HistoryFavoriteFragment.OnHistoryFavoritesSelectedListener,
+        HasSupportFragmentInjector{
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
 
     //Views
     private TabLayout tabLayout;
     private NonSwipeViewPager viewPager;
     private MainViewPagerAdapter adapter;
-
-    private ViewComponent viewComponent;
 
     private ViewPager.OnPageChangeListener viewPageChangeListener;
     private TabLayout.OnTabSelectedListener tabSelectedListener;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeViewComponent();
+        AndroidInjection.inject(this);
 
         adapter = new MainViewPagerAdapter(getSupportFragmentManager());
 
@@ -87,17 +90,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void initializeViewComponent() {
-        this.viewComponent = DaggerViewComponent.builder()
-                .appComponent(((TestYaApp) getApplication()).getAppComponent())
-                .build();
-    }
-
-    @Override
-    public ViewComponent getComponent() {
-        return viewComponent;
-    }
-
     @Override
     protected void onDestroy() {
         viewPager.removeOnPageChangeListener(viewPageChangeListener);
@@ -110,5 +102,10 @@ public class MainActivity extends AppCompatActivity implements
     public void onHistoryFavoriteEntitySelected(int id) {
         ((ITranslatorView) adapter.getFragmentAtPosition(0)).updateTranslation(id);
         viewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
     }
 }

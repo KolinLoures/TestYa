@@ -1,20 +1,26 @@
 package com.example.kolin.testya;
 
+import android.app.Activity;
 import android.app.Application;
 
-import com.example.kolin.testya.di.components.AppComponent;
 import com.example.kolin.testya.di.components.DaggerAppComponent;
-import com.example.kolin.testya.di.modules.AppModule;
 import com.facebook.stetho.Stetho;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 
 
 /**
  * Created by kolin on 02.04.2017.
  */
 
-public class TestYaApp extends Application {
+public class TestYaApp extends Application implements HasActivityInjector {
 
-    private AppComponent appComponent;
+    @Inject
+    DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
 
     @Override
     public void onCreate() {
@@ -22,14 +28,15 @@ public class TestYaApp extends Application {
 
         Stetho.initializeWithDefaults(this);
 
-        appComponent = DaggerAppComponent
+        DaggerAppComponent
                 .builder()
-                .appModule(new AppModule(this))
-                .build();
-
+                .application(this)
+                .build()
+                .inject(this);
     }
 
-    public AppComponent getAppComponent(){
-        return appComponent;
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return activityDispatchingAndroidInjector;
     }
 }
