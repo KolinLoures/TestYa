@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="0dp"
     tools:context="com.example.kolin.testya.veiw.language.LanguageDialogFragment">
 
     <LinearLayout
@@ -24,7 +24,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="24dp"
                 android:text="@string/translation_language"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large" />
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+                android:textColor="@color/colorWhite" />
 
         </FrameLayout>
 

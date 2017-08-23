@@ -1,6 +1,7 @@
 package com.example.kolin.testya.di;
 
 import com.example.kolin.testya.veiw.common.CommonFragment;
+import com.example.kolin.testya.veiw.language.LanguageDialogFragment;
 import com.example.kolin.testya.veiw.translator.TranslatorFragment;
 
 import dagger.Module;
@@ -17,4 +18,7 @@ public abstract class FragmentsProvider {
 
     @ContributesAndroidInjector(modules = FragmentsModule.class)
     abstract CommonFragment provideCommonFragmentProvider();
+
+    @ContributesAndroidInjector(modules = FragmentsModule.class)
+    abstract LanguageDialogFragment provideLanDialogFragment();
 }

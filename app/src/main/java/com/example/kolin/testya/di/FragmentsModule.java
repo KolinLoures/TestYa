@@ -10,6 +10,8 @@ import com.example.kolin.testya.domain.GetHistoryFavoriteTranslationFromDb;
 import com.example.kolin.testya.domain.GetLanguages;
 import com.example.kolin.testya.domain.GetTranslation;
 import com.example.kolin.testya.veiw.common.CommonPresenter;
+import com.example.kolin.testya.veiw.language.LanguageDialogFragment;
+import com.example.kolin.testya.veiw.language.LanguageDialogPresenter;
 import com.example.kolin.testya.veiw.translator.TranslatorPresenter;
 
 import dagger.Module;
@@ -52,5 +54,10 @@ public class FragmentsModule {
                 deleteHistoryEntityFromDB,
                 deleteTypeDb,
                 addRemoveFavoriteTranslationDb);
+    }
+
+    @Provides
+    LanguageDialogPresenter provideLanguageDialogPresenter(GetLanguages getLanguagesUseCase){
+        return new LanguageDialogPresenter(getLanguagesUseCase);
     }
 }
