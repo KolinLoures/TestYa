@@ -18,19 +18,3 @@ Test task for Yandex mobilization 2017
 Task implemented with Retrofit2, RxJava2 and Dagger2.
 
 ## Main Screens
-
-Translation screen
-
-![](https://github.com/KolinLoures/TestYa/blob/master/screenshots/translation_screen.png?row=true)
-
-Language definition
-
-![](https://github.com/KolinLoures/TestYa/blob/master/screenshots/lang.png?row=true)
-
-History
-
-![](https://github.com/KolinLoures/TestYa/blob/master/screenshots/history_screen.png?row=true)
-
-Favorities
-
-![](https://github.com/KolinLoures/TestYa/blob/master/screenshots/favorities_screen.png?row=true)
