@@ -1,5 +1,5 @@
 # TestYa
-Test task for Yandex mobilization 2017
+Small application that use feature of yandex translation API
 
 ## Application Features:
 1. Text translation
@@ -7,7 +7,6 @@ Test task for Yandex mobilization 2017
 3. Includes translation options
 4. History of translations
 5. Favorites translation
-6. Language definition
 
 ## Project contains
 1. Code with comments
@@ -15,6 +14,14 @@ Test task for Yandex mobilization 2017
 3. Animation of translation
 4. Handling network exceptions
 
-Task implemented with Retrofit2, RxJava2 and Dagger2.
+Task implemented with Retrofit2, RxJava2, Dagger2 and SQLite.
 
 ## Main Screens
+### Translte Screen
+<img src="https://github.com/KolinLoures/TestYa/blob/master/screenshots/translate.png?raw=true" width="270" height="480" />
+
+### History Screen
+<img src="https://github.com/KolinLoures/TestYa/blob/master/screenshots/history.png?raw=true" width="270" height="480" />
+
+### Favorite Screen
+<img src="https://github.com/KolinLoures/TestYa/blob/master/screenshots/favorite.png?raw=true" width="270" height="480" />
